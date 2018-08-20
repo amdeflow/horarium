@@ -17,6 +17,7 @@ limitations under the License.
 -->
 
 <resources>
+
     <style name="Theme.Horarium" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>

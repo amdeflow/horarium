@@ -17,11 +17,9 @@
 package nl.viasalix.horarium
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import nl.viasalix.horarium.ui.main.ScheduleFragment
-import nl.viasalix.horarium.zermelo.ZermeloInstance
 
 class MainActivity : AppCompatActivity() {
 

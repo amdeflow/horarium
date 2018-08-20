@@ -16,22 +16,16 @@
 
 package nl.viasalix.horarium.ui.main
 
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
-import nl.viasalix.horarium.zermelo.ZermeloInstance
 
 class ScheduleFragment : Fragment() {
 
