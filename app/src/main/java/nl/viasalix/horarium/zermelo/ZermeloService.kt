@@ -55,7 +55,6 @@ interface ZermeloService {
     ):
         Call<ZermeloResponse<Appointment>>
 
-    // This is just wrong
     @GET("parentteachernights")
     fun getParentTeacherNights(): Call<ZermeloResponse<ParentTeacherNight>>
 }
