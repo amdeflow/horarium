@@ -17,5 +17,9 @@ limitations under the License.
 -->
 
 <resources>
-    <string name="app_name">Horarium</string>
+    <string name="app_name" translatable="false">Horarium</string>
+    <string name="SP_KEY_CURRENT_USER" translatable="false">currentUser</string>
+    <string name="SP_KEY_ACCESS_TOKEN" translatable="false">accessToken</string>
+    <string name="SP_KEY_SCHOOL_NAME" translatable="false">schoolName</string>
+    <string name="SP_KEY_USERS" translatable="false">users</string>
 </resources>

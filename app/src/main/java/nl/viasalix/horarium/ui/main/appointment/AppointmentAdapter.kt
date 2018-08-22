@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.ui.main
+package nl.viasalix.horarium.ui.main.appointment
 
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +24,6 @@ import nl.viasalix.horarium.R
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.utils.DateUtils
 import java.util.Calendar
-import java.util.GregorianCalendar
 
 class AppointmentAdapter(private val schedule: MutableList<Appointment>) :
     RecyclerView.Adapter<AppointmentViewHolder>() {
@@ -55,13 +54,13 @@ class AppointmentAdapter(private val schedule: MutableList<Appointment>) :
         }
 
         holder.endSlot.text = appointment.endTimeSlot.toString()
-        holder.rooms.text = appointment.locations.joinToString(", ")
+        holder.rooms.text = appointment.locations.joinToString()
         holder.startSlot.text = appointment.startTimeSlot.toString()
-        holder.subjects.text = appointment.subjects.joinToString(", ")
-        holder.teachers.text = appointment.teachers.joinToString(", ")
+        holder.subjects.text = appointment.subjects.joinToString()
+        holder.teachers.text = appointment.teachers.joinToString()
         holder.time.text = {
-            val start = GregorianCalendar.getInstance()
-            val end = GregorianCalendar.getInstance()
+            val start = Calendar.getInstance()
+            val end = Calendar.getInstance()
             start.timeInMillis = appointment.start * 1000
             end.timeInMillis = appointment.end * 1000
 
@@ -72,7 +71,7 @@ class AppointmentAdapter(private val schedule: MutableList<Appointment>) :
             holder.endSlot.visibility = View.INVISIBLE
         }
 
-        // TODO: "Clean up this tiny mess and make it nicer"
+        // TODO: Clean up this tiny mess and make it nicer
         holder.infoChipGroup.visibility = View.GONE
         if (appointment.cancelled) {
             val oldtext = holder.subjects.text

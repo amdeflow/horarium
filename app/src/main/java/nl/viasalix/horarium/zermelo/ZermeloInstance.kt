@@ -21,7 +21,7 @@ import com.google.gson.GsonBuilder
 import nl.viasalix.horarium.zermelo.model.Announcement
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.model.ParentTeacherNight
-import nl.viasalix.horarium.zermelo.model.ZermeloResponse
+import nl.viasalix.horarium.zermelo.model.ZermeloAuthResponse
 import nl.viasalix.horarium.zermelo.utils.DateUtils
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -33,15 +33,10 @@ import java.util.Date
 
 class ZermeloInstance(
     schoolName: String,
-    authCode: String,
-    serializedSession: String = "",
+    accessToken: String = "",
     apiVer: Int = 3
 ) {
-    private var interceptor: ZermeloInterceptor = if (serializedSession.isNotEmpty()) {
-        ZermeloInterceptor(authCode, serializedSession)
-    } else {
-        ZermeloInterceptor(authCode)
-    }
+    private var interceptor: ZermeloInterceptor = ZermeloInterceptor(accessToken = accessToken)
 
     private val zermeloService: ZermeloService
     private val baseUrl = Uri.Builder().scheme("https")
@@ -169,5 +164,25 @@ class ZermeloInstance(
             })
     }
 
-    fun serializeSession(): String = interceptor.session.serializeToJson()
+    fun tryLogin(authCode: String, callback: (Boolean, String) -> Unit) {
+        zermeloService.login(authCode).enqueue(object : Callback<ZermeloAuthResponse> {
+            override fun onResponse(call: Call<ZermeloAuthResponse>, response: Response<ZermeloAuthResponse>) {
+                val body = response.body()
+                if (body != null) {
+                    interceptor.accessToken = body.accessToken
+                    callback(true, interceptor.accessToken)
+
+                    return
+                }
+
+                callback(false, interceptor.accessToken)
+            }
+
+            override fun onFailure(call: Call<ZermeloAuthResponse>, t: Throwable) {
+                callback(false, "")
+            }
+        })
+    }
+
+    fun getAccessToken(): String = interceptor.accessToken
 }

@@ -20,7 +20,6 @@ import nl.viasalix.horarium.zermelo.model.Announcement
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.model.ParentTeacherNight
 import nl.viasalix.horarium.zermelo.model.ZermeloAuthResponse
-import nl.viasalix.horarium.zermelo.model.ZermeloResponse
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

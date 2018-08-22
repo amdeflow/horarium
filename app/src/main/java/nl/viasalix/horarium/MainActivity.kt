@@ -16,14 +16,21 @@
 
 package nl.viasalix.horarium
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import nl.viasalix.horarium.ui.main.ScheduleFragment
+import org.jetbrains.anko.defaultSharedPreferences
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (!defaultSharedPreferences.contains("users")) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {

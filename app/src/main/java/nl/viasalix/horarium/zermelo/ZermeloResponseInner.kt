@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.zermelo.model
+package nl.viasalix.horarium.zermelo
 
-data class ZermeloResponse<T>(val response: ZermeloResponseInner<T>)
+data class ZermeloResponseInner<T>(
+    val status: Int,
+    val message: String,
+    val details: String,
+    val eventId: Long,
+    val startRow: Long,
+    val endRow: Long,
+    val totalRows: Long,
+    val data: List<T>
+)

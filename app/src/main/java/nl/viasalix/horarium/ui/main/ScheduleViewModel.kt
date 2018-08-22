@@ -19,8 +19,6 @@ package nl.viasalix.horarium.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.nio.charset.Charset
-import java.util.Random
 
 class ScheduleViewModel : ViewModel() {
     private val _data = MutableLiveData<String>()
@@ -28,13 +26,6 @@ class ScheduleViewModel : ViewModel() {
         get() = _data
 
     init {
-        _data.value = "Hello, Jetpack!"
-    }
-
-    fun genRandomText() {
-        val array = ByteArray(7)
-        Random().nextBytes(array)
-        val generatedString = String(array, Charset.forName("UTF-8"))
-        _data.value = generatedString
+        _data.value = ""
     }
 }

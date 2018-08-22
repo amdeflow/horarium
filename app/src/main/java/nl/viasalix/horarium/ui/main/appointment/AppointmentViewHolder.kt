@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.ui.main
+package nl.viasalix.horarium.ui.main.appointment
 
 import android.view.View
 import android.widget.TextView

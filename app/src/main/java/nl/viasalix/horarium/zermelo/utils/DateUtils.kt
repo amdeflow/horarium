@@ -23,7 +23,6 @@ import com.google.gson.stream.JsonWriter
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.GregorianCalendar
 import java.util.Locale
 
 object DateUtils {
@@ -61,7 +60,7 @@ object DateUtils {
     fun getCurrentUnixSeconds() = System.currentTimeMillis() / 1000
 
     fun isOtherDay(currentTime: Long, oldTime: Long): Boolean {
-        val calendar = GregorianCalendar.getInstance()
+        val calendar = Calendar.getInstance()
         calendar.timeInMillis = currentTime * 1000
         val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
