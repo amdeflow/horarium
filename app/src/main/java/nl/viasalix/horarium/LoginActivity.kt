@@ -96,5 +96,6 @@ class LoginActivity : AppCompatActivity() {
         defaultSharedPreferences.edit { putString(getString(R.string.SP_KEY_CURRENT_USER), userName) }
 
         startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }
