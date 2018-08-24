@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder
 import nl.viasalix.horarium.zermelo.model.Announcement
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.model.ParentTeacherNight
+import nl.viasalix.horarium.zermelo.model.User
 import nl.viasalix.horarium.zermelo.model.ZermeloAuthResponse
 import nl.viasalix.horarium.zermelo.utils.DateUtils
 import okhttp3.OkHttpClient
@@ -119,7 +120,7 @@ class ZermeloInstance(
         user: String = "~me",
         callback: (List<Announcement>?) -> Unit
     ) {
-        val response = zermeloService.getAnnouncements(current, user)
+        zermeloService.getAnnouncements(current, user)
             .enqueue(object : Callback<ZermeloResponse<Announcement>> {
                 override fun onResponse(
                     call: Call<ZermeloResponse<Announcement>>,
@@ -142,7 +143,7 @@ class ZermeloInstance(
     }
 
     fun getParentTeacherNights(callback: (List<ParentTeacherNight>?) -> Unit) {
-        val response = zermeloService.getParentTeacherNights()
+        zermeloService.getParentTeacherNights()
             .enqueue(object : Callback<ZermeloResponse<ParentTeacherNight>> {
                 override fun onResponse(
                     call: Call<ZermeloResponse<ParentTeacherNight>>,
@@ -159,6 +160,23 @@ class ZermeloInstance(
                     call: Call<ZermeloResponse<ParentTeacherNight>>,
                     t: Throwable
                 ) {
+                    callback(null)
+                }
+            })
+    }
+
+    fun getCurrentUser(callback: (User?) -> Unit) {
+        zermeloService.getUser()
+            .enqueue(object : Callback<ZermeloResponse<User>> {
+                override fun onResponse(call: Call<ZermeloResponse<User>>, response: Response<ZermeloResponse<User>>) {
+                    if (response.isSuccessful) {
+                        callback(response.body()?.response?.data?.get(0))
+                    } else {
+                        callback(null)
+                    }
+                }
+
+                override fun onFailure(call: Call<ZermeloResponse<User>>, t: Throwable) {
                     callback(null)
                 }
             })

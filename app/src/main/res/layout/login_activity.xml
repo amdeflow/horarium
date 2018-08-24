@@ -53,6 +53,24 @@ limitations under the License.
             app:layout_constraintVertical_bias="0.26999998" />
 
         <EditText
+            android:id="@+id/schoolName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:digits="abcdefghijklmnopqrstuvwxyz1234567890"
+            android:ems="10"
+            android:hint="School Name"
+            android:singleLine="true"
+            android:text="@={viewModel.schoolName}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login" />
+
+        <EditText
             android:id="@+id/code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,34 +90,29 @@ limitations under the License.
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/schoolName" />
 
-        <EditText
-            android:id="@+id/schoolName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:digits="abcdefghijklmnopqrstuvwxyz1234567890"
-            android:ems="10"
-            android:hint="School Name"
-            android:singleLine="true"
-            android:text="@={viewModel.schoolName}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login" />
-
         <Button
-            android:id="@+id/button"
+            android:id="@+id/loginBtn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:onClick="@{() -> viewModel.onLoginClick()}"
+            android:onClick="@{() -> viewModel.tryLogin()}"
             android:text="Log in"
             app:layout_constraintEnd_toEndOf="@+id/code"
             app:layout_constraintStart_toStartOf="@+id/code"
             app:layout_constraintTop_toBottomOf="@+id/code" />
+
+        <Button
+            android:id="@+id/scanQrBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:onClick="@{() -> viewModel.scanQr()}"
+            android:text="Scan QR-code"
+            app:layout_constraintEnd_toEndOf="@+id/code"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/code"
+            app:layout_constraintTop_toBottomOf="@+id/loginBtn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

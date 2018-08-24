@@ -61,16 +61,18 @@ class ScheduleFragment : Fragment() {
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
 
-        val db = Room.databaseBuilder<HorariumDatabase>(
-            activity!!.applicationContext,
-            HorariumDatabase::class.java,
-            "horarium-db"
-        ).build()
-
         val currentUser = activity?.defaultSharedPreferences?.getString(getString(R.string.SP_KEY_CURRENT_USER), "")
         val currentUserSp = activity?.getSharedPreferences(currentUser, Context.MODE_PRIVATE)
         val accessToken = currentUserSp?.getString(getString(R.string.SP_KEY_ACCESS_TOKEN), "")
         val schoolName = currentUserSp?.getString(getString(R.string.SP_KEY_SCHOOL_NAME), "")
+
+        Log.d("accessToken", accessToken)
+
+        val db = Room.databaseBuilder<HorariumDatabase>(
+            activity!!.applicationContext,
+            HorariumDatabase::class.java,
+            "horarium-db_$currentUser"
+        ).build()
 
         val instance = ZermeloInstance(
             schoolName = schoolName!!,
@@ -83,34 +85,32 @@ class ScheduleFragment : Fragment() {
                         db.appointmentDao().insertAppointment(appointment)
                     }
 
-                    val dbAppointments = db.appointmentDao()
-                        .getAppointmentsFromTill(DateUtils.startOfWeek().time / 1000, DateUtils.endOfWeek().time / 1000)
-
-                    uiThread {
-                        viewManager = LinearLayoutManager(context)
-                        viewAdapter = AppointmentAdapter(dbAppointments.toMutableList())
-
-                        recyclerView = binding.root.findViewById<RecyclerView>(R.id.scheduleRecyclerView)!!.apply {
-                            setHasFixedSize(true)
-                            layoutManager = viewManager
-                            adapter = viewAdapter
-                        }
-                    }
+                    viewAppointments(db)
                 }
-
-                viewManager = LinearLayoutManager(context)
-                viewAdapter = AppointmentAdapter(appointments.toMutableList())
-
-                recyclerView = activity?.findViewById<RecyclerView>(R.id.scheduleRecyclerView)?.apply {
-                    setHasFixedSize(true)
-                    layoutManager = viewManager
-                    adapter = viewAdapter
-                } ?: throw Resources.NotFoundException()
             } else {
+                viewAppointments(db)
                 Log.e("ERROR", "Appointments are null!")
             }
         }
 
         return binding.root
+    }
+
+    fun viewAppointments(db: HorariumDatabase) {
+        doAsync {
+            val dbAppointments = db.appointmentDao()
+                .getAppointmentsFromTill(DateUtils.startOfWeek().time / 1000, DateUtils.endOfWeek().time / 1000)
+
+            viewManager = LinearLayoutManager(context)
+            viewAdapter = AppointmentAdapter(dbAppointments.toMutableList())
+
+            uiThread {
+                recyclerView = view?.findViewById<RecyclerView>(R.id.scheduleRecyclerView)!!.apply {
+                    setHasFixedSize(true)
+                    layoutManager = viewManager
+                    adapter = viewAdapter
+                }
+            }
+        }
     }
 }

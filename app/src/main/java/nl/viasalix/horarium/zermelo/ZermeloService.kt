@@ -19,12 +19,14 @@ package nl.viasalix.horarium.zermelo
 import nl.viasalix.horarium.zermelo.model.Announcement
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.model.ParentTeacherNight
+import nl.viasalix.horarium.zermelo.model.User
 import nl.viasalix.horarium.zermelo.model.ZermeloAuthResponse
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ZermeloService {
@@ -57,4 +59,7 @@ interface ZermeloService {
 
     @GET("parentteachernights")
     fun getParentTeacherNights(): Call<ZermeloResponse<ParentTeacherNight>>
+
+    @GET("users/{id}")
+    fun getUser(@Path("id") id: String = "~me"): Call<ZermeloResponse<User>>
 }

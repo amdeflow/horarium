@@ -16,6 +16,7 @@
 
 package nl.viasalix.horarium.ui.main.appointment
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,12 +72,11 @@ class AppointmentAdapter(private val schedule: MutableList<Appointment>) :
             holder.endSlot.visibility = View.INVISIBLE
         }
 
-        // TODO: Clean up this tiny mess and make it nicer
-        holder.infoChipGroup.visibility = View.GONE
         if (appointment.cancelled) {
-            val oldtext = holder.subjects.text
-            holder.subjects.text = "$oldtext CANCELLED"
+            holder.itemView.setBackgroundColor(Color.parseColor("#ff3f3f"))
         }
+
+        holder.infoChipGroup.visibility = View.GONE
     }
 
     override fun getItemCount(): Int = schedule.size

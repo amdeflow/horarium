@@ -1,5 +1,6 @@
 package nl.viasalix.horarium.ui.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,11 +11,13 @@ class LoginViewModel : ViewModel() {
     var authCode: String = ""
     var accessToken: String = ""
 
+    val scanQr = MutableLiveData<Boolean>()
+
     private val _loggedIn = MutableLiveData<Boolean>()
     val loggedIn: LiveData<Boolean>
         get() = _loggedIn
 
-    fun onLoginClick() {
+    fun tryLogin() {
         val schoolNameMatches = schoolName.isNotEmpty()
         val authCodeMatches = authCode.length == 12
         if (schoolNameMatches && authCodeMatches) {
@@ -25,5 +28,9 @@ class LoginViewModel : ViewModel() {
 
             return
         }
+    }
+
+    fun scanQr() {
+        scanQr.value = true
     }
 }

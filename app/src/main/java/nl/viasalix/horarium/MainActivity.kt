@@ -26,7 +26,7 @@ import org.jetbrains.anko.defaultSharedPreferences
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (!defaultSharedPreferences.contains("users")) {
+        if (!defaultSharedPreferences.contains(getString(R.string.SP_KEY_USERS))) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
