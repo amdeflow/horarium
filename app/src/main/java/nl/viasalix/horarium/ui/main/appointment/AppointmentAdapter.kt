@@ -17,7 +17,6 @@
 package nl.viasalix.horarium.ui.main.appointment
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.utils.DateUtils
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.util.Calendar
 
 class AppointmentAdapter(private var schedule: MutableList<Appointment>) :
@@ -36,11 +37,16 @@ class AppointmentAdapter(private var schedule: MutableList<Appointment>) :
         return AppointmentViewHolder(appointment)
     }
 
-    fun updateSchedule(newSchedule: List<Appointment>) {
-        val result = DiffUtil.calculateDiff(AppointmentDiffCallback(schedule, newSchedule))
-        schedule = newSchedule.toMutableList()
+    fun updateSchedule(newSchedule: List<Appointment>, onDoneCallback: () -> Unit) {
+        doAsync {
+            val result = DiffUtil.calculateDiff(AppointmentDiffCallback(schedule, newSchedule))
+            schedule = newSchedule.toMutableList()
 
-        result.dispatchUpdatesTo(this)
+            uiThread {
+                result.dispatchUpdatesTo(this@AppointmentAdapter)
+                onDoneCallback()
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: AppointmentViewHolder, position: Int) {

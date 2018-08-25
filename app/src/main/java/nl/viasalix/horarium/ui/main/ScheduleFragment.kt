@@ -89,8 +89,9 @@ class ScheduleFragment : Fragment() {
         recyclerView.itemAnimator = DefaultItemAnimator()
 
         viewModel.appointments.observe(this, Observer<MutableList<Appointment>> { appointments ->
-            viewAdapter.updateSchedule(appointments)
-            viewAdapter.notifyDataSetChanged()
+            viewAdapter.updateSchedule(appointments) {
+                viewAdapter.notifyDataSetChanged()
+            }
             recyclerView.recycledViewPool.clear()
         })
 
