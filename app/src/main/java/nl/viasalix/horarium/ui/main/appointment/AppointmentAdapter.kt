@@ -17,25 +17,30 @@
 package nl.viasalix.horarium.ui.main.appointment
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.utils.DateUtils
 import java.util.Calendar
 
-class AppointmentAdapter(private val schedule: MutableList<Appointment>) :
+class AppointmentAdapter(private var schedule: MutableList<Appointment>) :
     RecyclerView.Adapter<AppointmentViewHolder>() {
-
-    init {
-        schedule.sortWith(compareBy(Appointment::start))
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppointmentViewHolder {
         val appointment = LayoutInflater.from(parent.context).inflate(R.layout.appointment, parent, false)
         return AppointmentViewHolder(appointment)
+    }
+
+    fun updateSchedule(newSchedule: List<Appointment>) {
+        val result = DiffUtil.calculateDiff(AppointmentDiffCallback(schedule, newSchedule))
+        schedule = newSchedule.toMutableList()
+
+        result.dispatchUpdatesTo(this)
     }
 
     override fun onBindViewHolder(holder: AppointmentViewHolder, position: Int) {

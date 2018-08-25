@@ -62,13 +62,9 @@ class LoginActivity : AppCompatActivity() {
 
             if (result.contents !== null) {
                 try {
-                    Log.v("LoginActivity r.c", result.contents)
-
                     val qrContents = Gson().fromJson(result.contents, LoginQr::class.java)
                     viewModel.schoolName = qrContents.institution
                     viewModel.authCode = qrContents.code
-
-                    Log.v("LoginActivity vm", "trying to login with ${viewModel.schoolName} && ${viewModel.authCode}")
 
                     viewModel.tryLogin()
                 } catch (_: JsonParseException) {

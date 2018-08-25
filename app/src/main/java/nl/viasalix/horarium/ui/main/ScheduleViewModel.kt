@@ -16,16 +16,10 @@
 
 package nl.viasalix.horarium.ui.main
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import nl.viasalix.horarium.zermelo.model.Appointment
 
 class ScheduleViewModel : ViewModel() {
-    private val _data = MutableLiveData<String>()
-    val data: LiveData<String>
-        get() = _data
-
-    init {
-        _data.value = ""
-    }
+    val appointments = MutableLiveData<MutableList<Appointment>>()
 }
