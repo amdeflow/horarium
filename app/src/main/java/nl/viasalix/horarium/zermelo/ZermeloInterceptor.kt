@@ -21,8 +21,6 @@ import okhttp3.Response
 import javax.security.auth.login.LoginException
 
 class ZermeloInterceptor(var accessToken: String = "") : Interceptor {
-    lateinit var service: ZermeloService
-
     /**
      * intercept: Intercepts the request and adds an authentication header
      */
@@ -32,14 +30,6 @@ class ZermeloInterceptor(var accessToken: String = "") : Interceptor {
             .header("Authorization", "Bearer $accessToken")
             .build()
 
-        // Make the request
-        val response = chain.proceed(newRequest)
-
-        // If the response was unsuccessful
-        if (response.code() == 401 || response.code() == 403) {
-            throw LoginException()
-        }
-
-        return response
+        return chain.proceed(newRequest)
     }
 }

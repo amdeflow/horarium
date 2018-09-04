@@ -63,7 +63,6 @@ class ZermeloInstance(
             ).client(zermeloClient).build()
 
         zermeloService = retrofit.create(ZermeloService::class.java)
-        interceptor.service = zermeloService
     }
 
     fun getAppointments(
@@ -106,7 +105,6 @@ class ZermeloInstance(
             }
 
             override fun onFailure(call: Call<ZermeloResponse<Appointment>>?, t: Throwable?) {
-                Log.e("status", "(getAppointments) onFailure")
                 callback(null)
             }
         })

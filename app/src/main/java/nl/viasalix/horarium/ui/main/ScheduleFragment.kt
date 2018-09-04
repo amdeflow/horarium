@@ -44,9 +44,9 @@ import org.jetbrains.anko.uiThread
 import android.app.AlertDialog
 import android.text.InputType
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.widget.EditText
-import nl.viasalix.horarium.zermelo.ZermeloInterceptor
 
 class ScheduleFragment : Fragment() {
 
@@ -145,8 +145,15 @@ class ScheduleFragment : Fragment() {
             weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 selected"
 
             activity!!.selector("Please select a week", weeksText) { dialogInterface, i ->
-                viewModel.selectedWeek = weeks[i]
-                Log.d("selectedWeek", "set to weeks[$i]")
+                if (i < 7) viewModel.selectedWeek = weeks[i]
+                else {
+                    customWeekDialog { done, week ->
+                        if (done) {
+                            viewModel.selectedWeek = week
+                            refresh()
+                        }
+                    }
+                }
 
                 refresh()
             }
@@ -157,31 +164,33 @@ class ScheduleFragment : Fragment() {
         return binding.root
     }
 
-    private fun customWeekDialog(onDoneCallback: (String) -> Unit) {
-        val builder = AlertDialog.Builder(context)
+    private fun customWeekDialog(onDoneCallback: (Boolean, Int) -> Unit) {
+        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.ThemeOverlay_MaterialComponents_Dialog))
         builder.setTitle("Enter a week number")
 
         val input = EditText(context)
+        input.inputType = InputType.TYPE_CLASS_NUMBER
+        input.maxWidth = 2
 
-        input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         builder.setView(input)
 
         builder.setPositiveButton(getString(android.R.string.ok)) { _, _ ->
-            onDoneCallback(input.text.toString())
+            if (input.text.toString().toInt() >= 0)
+                onDoneCallback(true, input.text.toString().toInt())
+            else
+                customWeekDialog(onDoneCallback)
         }
 
         builder.setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
             dialog.cancel()
 
-            onDoneCallback("")
+            onDoneCallback(false, -1)
         }
 
         builder.show()
     }
 
     private fun refresh() {
-        Log.d("status", "getting appointments")
-
         instance.getAppointments(viewModel.selectedWeek) { appointments ->
             if (appointments != null) {
                 doAsync {
@@ -189,18 +198,9 @@ class ScheduleFragment : Fragment() {
                         db.appointmentDao().insertAppointment(appointment)
                     }
 
-                    uiThread {
-                        Log.d("status", "viewing appointments")
-                    }
-
                     viewAppointments()
-
-                    uiThread {
-                        Log.d("status", "done viewing appointments")
-                    }
                 }
             } else {
-                Log.d("status", "getAppointments returned null")
                 viewAppointments()
             }
         }
