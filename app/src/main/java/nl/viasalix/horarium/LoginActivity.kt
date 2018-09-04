@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -16,11 +17,16 @@ import com.google.zxing.integration.android.IntentIntegrator
 import nl.viasalix.horarium.databinding.LoginActivityBinding
 import nl.viasalix.horarium.ui.login.LoginQr
 import nl.viasalix.horarium.ui.login.LoginViewModel
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.defaultSharedPreferences
+import org.jetbrains.anko.design.longSnackbar
 import org.jetbrains.anko.longToast
+import org.jetbrains.anko.noButton
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.yesButton
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var view: View
     private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +59,8 @@ class LoginActivity : AppCompatActivity() {
 
         // Set the focus on the 'school name' field
         binding.root.findViewById<EditText>(R.id.schoolName).requestFocus()
+
+        view = binding.root
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

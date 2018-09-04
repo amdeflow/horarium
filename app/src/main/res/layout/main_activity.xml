@@ -40,7 +40,7 @@ limitations under the License.
         app:navigationIcon="@drawable/ic_twotone_menu_24dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/weekSelector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_twotone_calendar_view_day_24dp"

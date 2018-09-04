@@ -17,6 +17,7 @@
 package nl.viasalix.horarium.zermelo
 
 import android.net.Uri
+import android.util.Log
 import com.google.gson.GsonBuilder
 import nl.viasalix.horarium.zermelo.model.Announcement
 import nl.viasalix.horarium.zermelo.model.Appointment
@@ -66,8 +67,9 @@ class ZermeloInstance(
     }
 
     fun getAppointments(
-        from: Date? = DateUtils.startOfWeek(),
-        till: Date? = DateUtils.endOfWeek(),
+        week: Int,
+        from: Date? = DateUtils.startOfWeek(week),
+        till: Date? = DateUtils.endOfWeek(week),
         modifiedSince: Date? = null,
         valid: Boolean? = null,
         cancelled: Boolean? = null,
@@ -100,16 +102,11 @@ class ZermeloInstance(
                 call: Call<ZermeloResponse<Appointment>>?,
                 response: Response<ZermeloResponse<Appointment>>?
             ) {
-                if (response != null) {
-                    if (response.isSuccessful) {
-                        callback(response.body()?.response?.data)
-                    } else {
-                        callback(null)
-                    }
-                }
+                callback(response?.body()?.response?.data)
             }
 
             override fun onFailure(call: Call<ZermeloResponse<Appointment>>?, t: Throwable?) {
+                Log.e("status", "(getAppointments) onFailure")
                 callback(null)
             }
         })
@@ -202,5 +199,9 @@ class ZermeloInstance(
         })
     }
 
-    fun getAccessToken(): String = interceptor.accessToken
+    val accessToken: String
+        get() = interceptor.accessToken
+
+    val ginterceptor: ZermeloInterceptor
+        get() = interceptor
 }

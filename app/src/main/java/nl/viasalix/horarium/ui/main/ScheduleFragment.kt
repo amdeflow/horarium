@@ -18,7 +18,6 @@ package nl.viasalix.horarium.ui.main
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +39,14 @@ import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.utils.DateUtils
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.selector
 import org.jetbrains.anko.uiThread
+import android.app.AlertDialog
+import android.text.InputType
+import android.util.Log
+import android.view.MenuItem
+import android.widget.EditText
+import nl.viasalix.horarium.zermelo.ZermeloInterceptor
 
 class ScheduleFragment : Fragment() {
 
@@ -53,6 +59,15 @@ class ScheduleFragment : Fragment() {
     private lateinit var viewAdapter: AppointmentAdapter
     private lateinit var db: HorariumDatabase
     private lateinit var instance: ZermeloInstance
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d("statusu", "optionsItemSelected")
+
+        return when (item.itemId) {
+            R.id.refresh -> { refresh(); true }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -88,19 +103,53 @@ class ScheduleFragment : Fragment() {
         recyclerView.adapter = viewAdapter
         recyclerView.itemAnimator = DefaultItemAnimator()
 
-        viewModel.appointments.observe(this, Observer<MutableList<Appointment>> { appointments ->
+        viewModel.schedule.observe(this, Observer<MutableList<Appointment>> { appointments ->
             viewAdapter.updateSchedule(appointments) {
                 viewAdapter.notifyDataSetChanged()
             }
             recyclerView.recycledViewPool.clear()
         })
 
-        activity?.findViewById<FloatingActionButton>(R.id.floatingActionButton)?.setOnClickListener {
-            val schedule = viewModel.appointments.value
-            if (schedule?.size!! > 0)
-                schedule.removeAt(schedule.size - 1)
+        activity?.findViewById<FloatingActionButton>(R.id.weekSelector)?.setOnClickListener {
+            val weeks = listOf(
+                DateUtils.threeWeeksAgo(),
+                DateUtils.twoWeeksAgo(),
+                DateUtils.previousWeek(),
+                DateUtils.currentWeek(),
+                DateUtils.nextWeek(),
+                DateUtils.inTwoWeeks(),
+                DateUtils.inThreeWeeks()
+            )
 
-            viewModel.appointments.value = schedule
+            var selectedIndex = 7
+
+            for (week in weeks) {
+                if (week == viewModel.selectedWeek) {
+                    selectedIndex = weeks.indexOf(week)
+                    break
+                }
+            }
+
+            val weeksText = mutableListOf(
+                "Three weeks ago (${weeks[0]})",
+                "Two weeks ago (${weeks[1]})",
+                "One week ago (${weeks[2]})",
+                "This week (${weeks[3]})",
+                "Next week (${weeks[4]})",
+                "In two weeks (${weeks[5]})",
+                "In three weeks (${weeks[6]})",
+                "Custom week"
+            )
+
+            if (selectedIndex == 7) weeksText[7] = "${weeksText[7]} (${viewModel.selectedWeek})"
+            weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 selected"
+
+            activity!!.selector("Please select a week", weeksText) { dialogInterface, i ->
+                viewModel.selectedWeek = weeks[i]
+                Log.d("selectedWeek", "set to weeks[$i]")
+
+                refresh()
+            }
         }
 
         refresh()
@@ -108,17 +157,50 @@ class ScheduleFragment : Fragment() {
         return binding.root
     }
 
+    private fun customWeekDialog(onDoneCallback: (String) -> Unit) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Enter a week number")
+
+        val input = EditText(context)
+
+        input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        builder.setView(input)
+
+        builder.setPositiveButton(getString(android.R.string.ok)) { _, _ ->
+            onDoneCallback(input.text.toString())
+        }
+
+        builder.setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
+            dialog.cancel()
+
+            onDoneCallback("")
+        }
+
+        builder.show()
+    }
+
     private fun refresh() {
-        instance.getAppointments { appointments ->
+        Log.d("status", "getting appointments")
+
+        instance.getAppointments(viewModel.selectedWeek) { appointments ->
             if (appointments != null) {
                 doAsync {
                     for (appointment in appointments) {
                         db.appointmentDao().insertAppointment(appointment)
                     }
 
+                    uiThread {
+                        Log.d("status", "viewing appointments")
+                    }
+
                     viewAppointments()
+
+                    uiThread {
+                        Log.d("status", "done viewing appointments")
+                    }
                 }
             } else {
+                Log.d("status", "getAppointments returned null")
                 viewAppointments()
             }
         }
@@ -126,9 +208,14 @@ class ScheduleFragment : Fragment() {
 
     private fun viewAppointments() {
         doAsync {
-            val dbAppointments = db.appointmentDao()
-                .getAppointmentsFromTill(DateUtils.startOfWeek().time / 1000, DateUtils.endOfWeek().time / 1000)
-            uiThread { viewModel.appointments.value = dbAppointments.sortedWith(compareBy(Appointment::start)).toMutableList() }
+            val dbAppointments = db.appointmentDao().getAppointmentsFromTill(
+                DateUtils.startOfWeek(viewModel.selectedWeek).time / 1000,
+                DateUtils.endOfWeek(viewModel.selectedWeek).time / 1000
+            )
+
+            uiThread {
+                viewModel.schedule.value = dbAppointments.sortedWith(compareBy(Appointment::start)).toMutableList()
+            }
         }
     }
 }

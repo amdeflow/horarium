@@ -20,6 +20,7 @@ limitations under the License.
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/refresh"
         android:icon="@drawable/ic_twotone_refresh_24dp"
         android:title="Refresh"
         app:showAsAction="always" />
