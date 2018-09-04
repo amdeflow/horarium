@@ -43,10 +43,7 @@ import org.jetbrains.anko.selector
 import org.jetbrains.anko.uiThread
 import android.app.AlertDialog
 import android.text.InputType
-import android.util.Log
 import android.view.ContextThemeWrapper
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.EditText
 
@@ -216,7 +213,17 @@ class ScheduleFragment : Fragment() {
 
             uiThread {
                 viewModel.schedule.value = dbAppointments.sortedWith(compareBy(Appointment::start)).toMutableList()
+
+                if (viewModel.selectedWeek.value == DateUtils.currentWeek()) {
+                    scrollToToday()
+                }
             }
         }
+    }
+
+    private fun scrollToToday() {
+        val firstToday = viewModel.schedule.value?.find { android.text.format.DateUtils.isToday(it.start * 1000) }
+        val position = viewModel.schedule.value?.indexOf(firstToday)
+        view?.findViewById<RecyclerView>(R.id.scheduleRecyclerView)?.scrollToPosition(position!!)
     }
 }
