@@ -110,6 +110,8 @@ class ScheduleFragment : Fragment() {
             recyclerView.recycledViewPool.clear()
         })
 
+        viewModel.selectedWeek.observe(this, Observer<Int> { _ -> refresh() })
+
         activity?.findViewById<FloatingActionButton>(R.id.weekSelector)?.setOnClickListener {
             val weeks = listOf(
                 DateUtils.threeWeeksAgo(),
@@ -124,7 +126,7 @@ class ScheduleFragment : Fragment() {
             var selectedIndex = 7
 
             for (week in weeks) {
-                if (week == viewModel.selectedWeek) {
+                if (week == viewModel.selectedWeek.value!!) {
                     selectedIndex = weeks.indexOf(week)
                     break
                 }
@@ -145,21 +147,16 @@ class ScheduleFragment : Fragment() {
             weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 selected"
 
             activity!!.selector("Please select a week", weeksText) { dialogInterface, i ->
-                if (i < 7) viewModel.selectedWeek = weeks[i]
+                if (i < 7) viewModel.selectedWeek.value = weeks[i]
                 else {
                     customWeekDialog { done, week ->
                         if (done) {
-                            viewModel.selectedWeek = week
-                            refresh()
+                            viewModel.selectedWeek.value = week
                         }
                     }
                 }
-
-                refresh()
             }
         }
-
-        refresh()
 
         return binding.root
     }
@@ -191,7 +188,7 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun refresh() {
-        instance.getAppointments(viewModel.selectedWeek) { appointments ->
+        instance.getAppointments(viewModel.selectedWeek.value!!) { appointments ->
             if (appointments != null) {
                 doAsync {
                     for (appointment in appointments) {
@@ -209,8 +206,8 @@ class ScheduleFragment : Fragment() {
     private fun viewAppointments() {
         doAsync {
             val dbAppointments = db.appointmentDao().getAppointmentsFromTill(
-                DateUtils.startOfWeek(viewModel.selectedWeek).time / 1000,
-                DateUtils.endOfWeek(viewModel.selectedWeek).time / 1000
+                DateUtils.startOfWeek(viewModel.selectedWeek.value!!).time / 1000,
+                DateUtils.endOfWeek(viewModel.selectedWeek.value!!).time / 1000
             )
 
             uiThread {

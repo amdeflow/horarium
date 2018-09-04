@@ -23,5 +23,9 @@ import java.util.Calendar
 
 class ScheduleViewModel : ViewModel() {
     val schedule = MutableLiveData<MutableList<Appointment>>()
-    var selectedWeek: Int = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)
+    var selectedWeek = MutableLiveData<Int>()
+
+    init {
+        selectedWeek.value = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)
+    }
 }
