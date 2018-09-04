@@ -149,7 +149,7 @@ class ScheduleFragment : Fragment() {
                 "Custom week"
             )
 
-            if (selectedIndex == 7) weeksText[7] = "${weeksText[7]} (${viewModel.selectedWeek})"
+            if (selectedIndex == 7) weeksText[7] = "${weeksText[7]} (${viewModel.selectedWeek.value})"
             weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 selected"
 
             activity!!.selector("Please select a week", weeksText) { _, i ->
