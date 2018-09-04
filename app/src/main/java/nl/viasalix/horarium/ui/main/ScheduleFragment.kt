@@ -45,6 +45,8 @@ import android.app.AlertDialog
 import android.text.InputType
 import android.util.Log
 import android.view.ContextThemeWrapper
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.EditText
 
@@ -61,12 +63,16 @@ class ScheduleFragment : Fragment() {
     private lateinit var instance: ZermeloInstance
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d("statusu", "optionsItemSelected")
-
         return when (item.itemId) {
             R.id.refresh -> { refresh(); true }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -146,13 +152,11 @@ class ScheduleFragment : Fragment() {
             if (selectedIndex == 7) weeksText[7] = "${weeksText[7]} (${viewModel.selectedWeek})"
             weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 selected"
 
-            activity!!.selector("Please select a week", weeksText) { dialogInterface, i ->
+            activity!!.selector("Please select a week", weeksText) { _, i ->
                 if (i < 7) viewModel.selectedWeek.value = weeks[i]
-                else {
-                    customWeekDialog { done, week ->
-                        if (done) {
-                            viewModel.selectedWeek.value = week
-                        }
+                else customWeekDialog { done, week ->
+                    if (done) {
+                        viewModel.selectedWeek.value = week
                     }
                 }
             }

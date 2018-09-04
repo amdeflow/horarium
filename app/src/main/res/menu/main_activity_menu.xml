@@ -24,7 +24,4 @@ limitations under the License.
         android:icon="@drawable/ic_twotone_refresh_24dp"
         android:title="Refresh"
         app:showAsAction="always" />
-    <item
-        android:title="Force refresh"
-        app:showAsAction="never" />
 </menu>
