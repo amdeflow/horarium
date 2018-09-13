@@ -222,8 +222,10 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun scrollToToday() {
-        val firstToday = viewModel.schedule.value?.find { android.text.format.DateUtils.isToday(it.start * 1000) }
-        val position = viewModel.schedule.value?.indexOf(firstToday)
-        view?.findViewById<RecyclerView>(R.id.scheduleRecyclerView)?.scrollToPosition(position!!)
+        val firstToday = viewModel.schedule.value?.find { DateUtils.isToday(it.start * 1000) }
+        if (firstToday != null ) {
+            val position = viewModel.schedule.value?.indexOf(firstToday)
+            if (position != null) view?.findViewById<RecyclerView>(R.id.scheduleRecyclerView)?.scrollToPosition(position)
+        }
     }
 }
