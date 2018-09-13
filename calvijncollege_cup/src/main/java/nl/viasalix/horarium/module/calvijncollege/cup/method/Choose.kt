@@ -29,7 +29,8 @@ data class Choose(override val success: Boolean) : CUPMethod<Any>() {
         fun execute(cupClient: CUPClient, internalId: Int): Choose {
             // TODO: Check if successfully signed in
 
-            val call = cupClient.createCall("RoosterForm.aspx", "POST", mapOf(
+            val call = cupClient.createCall(
+                "RoosterForm.aspx", "POST", mapOf(
                     "__EVENTARGUMENT" to internalId.toString(),
                     "__SCROLLPOSITIONX" to "0",
                     "__SCROLLPOSITIONY" to "0",
@@ -37,7 +38,8 @@ data class Choose(override val success: Boolean) : CUPMethod<Any>() {
                     "txtLLtekst" to "",
                     "hiddenlesnr" to "",
                     "rememberClickY" to "185"
-            ), AspFieldMode.EXCEPT_EVENTARGUMENT)
+                ), AspFieldMode.EXCEPT_EVENTARGUMENT
+            )
             val response = call.execute()
 
             if (response?.body() == null) return Choose(false).also { it.failReason = "E_Choose_BodyNull" }
@@ -49,9 +51,9 @@ data class Choose(override val success: Boolean) : CUPMethod<Any>() {
                 val img = prekolomImgs.first()
                 if (img.attr("src")!!.contentEquals("images/infoError.png") && img.hasAttr("onmouseover")) {
                     val errorMessage = img
-                            .attr("onmouseover")
-                            .replace("showHelpText('", "")
-                            .replace("',event);", "")
+                        .attr("onmouseover")
+                        .replace("showHelpText('", "")
+                        .replace("',event);", "")
                     return Choose(false).also { it.failReason = errorMessage }
                 }
             }

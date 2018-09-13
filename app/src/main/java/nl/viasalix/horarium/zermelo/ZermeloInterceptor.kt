@@ -18,7 +18,6 @@ package nl.viasalix.horarium.zermelo
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import javax.security.auth.login.LoginException
 
 class ZermeloInterceptor(var accessToken: String = "") : Interceptor {
     /**

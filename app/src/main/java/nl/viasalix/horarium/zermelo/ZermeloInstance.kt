@@ -17,7 +17,6 @@
 package nl.viasalix.horarium.zermelo
 
 import android.net.Uri
-import android.util.Log
 import com.google.gson.GsonBuilder
 import nl.viasalix.horarium.zermelo.model.Announcement
 import nl.viasalix.horarium.zermelo.model.Appointment

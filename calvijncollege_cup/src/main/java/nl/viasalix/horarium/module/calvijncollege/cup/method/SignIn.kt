@@ -31,9 +31,9 @@ class SignIn(override val success: Boolean, override val result: String = "") : 
             }
 
             val extraFields = mapOf(
-                    "_nameDropDownList" to cupClient.session.internalUsernameIdentifier,
-                    "_pincodeTextBox" to cupClient.session.pin,
-                    "_loginButton" to "Login"
+                "_nameDropDownList" to cupClient.session.internalUsernameIdentifier,
+                "_pincodeTextBox" to cupClient.session.pin,
+                "_loginButton" to "Login"
             )
             val call = cupClient.createCall("LogInWebForm.aspx", "POST", extraFields)
             val response = call.execute()

@@ -23,13 +23,14 @@ import org.jsoup.Jsoup
 /**
  * @param result A [Map] where the key is the internal username identifier. The value is meant to be presented to the user.
  */
-class SearchUsers(override val success: Boolean, override val result: Map<String, String> = emptyMap()) : CUPMethod<Map<String, String>>() {
+class SearchUsers(override val success: Boolean, override val result: Map<String, String> = emptyMap()) :
+    CUPMethod<Map<String, String>>() {
     companion object {
         fun execute(cupClient: CUPClient, surnameFirstLetters: String): SearchUsers {
             val extraFields = mapOf(
-                    "_nameTextBox" to surnameFirstLetters,
-                    "_zoekButton" to "Zoek",
-                    "numberOfLettersField" to "3"
+                "_nameTextBox" to surnameFirstLetters,
+                "_zoekButton" to "Zoek",
+                "numberOfLettersField" to "3"
             )
             val call = cupClient.createCall("Default.aspx", "POST", extraFields)
             val response = call.execute()
@@ -41,12 +42,10 @@ class SearchUsers(override val success: Boolean, override val result: Map<String
             cupClient.session.extractAspFields(doc)
 
             val names = doc
-                    .select("#_nameDropDownList option")
-                    .map { it.`val`() to it.text() }.toMap()
+                .select("#_nameDropDownList option")
+                .map { it.`val`() to it.text() }.toMap()
 
             return SearchUsers(true, names)
         }
     }
-
-
 }

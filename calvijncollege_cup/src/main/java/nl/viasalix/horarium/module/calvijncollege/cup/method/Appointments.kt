@@ -24,13 +24,13 @@ import nl.viasalix.horarium.module.calvijncollege.cup.data.Choice
 import nl.viasalix.horarium.module.calvijncollege.cup.data.Option
 import org.jsoup.Jsoup
 import java.text.ParseException
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
 
 /**
  * @param result List of available [Appointment]s.
  */
-class Appointments(override val success: Boolean, override val result: List<Appointment> = emptyList()) : CUPMethod<List<Appointment>>() {
+class Appointments(override val success: Boolean, override val result: List<Appointment> = emptyList()) :
+    CUPMethod<List<Appointment>>() {
     companion object {
         fun execute(cupClient: CUPClient): Appointments {
             // TODO: Check if successfully signed in
@@ -69,11 +69,11 @@ class Appointments(override val success: Boolean, override val result: List<Appo
                             // Start and end time
                             if (startDate != null) {
                                 val fromToRaw = domAppointmentColumn
-                                        .selectFirst("> p")
-                                        .attr("onmouseover")
-                                        .replace("showHelpText(\"", "")
-                                        .replace(",event);", "")
-                                        .split('-')
+                                    .selectFirst("> p")
+                                    .attr("onmouseover")
+                                    .replace("showHelpText(\"", "")
+                                    .replace(",event);", "")
+                                    .split('-')
                                 if (fromToRaw.size == 2) {
                                     try {
                                         val from = CUPClient.appointmentTimeFormatter.parse(fromToRaw[0])
@@ -115,7 +115,9 @@ class Appointments(override val success: Boolean, override val result: List<Appo
                     }
                 }
 
-                if (startDate == null) return Appointments(false).also { it.failReason = "E_Appointments_StartDateNull" }
+                if (startDate == null) return Appointments(false).also {
+                    it.failReason = "E_Appointments_StartDateNull"
+                }
 
                 appointments += Appointment(startDate!!, endDate, slot, selectedOption, fixed, choices)
             }

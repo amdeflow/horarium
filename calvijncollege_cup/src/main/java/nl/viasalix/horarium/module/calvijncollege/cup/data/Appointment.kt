@@ -16,7 +16,7 @@
 
 package nl.viasalix.horarium.module.calvijncollege.cup.data
 
-import java.util.*
+import java.util.Date
 
 /**
  * @param start Start date.
@@ -26,4 +26,11 @@ import java.util.*
  * @param fixed `true` if this appointment is fixed. This probably means that no choices are available.
  * @param choices List of available [Choice]s.
  */
-data class Appointment(val start: Date, val end: Date?, val slot: Int, val selectedOption: Option?, val fixed: Boolean, val choices: List<Choice>)
+data class Appointment(
+    val start: Date,
+    val end: Date?,
+    val slot: Int,
+    val selectedOption: Option?,
+    val fixed: Boolean,
+    val choices: List<Choice>
+)

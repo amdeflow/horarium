@@ -41,7 +41,12 @@ data class Session(val token: String, var internalUsernameIdentifier: String = "
         putElementValueIfPresent(doc, "__EVENTVALIDATION", aspFields)
     }
 
-    private fun putElementValueIfPresent(doc: Document, id: String, map: MutableMap<String, String>, defaultValue: String = "") {
+    private fun putElementValueIfPresent(
+        doc: Document,
+        id: String,
+        map: MutableMap<String, String>,
+        defaultValue: String = ""
+    ) {
         doc.getElementById(id).also {
             map[id] = if (it == null) defaultValue else it.`val`()
         }

@@ -23,15 +23,17 @@ import nl.viasalix.horarium.R
 import nl.viasalix.horarium.module.ModuleStatusReport
 
 class ModuleItemAdapter(
-        private val moduleStatusReports: Array<ModuleStatusReport>,
-        private val strInstalled: String,
-        private val strNotInstalled: String
+    private val moduleStatusReports: Array<ModuleStatusReport>,
+    private val strInstalled: String,
+    private val strNotInstalled: String
 ) : RecyclerView.Adapter<ModuleItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModuleItemViewHolder {
-        return ModuleItemViewHolder(LayoutInflater
+        return ModuleItemViewHolder(
+            LayoutInflater
                 .from(parent.context)
-                .inflate(R.layout.module_item, parent, false))
+                .inflate(R.layout.module_item, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: ModuleItemViewHolder, position: Int) {
@@ -40,8 +42,8 @@ class ModuleItemAdapter(
         holder.title.text = report.displayName
         holder.activationState.isChecked = report.activated
         holder.installationState.text =
-                if (report.installed) strInstalled
-                else strNotInstalled
+            if (report.installed) strInstalled
+            else strNotInstalled
     }
 
     override fun getItemCount(): Int = moduleStatusReports.size

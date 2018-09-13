@@ -16,11 +16,16 @@
 
 package nl.viasalix.horarium.ui.main
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.InputType
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -41,11 +46,6 @@ import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.selector
 import org.jetbrains.anko.uiThread
-import android.app.AlertDialog
-import android.text.InputType
-import android.view.ContextThemeWrapper
-import android.view.MenuItem
-import android.widget.EditText
 
 class ScheduleFragment : Fragment() {
 
@@ -61,7 +61,9 @@ class ScheduleFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.refresh -> { refresh(); true }
+            R.id.refresh -> {
+                refresh(); true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -223,7 +225,7 @@ class ScheduleFragment : Fragment() {
 
     private fun scrollToToday() {
         val firstToday = viewModel.schedule.value?.find { DateUtils.isToday(it.start * 1000) }
-        if (firstToday != null ) {
+        if (firstToday != null) {
             val position = viewModel.schedule.value?.indexOf(firstToday)
             if (position != null) view?.findViewById<RecyclerView>(R.id.scheduleRecyclerView)?.scrollToPosition(position)
         }

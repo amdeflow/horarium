@@ -35,11 +35,13 @@ object ModuleManager {
 
     fun loadDefinitions(context: Context) {
         context.resources.openRawResource(R.raw.modules_per_institute).use {
-            modulesPerInstitute = gson.fromJson(InputStreamReader(it), object : TypeToken<Map<String, List<String>>>() {}.type)
+            modulesPerInstitute =
+                gson.fromJson(InputStreamReader(it), object : TypeToken<Map<String, List<String>>>() {}.type)
         }
 
         context.resources.openRawResource(R.raw.module_metadata).use {
-            moduleMetadata = gson.fromJson(InputStreamReader(it), object : TypeToken<Map<String, ModuleMetadata>>() {}.type)
+            moduleMetadata =
+                gson.fromJson(InputStreamReader(it), object : TypeToken<Map<String, ModuleMetadata>>() {}.type)
         }
     }
 
@@ -90,8 +92,14 @@ object ModuleManager {
 
                 if (userIdentifier != null) {
                     try {
-                        val userModuleInstance = Class.forName(className).asSubclass(HorariumUserModule::class.java).newInstance()
-                        userModuleInstance.init(context.getSharedPreferences(userIdentifier + "_module_$className", Context.MODE_PRIVATE))
+                        val userModuleInstance =
+                            Class.forName(className).asSubclass(HorariumUserModule::class.java).newInstance()
+                        userModuleInstance.init(
+                            context.getSharedPreferences(
+                                userIdentifier + "_module_$className",
+                                Context.MODE_PRIVATE
+                            )
+                        )
                         set.add(userModuleInstance)
                     } catch (e: Exception) {
                         Log.i(TAG, "Caught exception when instantiating the user module $className", e)

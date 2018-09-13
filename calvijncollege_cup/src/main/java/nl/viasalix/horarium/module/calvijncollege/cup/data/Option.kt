@@ -27,7 +27,15 @@ import org.jsoup.nodes.Element
  * @param info Information for this [Option]. Usually describes what will happen in this lesson.
  * @param availablePlaces Amount of available places. A negative number usually indicates that this option is full.
  */
-data class Option(val subject: String, val room: String, val teacher: String, val extra: String = "", val message: String = "", val info: String = "", val availablePlaces: Int = -1) {
+data class Option(
+    val subject: String,
+    val room: String,
+    val teacher: String,
+    val extra: String = "",
+    val message: String = "",
+    val info: String = "",
+    val availablePlaces: Int = -1
+) {
 
     enum class Pattern {
         Appointments,
@@ -87,9 +95,9 @@ data class Option(val subject: String, val room: String, val teacher: String, va
             val images = input.select("img")!!
             if (images.isNotEmpty()) {
                 info = images.first()
-                        .attr("onmouseover")
-                        .replace("showHelpText('", "")
-                        .replace("',event);", "")
+                    .attr("onmouseover")
+                    .replace("showHelpText('", "")
+                    .replace("',event);", "")
             }
 
             return Option(subject, room, teacher, extra, message, info, availablePlaces)

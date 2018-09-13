@@ -16,8 +16,8 @@
 
 package nl.viasalix.horarium
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import nl.viasalix.horarium.module.ModuleStatusReport
@@ -41,12 +41,16 @@ class ModuleInstallationActivity : AppCompatActivity() {
         }
 
         val statusReports = arrayOf(
-                ModuleStatusReport(true, "First Example Module", false),
-                ModuleStatusReport(false, "Second Example Module", false)
+            ModuleStatusReport(true, "First Example Module", false),
+            ModuleStatusReport(false, "Second Example Module", false)
         )
 
         viewManager = LinearLayoutManager(this)
-        viewAdapter = ModuleItemAdapter(statusReports, getString(R.string.already_downloaded), getString(R.string.must_be_downloaded))
+        viewAdapter = ModuleItemAdapter(
+            statusReports,
+            getString(R.string.already_downloaded),
+            getString(R.string.must_be_downloaded)
+        )
 
         recyclerView = findViewById<RecyclerView>(R.id.module_installation_recyclerView).apply {
             setHasFixedSize(true) // Improved performance. All items will have the same height.

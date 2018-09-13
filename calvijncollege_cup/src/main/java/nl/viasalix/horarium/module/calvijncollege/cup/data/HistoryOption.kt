@@ -16,7 +16,7 @@
 
 package nl.viasalix.horarium.module.calvijncollege.cup.data
 
-import java.util.*
+import java.util.Date
 
 /**
  * @param day Day of this historical option. Usually only contains day, month and year.

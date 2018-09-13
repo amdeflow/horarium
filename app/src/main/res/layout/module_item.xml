@@ -16,17 +16,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
     android:paddingStart="16dp"
+    android:paddingLeft="16dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="16dp"
     android:paddingRight="16dp"
-    android:paddingEnd="16dp">
+    android:paddingBottom="16dp">
 
     <ImageView
         android:id="@+id/module_item_icon"
@@ -36,27 +35,27 @@ limitations under the License.
 
     <TextView
         android:id="@+id/module_item_title"
-        android:text="module name"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="module name"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         app:layout_constraintLeft_toRightOf="@id/module_item_icon" />
 
     <TextView
         android:id="@+id/module_item_installationState"
-        android:text="installation state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/module_item_title"
-        app:layout_constraintLeft_toLeftOf="@id/module_item_title"/>
+        android:text="installation state"
+        app:layout_constraintLeft_toLeftOf="@id/module_item_title"
+        app:layout_constraintTop_toBottomOf="@id/module_item_title" />
 
     <!-- The CheckBox is not positioned completely correctly -->
     <CheckBox
         android:id="@+id/module_item_activationState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

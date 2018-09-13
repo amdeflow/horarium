@@ -17,16 +17,20 @@
 package nl.viasalix.horarium.module.calvijncollege.cup
 
 import nl.viasalix.horarium.module.calvijncollege.cup.data.Session
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.FormBody
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okio.Buffer
 import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
 
 class CUPClient(host: String) {
     private val baseUrl = HttpUrl.Builder()
-            .scheme("https")
-            .host(host)
-            .build()
+        .scheme("https")
+        .host(host)
+        .build()
 
     private lateinit var client: OkHttpClient
     lateinit var session: Session
@@ -34,12 +38,12 @@ class CUPClient(host: String) {
     fun init() {
         val plainCookieJar = PlainCookieJar()
         client = OkHttpClient.Builder()
-                .cookieJar(plainCookieJar)
-                .build()
+            .cookieJar(plainCookieJar)
+            .build()
 
         val request = Request.Builder()
-                .url(baseUrl)
-                .build()
+            .url(baseUrl)
+            .build()
 
         val response = client.newCall(request).execute()
         val token = response.request().url().pathSegments()[0]
@@ -55,14 +59,19 @@ class CUPClient(host: String) {
     fun init(loadedSession: Session) {
         session = loadedSession
         client = OkHttpClient.Builder()
-                .cookieJar(session)
-                .build()
+            .cookieJar(session)
+            .build()
     }
 
-    fun createCall(endpoint: String, method: String = "GET", extraFields: Map<String, String> = emptyMap(), aspFieldMode: AspFieldMode = AspFieldMode.ALL): Call {
+    fun createCall(
+        endpoint: String,
+        method: String = "GET",
+        extraFields: Map<String, String> = emptyMap(),
+        aspFieldMode: AspFieldMode = AspFieldMode.ALL
+    ): Call {
         val urlBuilder = baseUrl.newBuilder()
-                .addPathSegments(session.token)
-                .addPathSegment(endpoint)
+            .addPathSegments(session.token)
+            .addPathSegment(endpoint)
 
         val requestBuilder = Request.Builder()
 
@@ -75,11 +84,11 @@ class CUPClient(host: String) {
 
         if (method.contentEquals("POST")) {
             val body = FormBody.Builder()
-                    .also { builder ->
-                        session.filteredAspFields(aspFieldMode).forEach { builder.add(it.key, it.value) }
-                        extraFields.forEach { builder.add(it.key, it.value) }
-                    }
-                    .build()
+                .also { builder ->
+                    session.filteredAspFields(aspFieldMode).forEach { builder.add(it.key, it.value) }
+                    extraFields.forEach { builder.add(it.key, it.value) }
+                }
+                .build()
 
 
             requestBuilder.post(body)
@@ -92,8 +101,8 @@ class CUPClient(host: String) {
         }
 
         val request = requestBuilder
-                .url(urlBuilder.build())
-                .build()
+            .url(urlBuilder.build())
+            .build()
 
         return client.newCall(request)
     }

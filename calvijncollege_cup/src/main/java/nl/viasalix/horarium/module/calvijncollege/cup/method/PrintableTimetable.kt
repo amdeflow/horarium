@@ -23,13 +23,16 @@ import nl.viasalix.horarium.module.calvijncollege.cup.data.HistoryOption
 import nl.viasalix.horarium.module.calvijncollege.cup.data.Option
 import org.jsoup.Jsoup
 import java.text.ParseException
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
+import java.util.HashMap
 
 /**
  * @param result A [Map] where the key is the week number and where the value is a [List] of [HistoryOption]s.
  */
-class PrintableTimetable(override val success: Boolean, override val result: Map<Int, List<HistoryOption>> = emptyMap()) : CUPMethod<Map<Int, List<HistoryOption>>>() {
+class PrintableTimetable(
+    override val success: Boolean,
+    override val result: Map<Int, List<HistoryOption>> = emptyMap()
+) : CUPMethod<Map<Int, List<HistoryOption>>>() {
     companion object {
         fun execute(cupClient: CUPClient): PrintableTimetable {
             // TODO: Check if successfully signed in
@@ -42,12 +45,16 @@ class PrintableTimetable(override val success: Boolean, override val result: Map
 
             // A request to RoosterForm.aspx is executed, but a HTTP redirect will be performed by the CUPweb server
             // This request is used to make the most wide selection of the history
-            val baseSelectionCall = cupClient.createCall("RoosterForm.aspx", "POST", mapOf(
+            val baseSelectionCall = cupClient.createCall(
+                "RoosterForm.aspx", "POST", mapOf(
                     "ToPrintableRooster" to "Printbaar Rooster"
-            ))
+                )
+            )
             val baseSelectionResult = baseSelectionCall.execute()
 
-            if (baseSelectionResult?.body() == null) return PrintableTimetable(false).also { it.failReason = "E_PrintableTimetable_BaseBodyNull" }
+            if (baseSelectionResult?.body() == null) return PrintableTimetable(false).also {
+                it.failReason = "E_PrintableTimetable_BaseBodyNull"
+            }
             val baseSelectionDoc = Jsoup.parse(baseSelectionResult.body()!!.string())
             cupClient.session.extractAspFields(baseSelectionDoc)
 
@@ -55,19 +62,23 @@ class PrintableTimetable(override val success: Boolean, override val result: Map
             val to = baseSelectionDoc.getElementById("dropDatumTot").select("> option").first().`val`()
 
             // This is the request that requests the 'real' history data
-            val realHistoryCall = cupClient.createCall("PrintableRooster.aspx", "POST", mapOf(
+            val realHistoryCall = cupClient.createCall(
+                "PrintableRooster.aspx", "POST", mapOf(
                     "dropDatumVan" to from,
                     "dropDatumTot" to to
-            ))
+                )
+            )
             val realHistoryResponse = realHistoryCall.execute()
 
-            if (realHistoryResponse?.body() == null) return PrintableTimetable(false).also { it.failReason = "E_PrintableTimetable_RealHistoryBodyNull" }
+            if (realHistoryResponse?.body() == null) return PrintableTimetable(false).also {
+                it.failReason = "E_PrintableTimetable_RealHistoryBodyNull"
+            }
             val realHistoryDoc = Jsoup.parse(realHistoryResponse.body()!!.string())
             cupClient.session.extractAspFields(realHistoryDoc)
 
             val historyOptions: MutableMap<Int, MutableList<HistoryOption>> = HashMap()
             val historyTable = realHistoryDoc.select(".StandaardTabel").first()
-                    ?: return PrintableTimetable(false).also { it.failReason = "E_PrintableTimetable_InvalidDocument" }
+                ?: return PrintableTimetable(false).also { it.failReason = "E_PrintableTimetable_InvalidDocument" }
 
             var justFoundWeekMark = false
             var lastKnownDate: Date?
