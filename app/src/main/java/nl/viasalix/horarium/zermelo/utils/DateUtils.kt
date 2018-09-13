@@ -93,6 +93,7 @@ object DateUtils {
     fun nextWeek() = with(Calendar.getInstance()) { add(Calendar.WEEK_OF_YEAR, 1); return@with get(Calendar.WEEK_OF_YEAR) }
     fun inTwoWeeks() = with(Calendar.getInstance()) { add(Calendar.WEEK_OF_YEAR, 2); return@with get(Calendar.WEEK_OF_YEAR) }
     fun inThreeWeeks() = with(Calendar.getInstance()) { add(Calendar.WEEK_OF_YEAR, 3); return@with get(Calendar.WEEK_OF_YEAR) }
+    fun isToday(timestamp: Long): Boolean = DateUtils.isToday(timestamp)
 
     class DateTypeAdapter : TypeAdapter<Date>() {
         override fun read(`in`: JsonReader): Date = unixSecondsToDate(`in`.nextLong())
