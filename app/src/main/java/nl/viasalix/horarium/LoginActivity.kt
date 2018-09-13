@@ -3,7 +3,6 @@ package nl.viasalix.horarium
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -17,13 +16,9 @@ import com.google.zxing.integration.android.IntentIntegrator
 import nl.viasalix.horarium.databinding.LoginActivityBinding
 import nl.viasalix.horarium.ui.login.LoginQr
 import nl.viasalix.horarium.ui.login.LoginViewModel
-import org.jetbrains.anko.alert
 import org.jetbrains.anko.defaultSharedPreferences
-import org.jetbrains.anko.design.longSnackbar
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.noButton
 import org.jetbrains.anko.toast
-import org.jetbrains.anko.yesButton
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var view: View
@@ -88,16 +83,20 @@ class LoginActivity : AppCompatActivity() {
         val userName = "user_${viewModel.authCode}"
 
         val userSp = getSharedPreferences(userName, Context.MODE_PRIVATE)
-        userSp.edit {
+        userSp.edit(commit = true) {
             putString(getString(R.string.SP_KEY_ACCESS_TOKEN), viewModel.accessToken)
             putString(getString(R.string.SP_KEY_SCHOOL_NAME), viewModel.schoolName)
+            putString(getString(R.string.SP_KEY_USER_IDENTIFIER), userName)
         }
 
+        // Must use .toMutableSet() because default value can be an immutable set
         val users = defaultSharedPreferences.getStringSet(getString(R.string.SP_KEY_USERS), emptySet())?.toMutableSet()
         users?.add(viewModel.authCode)
 
-        defaultSharedPreferences.edit { putStringSet(getString(R.string.SP_KEY_USERS), users) }
-        defaultSharedPreferences.edit { putString(getString(R.string.SP_KEY_CURRENT_USER), userName) }
+        defaultSharedPreferences.edit(commit = true) {
+            putStringSet(getString(R.string.SP_KEY_USERS), users)
+            putString(getString(R.string.SP_KEY_CURRENT_USER), userName)
+        }
 
         startActivity(Intent(this, MainActivity::class.java))
         finish()

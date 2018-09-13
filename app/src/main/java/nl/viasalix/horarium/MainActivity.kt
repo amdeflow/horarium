@@ -16,19 +16,53 @@
 
 package nl.viasalix.horarium
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
+import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.ui.main.ScheduleFragment
 import org.jetbrains.anko.defaultSharedPreferences
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var userSp: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (!defaultSharedPreferences.contains(getString(R.string.SP_KEY_USERS))) {
+        val currentUser = defaultSharedPreferences.getString(getString(R.string.SP_KEY_CURRENT_USER), null)
+
+        if (!defaultSharedPreferences.contains(getString(R.string.SP_KEY_USERS)) || currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
+
             finish()
+            super.onCreate(savedInstanceState)
+            return
+        }
+
+        userSp = getSharedPreferences(currentUser, Context.MODE_PRIVATE)
+
+        Log.d("HOR", "Checking modules state...")
+        if (ModuleManager.mustPromptModuleInstallation(this, userSp)) {
+            val availableModules = ModuleManager.listAvailableModules(this, userSp)
+            val activeModules = ModuleManager.listActiveModules(this, userSp)
+
+            startActivity(Intent(this, ModuleInstallationActivity::class.java).also {
+                it.putStringArrayListExtra("availableModules", ArrayList(availableModules))
+                it.putStringArrayListExtra("activeModules", ArrayList(activeModules))
+            })
+
+            finish()
+            super.onCreate(savedInstanceState)
+            return
+        }
+
+        userSp.edit(commit = true) {
+            putStringSet(getString(R.string.SP_KEY_MODULES_ACTIVE), setOf("calvijncollege_cup"))
         }
 
         super.onCreate(savedInstanceState)
@@ -40,6 +74,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         setSupportActionBar(findViewById(R.id.bottomAppBar))
+
+        AsyncTask.execute {
+            ModuleManager.initializeModules(this, userSp)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -21,5 +21,15 @@ limitations under the License.
     <string name="SP_KEY_CURRENT_USER" translatable="false">currentUser</string>
     <string name="SP_KEY_ACCESS_TOKEN" translatable="false">accessToken</string>
     <string name="SP_KEY_SCHOOL_NAME" translatable="false">schoolName</string>
+    <string name="SP_KEY_USER_IDENTIFIER" translatable="false">userIdentifier</string>
+    <string name="SP_KEY_MODULES_PROMPTED" translatable="false">modulesPrompted</string>
+    <string name="SP_KEY_MODULES_ACTIVE" translatable="false">modulesActive</string>
     <string name="SP_KEY_USERS" translatable="false">users</string>
+    <string name="title_calvijncollege_cup">Calvijn College: CUP</string>
+    <string name="already_downloaded">Already downloaded</string>
+    <string name="must_be_downloaded">Must be downloaded</string>
+    <string name="module_installation_instructions">Modules are available for your school. Select the modules you want to download and activate.</string>
+    <string name="module_installation">Module installation</string>
+    <string name="skip">Skip</string>
+    <string name="download_and_activate">Download and Activate</string>
 </resources>
