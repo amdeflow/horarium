@@ -1,0 +1,8 @@
+{
+  "calvijncollege_cup": {
+    "package": "nl.viasalix.horarium.module.calvijncollege.cup",
+    "user_modules": [
+      "CUPUserModule"
+    ]
+  }
+}
