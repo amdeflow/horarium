@@ -16,16 +16,12 @@
 
 package nl.viasalix.horarium.ui.main
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.text.InputType
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -39,6 +35,7 @@ import nl.viasalix.horarium.R
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
 import nl.viasalix.horarium.persistence.HorariumDatabase
 import nl.viasalix.horarium.ui.main.appointment.AppointmentAdapter
+import nl.viasalix.horarium.ui.main.dialogs.CustomWeekDialog
 import nl.viasalix.horarium.zermelo.ZermeloInstance
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.utils.DateUtils
@@ -57,7 +54,6 @@ class ScheduleFragment : Fragment() {
     private lateinit var viewModel: ScheduleViewModel
     private lateinit var viewAdapter: AppointmentAdapter
     private lateinit var db: HorariumDatabase
-    private lateinit var instance: ZermeloInstance
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -78,12 +74,9 @@ class ScheduleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProviders.of(this).get(ScheduleViewModel::class.java)
-
         val binding: ScheduleFragmentBinding =
             DataBindingUtil.inflate(inflater, R.layout.schedule_fragment, container, false)
         binding.setLifecycleOwner(this)
-        binding.viewModel = viewModel
 
         val currentUser = activity?.defaultSharedPreferences?.getString(getString(R.string.SP_KEY_CURRENT_USER), "")
         val currentUserSp = activity?.getSharedPreferences(currentUser, Context.MODE_PRIVATE)
@@ -96,17 +89,14 @@ class ScheduleFragment : Fragment() {
             "horarium-db_$currentUser"
         ).build()
 
-        instance = ZermeloInstance(
+        viewModel = ViewModelProviders.of(this).get(ScheduleViewModel::class.java)
+        viewModel.instance = ZermeloInstance(
             schoolName = schoolName!!,
             accessToken = accessToken!!
         )
+        binding.viewModel = viewModel
 
-        viewAdapter = AppointmentAdapter(emptyList<Appointment>().toMutableList())
-
-        recyclerView = binding.root.findViewById(R.id.scheduleRecyclerView)!!
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = viewAdapter
-        recyclerView.itemAnimator = DefaultItemAnimator()
+        setupRecyclerView(binding.root)
 
         viewModel.schedule.observe(this, Observer<MutableList<Appointment>> { appointments ->
             viewAdapter.updateSchedule(appointments) {
@@ -118,80 +108,67 @@ class ScheduleFragment : Fragment() {
         viewModel.selectedWeek.observe(this, Observer<Int> { _ -> refresh() })
 
         activity?.findViewById<FloatingActionButton>(R.id.weekSelector)?.setOnClickListener {
-            val weeks = listOf(
-                DateUtils.threeWeeksAgo(),
-                DateUtils.twoWeeksAgo(),
-                DateUtils.previousWeek(),
-                DateUtils.currentWeek(),
-                DateUtils.nextWeek(),
-                DateUtils.inTwoWeeks(),
-                DateUtils.inThreeWeeks()
-            )
-
-            var selectedIndex = 7
-
-            for (week in weeks) {
-                if (week == viewModel.selectedWeek.value!!) {
-                    selectedIndex = weeks.indexOf(week)
-                    break
-                }
-            }
-
-            val weeksText = mutableListOf(
-                "Three weeks ago (${weeks[0]})",
-                "Two weeks ago (${weeks[1]})",
-                "One week ago (${weeks[2]})",
-                "This week (${weeks[3]})",
-                "Next week (${weeks[4]})",
-                "In two weeks (${weeks[5]})",
-                "In three weeks (${weeks[6]})",
-                "Custom week"
-            )
-
-            if (selectedIndex == 7) weeksText[7] = "${weeksText[7]} (${viewModel.selectedWeek.value})"
-            weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 selected"
-
-            activity!!.selector("Please select a week", weeksText) { _, i ->
-                if (i < 7) viewModel.selectedWeek.value = weeks[i]
-                else customWeekDialog { done, week ->
-                    if (done) {
-                        viewModel.selectedWeek.value = week
-                    }
-                }
-            }
+            weekSelector()
         }
 
         return binding.root
     }
 
-    private fun customWeekDialog(onDoneCallback: (Boolean, Int) -> Unit) {
-        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.ThemeOverlay_MaterialComponents_Dialog))
-        builder.setTitle("Enter a week number")
+    private fun setupRecyclerView(view: View) {
+        viewAdapter = AppointmentAdapter(emptyList<Appointment>().toMutableList())
 
-        val input = EditText(context)
-        input.inputType = InputType.TYPE_CLASS_NUMBER
-        input.maxWidth = 2
+        recyclerView = view.findViewById(R.id.scheduleRecyclerView)!!
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = viewAdapter
+        recyclerView.itemAnimator = DefaultItemAnimator()
+    }
 
-        builder.setView(input)
+    private fun weekSelector() {
+        val weeks = listOf(
+            DateUtils.threeWeeksAgo(),
+            DateUtils.twoWeeksAgo(),
+            DateUtils.previousWeek(),
+            DateUtils.currentWeek(),
+            DateUtils.nextWeek(),
+            DateUtils.inTwoWeeks(),
+            DateUtils.inThreeWeeks()
+        )
 
-        builder.setPositiveButton(getString(android.R.string.ok)) { _, _ ->
-            if (input.text.toString().toInt() >= 0)
-                onDoneCallback(true, input.text.toString().toInt())
-            else
-                customWeekDialog(onDoneCallback)
+        var selectedIndex = 7
+
+        for (week in weeks) {
+            if (week == viewModel.selectedWeek.value!!) {
+                selectedIndex = weeks.indexOf(week)
+                break
+            }
         }
 
-        builder.setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
-            dialog.cancel()
+        val weeksText = mutableListOf(
+            "Three weeks ago (${weeks[0]})",
+            "Two weeks ago (${weeks[1]})",
+            "One week ago (${weeks[2]})",
+            "This week (${weeks[3]})",
+            "Next week (${weeks[4]})",
+            "In two weeks (${weeks[5]})",
+            "In three weeks (${weeks[6]})",
+            "Custom week"
+        )
 
-            onDoneCallback(false, -1)
+        if (selectedIndex == 7) weeksText[7] = "${weeksText[7]} (${viewModel.selectedWeek.value})"
+        weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 selected"
+
+        activity!!.selector("Please select a week", weeksText) { _, i ->
+            if (i < 7) viewModel.selectedWeek.value = weeks[i]
+            else CustomWeekDialog.show(context) { done, week ->
+                if (done) {
+                    viewModel.selectedWeek.value = week
+                }
+            }
         }
-
-        builder.show()
     }
 
     private fun refresh() {
-        instance.getAppointments(viewModel.selectedWeek.value!!) { appointments ->
+        viewModel.instance.getAppointments(viewModel.selectedWeek.value!!) { appointments ->
             if (appointments != null) {
                 doAsync {
                     for (appointment in appointments) {
@@ -208,13 +185,14 @@ class ScheduleFragment : Fragment() {
 
     private fun viewAppointments() {
         doAsync {
+            // Collect appointments and sort
             val dbAppointments = db.appointmentDao().getAppointmentsFromTill(
                 DateUtils.startOfWeek(viewModel.selectedWeek.value!!).time / 1000,
                 DateUtils.endOfWeek(viewModel.selectedWeek.value!!).time / 1000
-            )
+            ).asSequence().sortedWith(compareBy(Appointment::start)).toMutableList()
 
             uiThread {
-                viewModel.schedule.value = dbAppointments.sortedWith(compareBy(Appointment::start)).toMutableList()
+                viewModel.schedule.value = dbAppointments
 
                 if (viewModel.selectedWeek.value == DateUtils.currentWeek()) {
                     scrollToToday()

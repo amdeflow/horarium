@@ -18,12 +18,14 @@ package nl.viasalix.horarium.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import nl.viasalix.horarium.zermelo.ZermeloInstance
 import nl.viasalix.horarium.zermelo.model.Appointment
 import java.util.Calendar
 
 class ScheduleViewModel : ViewModel() {
     val schedule = MutableLiveData<MutableList<Appointment>>()
     var selectedWeek = MutableLiveData<Int>()
+    lateinit var instance: ZermeloInstance
 
     init {
         selectedWeek.value = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)
