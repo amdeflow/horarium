@@ -86,25 +86,12 @@ object DateUtils {
         return day
     }
 
-    fun threeWeeksAgo() =
-        with(Calendar.getInstance()) { add(Calendar.WEEK_OF_YEAR, -3); return@with get(Calendar.WEEK_OF_YEAR) }
-
-    fun twoWeeksAgo() =
-        with(Calendar.getInstance()) { add(Calendar.WEEK_OF_YEAR, -2); return@with get(Calendar.WEEK_OF_YEAR) }
-
-    fun previousWeek() =
-        with(Calendar.getInstance()) { add(Calendar.WEEK_OF_YEAR, -1); return@with get(Calendar.WEEK_OF_YEAR) }
-
-    fun currentWeek() = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)
-
-    fun nextWeek() =
-        with(Calendar.getInstance()) { add(Calendar.WEEK_OF_YEAR, 1); return@with get(Calendar.WEEK_OF_YEAR) }
-
-    fun inTwoWeeks() =
-        with(Calendar.getInstance()) { add(Calendar.WEEK_OF_YEAR, 2); return@with get(Calendar.WEEK_OF_YEAR) }
-
-    fun inThreeWeeks() =
-        with(Calendar.getInstance()) { add(Calendar.WEEK_OF_YEAR, 3); return@with get(Calendar.WEEK_OF_YEAR) }
+    fun getWeekWithOffset(offset: Int): Int {
+        with(Calendar.getInstance()) {
+            add(Calendar.WEEK_OF_YEAR, offset)
+            return get(Calendar.WEEK_OF_YEAR)
+        }
+    }
 
     fun isToday(timestamp: Long): Boolean = DateUtils.isToday(timestamp)
 

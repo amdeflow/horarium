@@ -125,13 +125,13 @@ class ScheduleFragment : Fragment() {
 
     private fun weekSelector() {
         val weeks = listOf(
-            DateUtils.threeWeeksAgo(),
-            DateUtils.twoWeeksAgo(),
-            DateUtils.previousWeek(),
-            DateUtils.currentWeek(),
-            DateUtils.nextWeek(),
-            DateUtils.inTwoWeeks(),
-            DateUtils.inThreeWeeks()
+            DateUtils.getWeekWithOffset(-3),
+            DateUtils.getWeekWithOffset(-2),
+            DateUtils.getWeekWithOffset(-1),
+            DateUtils.getWeekWithOffset(0),
+            DateUtils.getWeekWithOffset(1),
+            DateUtils.getWeekWithOffset(2),
+            DateUtils.getWeekWithOffset(3)
         )
 
         var selectedIndex = 7
@@ -194,7 +194,7 @@ class ScheduleFragment : Fragment() {
             uiThread {
                 viewModel.schedule.value = dbAppointments
 
-                if (viewModel.selectedWeek.value == DateUtils.currentWeek()) {
+                if (viewModel.selectedWeek.value == DateUtils.getWeekWithOffset(0)) {
                     scrollToToday()
                 }
             }
