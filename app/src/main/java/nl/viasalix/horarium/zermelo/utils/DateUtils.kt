@@ -41,8 +41,6 @@ object DateUtils {
             set(Calendar.MILLISECOND, 0)
         }
 
-        Log.d("startOfWeek", "($week): ${cal.time}")
-
         return cal.time
     }
 
@@ -56,8 +54,6 @@ object DateUtils {
             set(Calendar.SECOND, 59)
             set(Calendar.MILLISECOND, 999)
         }
-
-        Log.d("endOfWeek", "($week): ${cal.time}")
 
         return cal.time
     }
