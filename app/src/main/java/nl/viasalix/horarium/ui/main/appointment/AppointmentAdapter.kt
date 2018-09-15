@@ -67,7 +67,7 @@ class AppointmentAdapter(private var schedule: MutableList<Appointment>) :
 
         holder.endSlot.text = appointment.endTimeSlot.toString()
         holder.rooms.text = appointment.locations.joinToString()
-        holder.startSlot.text = appointment.startTimeSlot.toString()
+        holder.startSlot.text = if (appointment.startTimeSlot < 0) appointment.startTimeSlot.toString() else " "
         holder.subjects.text = appointment.subjects.joinToString()
         holder.teachers.text = appointment.teachers.joinToString()
         holder.time.text = {
