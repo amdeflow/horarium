@@ -21,11 +21,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import com.google.android.material.bottomappbar.BottomAppBar
 import nl.viasalix.horarium.module.ModuleManager
+import nl.viasalix.horarium.ui.drawer.BottomDrawer
 import nl.viasalix.horarium.ui.main.ScheduleFragment
 import org.jetbrains.anko.defaultSharedPreferences
 
@@ -46,20 +47,20 @@ class MainActivity : AppCompatActivity() {
 
         userSp = getSharedPreferences(currentUser, Context.MODE_PRIVATE)
 
-        Log.d("HOR", "Checking modules state...")
-        if (ModuleManager.mustPromptModuleInstallation(this, userSp)) {
-            val availableModules = ModuleManager.listAvailableModules(this, userSp)
-            val activeModules = ModuleManager.listActiveModules(this, userSp)
-
-            startActivity(Intent(this, ModuleInstallationActivity::class.java).also {
-                it.putStringArrayListExtra("availableModules", ArrayList(availableModules))
-                it.putStringArrayListExtra("activeModules", ArrayList(activeModules))
-            })
-
-            finish()
-            super.onCreate(savedInstanceState)
-            return
-        }
+//        Log.d("HOR", "Checking modules state...")
+//        if (ModuleManager.mustPromptModuleInstallation(this, userSp)) {
+//            val availableModules = ModuleManager.listAvailableModules(this, userSp)
+//            val activeModules = ModuleManager.listActiveModules(this, userSp)
+//
+//            startActivity(Intent(this, ModuleInstallationActivity::class.java).also {
+//                it.putStringArrayListExtra("availableModules", ArrayList(availableModules))
+//                it.putStringArrayListExtra("activeModules", ArrayList(activeModules))
+//            })
+//
+//            finish()
+//            super.onCreate(savedInstanceState)
+//            return
+//        }
 
         userSp.edit(commit = true) {
             putStringSet(getString(R.string.SP_KEY_MODULES_ACTIVE), setOf("calvijncollege_cup"))
@@ -77,6 +78,10 @@ class MainActivity : AppCompatActivity() {
 
         AsyncTask.execute {
             ModuleManager.initializeModules(this, userSp)
+        }
+
+        findViewById<BottomAppBar>(R.id.bottomAppBar).setNavigationOnClickListener { _ ->
+            BottomDrawer().showNow(supportFragmentManager, "bottom_drawer")
         }
     }
 

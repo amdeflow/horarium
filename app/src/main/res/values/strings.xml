@@ -32,4 +32,10 @@ limitations under the License.
     <string name="module_installation">Module installation</string>
     <string name="skip">Skip</string>
     <string name="download_and_activate">Download and Activate</string>
+    <string name="SP_KEY_CODE" translatable="false">code</string>
+    <string name="SP_KEY_FIRST_NAME" translatable="false">firstName</string>
+    <string name="SP_KEY_PREFIX" translatable="false">prefix</string>
+    <string name="SP_KEY_LAST_NAME" translatable="false">lastName</string>
+    <string name="error_recognizing_qr_code">An error occured trying to recognize the QR code</string>
+    <string name="error_login">An error occured while trying to login</string>
 </resources>

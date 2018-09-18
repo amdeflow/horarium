@@ -45,6 +45,6 @@ limitations under the License.
         android:layout_height="wrap_content"
         android:src="@drawable/ic_twotone_calendar_view_day_24dp"
         android:tint="@android:color/white"
+        app:elevation="8dp"
         app:layout_anchor="@+id/bottomAppBar" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

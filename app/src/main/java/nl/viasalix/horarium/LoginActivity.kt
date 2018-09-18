@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
                 onComplete()
             } else {
                 runOnUiThread {
-                    toast("Error while trying to log in")
+                    toast(getString(R.string.error_login))
                 }
             }
         })
@@ -71,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
 
                     viewModel.tryLogin()
                 } catch (_: JsonParseException) {
-                    longToast("Error recognizing the QR code. Please try again")
+                    longToast(getString(R.string.error_recognizing_qr_code))
                 }
             }
         } else {
@@ -80,13 +80,17 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onComplete() {
-        val userName = "user_${viewModel.authCode}"
+        val userId = "user_${viewModel.authCode}"
 
-        val userSp = getSharedPreferences(userName, Context.MODE_PRIVATE)
+        val userSp = getSharedPreferences(userId, Context.MODE_PRIVATE)
         userSp.edit(commit = true) {
             putString(getString(R.string.SP_KEY_ACCESS_TOKEN), viewModel.accessToken)
             putString(getString(R.string.SP_KEY_SCHOOL_NAME), viewModel.schoolName)
-            putString(getString(R.string.SP_KEY_USER_IDENTIFIER), userName)
+            putString(getString(R.string.SP_KEY_USER_IDENTIFIER), userId)
+            putString(getString(R.string.SP_KEY_CODE), viewModel.user?.code)
+            putString(getString(R.string.SP_KEY_FIRST_NAME), viewModel.user?.firstName)
+            putString(getString(R.string.SP_KEY_PREFIX), viewModel.user?.prefix)
+            putString(getString(R.string.SP_KEY_LAST_NAME), viewModel.user?.lastName)
         }
 
         // Must use .toMutableSet() because default value can be an immutable set
@@ -95,7 +99,7 @@ class LoginActivity : AppCompatActivity() {
 
         defaultSharedPreferences.edit(commit = true) {
             putStringSet(getString(R.string.SP_KEY_USERS), users)
-            putString(getString(R.string.SP_KEY_CURRENT_USER), userName)
+            putString(getString(R.string.SP_KEY_CURRENT_USER), userId)
         }
 
         startActivity(Intent(this, MainActivity::class.java))

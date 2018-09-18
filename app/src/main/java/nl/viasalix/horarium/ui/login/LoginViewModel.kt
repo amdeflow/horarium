@@ -4,11 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import nl.viasalix.horarium.zermelo.ZermeloInstance
+import nl.viasalix.horarium.zermelo.model.User
 
 class LoginViewModel : ViewModel() {
     var schoolName: String = ""
     var authCode: String = ""
     var accessToken: String = ""
+    var user: User? = null
 
     val scanQr = MutableLiveData<Boolean>()
 
@@ -23,6 +25,10 @@ class LoginViewModel : ViewModel() {
             ZermeloInstance(schoolName).tryLogin(authCode) { success, newAccessToken ->
                 accessToken = newAccessToken
                 _loggedIn.value = success
+
+                ZermeloInstance(schoolName, accessToken).getCurrentUser { newUser ->
+                    user = newUser
+                }
             }
 
             return

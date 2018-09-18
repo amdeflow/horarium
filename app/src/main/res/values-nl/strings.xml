@@ -24,4 +24,6 @@ limitations under the License.
     <string name="module_installation">Module-installatie</string>
     <string name="skip">Overslaan</string>
     <string name="download_and_activate">Download en activeer</string>
+    <string name="error_recognizing_qr_code">Er is een fout opgetreden met het uitlezen van de QR-code</string>
+    <string name="error_login">Een fout is opgetreden tijdens het inloggen</string>
 </resources>
