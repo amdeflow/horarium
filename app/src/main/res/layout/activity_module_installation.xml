@@ -72,7 +72,7 @@ limitations under the License.
             android:id="@+id/module_installation_proceed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/skip"
+            android:text="@{viewModel.proceedButtonText}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />

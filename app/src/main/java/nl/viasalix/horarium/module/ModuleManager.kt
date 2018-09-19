@@ -22,7 +22,9 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import nl.viasalix.horarium.HorariumApplication
 import nl.viasalix.horarium.R
+import nl.viasalix.horarium.events.UserEvents
 import java.io.InputStreamReader
 
 object ModuleManager {
@@ -43,6 +45,10 @@ object ModuleManager {
             moduleMetadata =
                 gson.fromJson(InputStreamReader(it), object : TypeToken<Map<String, ModuleMetadata>>() {}.type)
         }
+    }
+
+    fun listInstalledModules(): Set<String> {
+        return HorariumApplication.manager.installedModules.intersect(moduleMetadata.keys)
     }
 
     /**
@@ -76,10 +82,26 @@ object ModuleManager {
         return userSp.getStringSet(context.getString(R.string.SP_KEY_MODULES_ACTIVE), emptySet())!!
     }
 
-    fun initializeModules(context: Context, userSp: SharedPreferences): Set<HorariumUserModule> {
+    fun createStatusReport(availableModules: List<String>, activeModules: List<String>): Array<ModuleStatusReport> {
+        if (availableModules.isEmpty()) return emptyArray()
+
+        val installedModules = listInstalledModules()
+
+        return  Array(availableModules.size) { i ->
+            val module = availableModules[i]
+
+            return@Array ModuleStatusReport(
+                    installedModules.contains(module),
+                    "display name", // TODO: Get display name from resources?
+                    activeModules.contains(module)
+            )
+        }
+    }
+
+    fun initializeModules(context: Context, userSp: SharedPreferences, eventsProvider: UserEvents): List<HorariumUserModule> {
         Log.d(TAG, "Initializing active modules...")
 
-        val set: MutableSet<HorariumUserModule> = HashSet()
+        val initializedModules: MutableList<HorariumUserModule> = ArrayList()
 
         listActiveModules(context, userSp).forEach { moduleName ->
             Log.d(TAG, "Initializing modules provided by $moduleName...")
@@ -94,13 +116,16 @@ object ModuleManager {
                     try {
                         val userModuleInstance =
                             Class.forName(className).asSubclass(HorariumUserModule::class.java).newInstance()
+
                         userModuleInstance.init(
                             context.getSharedPreferences(
                                 userIdentifier + "_module_$className",
                                 Context.MODE_PRIVATE
-                            )
+                            ),
+                            eventsProvider
                         )
-                        set.add(userModuleInstance)
+
+                        initializedModules.add(userModuleInstance)
                     } catch (e: Exception) {
                         Log.i(TAG, "Caught exception when instantiating the user module $className", e)
                     }
@@ -108,6 +133,6 @@ object ModuleManager {
             }
         }
 
-        return set
+        return initializedModules
     }
 }

@@ -24,8 +24,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
 import com.google.android.material.bottomappbar.BottomAppBar
+import nl.viasalix.horarium.events.UserEvents
 import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.ui.drawer.BottomDrawer
 import nl.viasalix.horarium.ui.main.ScheduleFragment
@@ -63,22 +63,20 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        userSp.edit(commit = true) {
-            putStringSet(getString(R.string.SP_KEY_MODULES_ACTIVE), setOf("calvijncollege_cup"))
-        }
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, ScheduleFragment.newInstance())
-                .commitNow()
+                    .replace(R.id.container, ScheduleFragment.newInstance())
+                    .commitNow()
         }
 
         setSupportActionBar(findViewById(R.id.bottomAppBar))
 
         AsyncTask.execute {
-            ModuleManager.initializeModules(this, userSp)
+            val userEvents = UserEvents()
+            ModuleManager.initializeModules(this, userSp, userEvents)
+            // TODO: Store userEvents instance
         }
 
         findViewById<BottomAppBar>(R.id.bottomAppBar).setNavigationOnClickListener { _ ->

@@ -21,11 +21,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.module.ModuleStatusReport
+import org.jetbrains.anko.sdk25.coroutines.onCheckedChange
 
 class ModuleItemAdapter(
     private val moduleStatusReports: Array<ModuleStatusReport>,
     private val strInstalled: String,
-    private val strNotInstalled: String
+    private val strNotInstalled: String,
+    private val activationStateChanged: () -> Unit
 ) : RecyclerView.Adapter<ModuleItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModuleItemViewHolder {
@@ -44,6 +46,11 @@ class ModuleItemAdapter(
         holder.installationState.text =
             if (report.installed) strInstalled
             else strNotInstalled
+
+        holder.activationState.onCheckedChange { _, isChecked ->
+            report.activated = isChecked
+            activationStateChanged()
+        }
     }
 
     override fun getItemCount(): Int = moduleStatusReports.size

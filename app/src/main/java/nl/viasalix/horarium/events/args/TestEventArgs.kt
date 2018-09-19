@@ -14,24 +14,8 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.module.calvijncollege.cup
+package nl.viasalix.horarium.events.args
 
-import android.content.SharedPreferences
-import android.util.Log
-import nl.viasalix.horarium.events.UserEvents
-import nl.viasalix.horarium.module.HorariumUserModule
+import nl.viasalix.horarium.events.IEventArgs
 
-class CUPUserModule : HorariumUserModule() {
-
-    companion object {
-        const val TAG: String = "HORARIUM/CC/CUP"
-    }
-
-    override fun init(moduleSp: SharedPreferences, eventsProvider: UserEvents) {
-        Log.d(TAG, "Initializing CUP module.")
-
-        eventsProvider.test += { args ->
-            Log.d(TAG, "From event: ${args.message}")
-        }
-    }
-}
+data class TestEventArgs(val message: String) : IEventArgs

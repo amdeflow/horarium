@@ -16,7 +16,9 @@
 
 package nl.viasalix.horarium.ui.module.installation
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class ModuleInstallationViewModel : ViewModel() {
+    val proceedButtonText = MutableLiveData<String>()
 }

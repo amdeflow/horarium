@@ -18,44 +18,66 @@ package nl.viasalix.horarium
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import nl.viasalix.horarium.databinding.ActivityModuleInstallationBinding
+import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.module.ModuleStatusReport
 import nl.viasalix.horarium.ui.module.ModuleItemAdapter
+import nl.viasalix.horarium.ui.module.installation.ModuleInstallationViewModel
 
 class ModuleInstallationActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: ModuleInstallationViewModel
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    private var statusReports: Array<ModuleStatusReport> = emptyArray()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_module_installation)
+
+        viewModel = ViewModelProviders.of(this).get(ModuleInstallationViewModel::class.java)
+
+        val binding = DataBindingUtil.setContentView<ActivityModuleInstallationBinding>(
+                this, R.layout.activity_module_installation
+        )
+        binding.setLifecycleOwner(this)
+        binding.viewModel = viewModel
 
         val availableModules = intent.getStringArrayListExtra("availableModules")
         val activeModules = intent.getStringArrayListExtra("activeModules")
 
         if (availableModules != null && activeModules != null) {
-            // TODO: Gather status reports
+            statusReports = ModuleManager.createStatusReport(availableModules, activeModules)
         }
-
-        val statusReports = arrayOf(
-            ModuleStatusReport(true, "First Example Module", false),
-            ModuleStatusReport(false, "Second Example Module", false)
-        )
 
         viewManager = LinearLayoutManager(this)
         viewAdapter = ModuleItemAdapter(
             statusReports,
             getString(R.string.already_downloaded),
-            getString(R.string.must_be_downloaded)
+            getString(R.string.must_be_downloaded),
+            ::activationStateChanged
         )
 
         recyclerView = findViewById<RecyclerView>(R.id.module_installation_recyclerView).apply {
             setHasFixedSize(true) // Improved performance. All items will have the same height.
             layoutManager = viewManager
             adapter = viewAdapter
+        }
+
+        viewModel.proceedButtonText.value = "skip"
+    }
+
+    fun activationStateChanged() {
+        if (statusReports.count { it.activated } == 0) {
+            viewModel.proceedButtonText.value = "skip"
+        } else {
+            viewModel.proceedButtonText.value = "proceed"
         }
     }
 }

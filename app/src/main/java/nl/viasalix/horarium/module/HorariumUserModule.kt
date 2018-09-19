@@ -17,6 +17,7 @@
 package nl.viasalix.horarium.module
 
 import android.content.SharedPreferences
+import nl.viasalix.horarium.events.UserEvents
 
 open class HorariumUserModule {
     /**
@@ -31,14 +32,14 @@ open class HorariumUserModule {
      * Initialize the module, performed upon module instantiation.
      * Before this method is called, the user storage container will be ready.
      *
-     * Called every time the user session loads.
+     * Called every time the user session loads. It is recommended that you bind the hooks here.
      *
      * Note: this function will be called from a background thread. UI operations are not safe (and
      * not recommended in the [init] method anyway).
      *
      * @param moduleSp [SharedPreferences] container for this module to store settings.
      */
-    open fun init(moduleSp: SharedPreferences) {}
+    open fun init(moduleSp: SharedPreferences, eventsProvider: UserEvents) {}
 
     /**
      * Stop the module gracefully. Must not reset anything.
