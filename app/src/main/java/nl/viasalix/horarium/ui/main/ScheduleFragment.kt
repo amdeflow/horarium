@@ -37,6 +37,7 @@ import nl.viasalix.horarium.persistence.HorariumDatabase
 import nl.viasalix.horarium.ui.main.appointment.AppointmentAdapter
 import nl.viasalix.horarium.ui.main.dialogs.CustomWeekDialog
 import nl.viasalix.horarium.zermelo.ZermeloInstance
+import nl.viasalix.horarium.zermelo.args.GetAppointmentsArgs
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.utils.DateUtils
 import org.jetbrains.anko.defaultSharedPreferences
@@ -168,7 +169,7 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun refresh() {
-        viewModel.instance.getAppointments(viewModel.selectedWeek.value!!) { appointments ->
+        val args = GetAppointmentsArgs(viewModel.selectedWeek.value!!) { appointments ->
             if (appointments != null) {
                 doAsync {
                     for (appointment in appointments) {
@@ -181,6 +182,8 @@ class ScheduleFragment : Fragment() {
                 viewAppointments()
             }
         }
+
+        viewModel.instance.getAppointments(args)
     }
 
     private fun viewAppointments() {

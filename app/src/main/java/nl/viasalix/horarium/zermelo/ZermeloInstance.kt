@@ -17,8 +17,8 @@
 package nl.viasalix.horarium.zermelo
 
 import android.net.Uri
-import android.util.Log
 import com.google.gson.GsonBuilder
+import nl.viasalix.horarium.zermelo.args.GetAppointmentsArgs
 import nl.viasalix.horarium.zermelo.model.Announcement
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.model.ParentTeacherNight
@@ -65,47 +65,39 @@ class ZermeloInstance(
         zermeloService = retrofit.create(ZermeloService::class.java)
     }
 
-    fun getAppointments(
-        week: Int,
-        from: Date? = DateUtils.startOfWeek(week),
-        till: Date? = DateUtils.endOfWeek(week),
-        modifiedSince: Date? = null,
-        valid: Boolean? = null,
-        cancelled: Boolean? = null,
-        includeHidden: Boolean? = null,
-        user: String = "~me",
-        callback: (List<Appointment>?) -> Unit
-    ) {
+
+
+    fun getAppointments(args: GetAppointmentsArgs) {
         zermeloService.getAppointments(
-            if (from != null) {
-                from.time / 1000
+            if (args.from != null) {
+                args.from.time / 1000
             } else {
                 null
             },
-            if (till != null) {
-                till.time / 1000
+            if (args.till != null) {
+                args.till.time / 1000
             } else {
                 null
             },
-            if (modifiedSince != null) {
-                modifiedSince.time / 1000
+            if (args.modifiedSince != null) {
+                args.modifiedSince.time / 1000
             } else {
                 null
             },
-            valid,
-            cancelled,
-            includeHidden,
-            user
+            args.valid,
+            args.cancelled,
+            args.includeHidden,
+            args.user
         ).enqueue(object : Callback<ZermeloResponse<Appointment>> {
             override fun onResponse(
                 call: Call<ZermeloResponse<Appointment>>?,
                 response: Response<ZermeloResponse<Appointment>>?
             ) {
-                callback(response?.body()?.response?.data)
+                args.callback(response?.body()?.response?.data)
             }
 
             override fun onFailure(call: Call<ZermeloResponse<Appointment>>?, t: Throwable?) {
-                callback(null)
+                args.callback(null)
             }
         })
     }
