@@ -144,9 +144,9 @@ class ScheduleFragment : Fragment() {
         }.toMutableList()
 
         if (selectedIndex == 7) weeksText[7] = "${weeksText[7]} (${viewModel.selectedWeek.value})"
-        weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 selected"
+        weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 ${getString(R.string.selected)}"
 
-        activity!!.selector("Please select a week", weeksText) { _, i ->
+        activity!!.selector(getString(R.string.select_week), weeksText) { _, i ->
             if (i < 7) viewModel.selectedWeek.value = weeks[i]
             else CustomWeekDialog.show(context) { done, week ->
                 if (done) {

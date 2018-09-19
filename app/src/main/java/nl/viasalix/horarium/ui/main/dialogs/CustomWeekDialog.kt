@@ -10,7 +10,7 @@ import nl.viasalix.horarium.R
 object CustomWeekDialog {
     fun show(context: Context?, onDoneCallback: (Boolean, Int) -> Unit) {
         val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.ThemeOverlay_MaterialComponents_Dialog))
-        builder.setTitle("Enter a week number")
+        builder.setTitle(context?.getString(R.string.enter_week_number))
 
         val input = EditText(context)
         input.inputType = InputType.TYPE_CLASS_NUMBER

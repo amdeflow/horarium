@@ -37,4 +37,7 @@ limitations under the License.
         <item>Over drie weken</item>
         <item>Zelfgekozen week</item>
     </string-array>
+    <string name="select_week">Selecteer week</string>
+    <string name="selected">geselecteerd</string>
+    <string name="enter_week_number">Toets een weeknummer in</string>
 </resources>
