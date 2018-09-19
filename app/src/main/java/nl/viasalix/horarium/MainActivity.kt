@@ -47,20 +47,20 @@ class MainActivity : AppCompatActivity() {
 
         userSp = getSharedPreferences(currentUser, Context.MODE_PRIVATE)
 
-//        Log.d("HOR", "Checking modules state...")
-//        if (ModuleManager.mustPromptModuleInstallation(this, userSp)) {
-//            val availableModules = ModuleManager.listAvailableModules(this, userSp)
-//            val activeModules = ModuleManager.listActiveModules(this, userSp)
-//
-//            startActivity(Intent(this, ModuleInstallationActivity::class.java).also {
-//                it.putStringArrayListExtra("availableModules", ArrayList(availableModules))
-//                it.putStringArrayListExtra("activeModules", ArrayList(activeModules))
-//            })
-//
-//            finish()
-//            super.onCreate(savedInstanceState)
-//            return
-//        }
+        Log.d("HOR", "Checking modules state...")
+        if (ModuleManager.mustPromptModuleInstallation(this, userSp)) {
+            val availableModules = ModuleManager.listAvailableModules(this, userSp)
+            val activeModules = ModuleManager.listActiveModules(this, userSp)
+
+            startActivity(Intent(this, ModuleInstallationActivity::class.java).also {
+                it.putStringArrayListExtra("availableModules", ArrayList(availableModules))
+                it.putStringArrayListExtra("activeModules", ArrayList(activeModules))
+            })
+
+            finish()
+            super.onCreate(savedInstanceState)
+            return
+        }
 
         userSp.edit(commit = true) {
             putStringSet(getString(R.string.SP_KEY_MODULES_ACTIVE), setOf("calvijncollege_cup"))
