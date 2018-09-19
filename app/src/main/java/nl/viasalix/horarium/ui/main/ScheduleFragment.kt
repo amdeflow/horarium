@@ -125,15 +125,10 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun weekSelector() {
-        val weeks = listOf(
-            DateUtils.getWeekWithOffset(-3),
-            DateUtils.getWeekWithOffset(-2),
-            DateUtils.getWeekWithOffset(-1),
-            DateUtils.getWeekWithOffset(0),
-            DateUtils.getWeekWithOffset(1),
-            DateUtils.getWeekWithOffset(2),
-            DateUtils.getWeekWithOffset(3)
-        )
+        val weeks = mutableListOf<Int>()
+        for (offset in -3..3) {
+            weeks.add(DateUtils.getWeekWithOffset(offset))
+        }
 
         var selectedIndex = 7
 
@@ -144,16 +139,9 @@ class ScheduleFragment : Fragment() {
             }
         }
 
-        val weeksText = mutableListOf(
-            "Three weeks ago (${weeks[0]})",
-            "Two weeks ago (${weeks[1]})",
-            "One week ago (${weeks[2]})",
-            "This week (${weeks[3]})",
-            "Next week (${weeks[4]})",
-            "In two weeks (${weeks[5]})",
-            "In three weeks (${weeks[6]})",
-            "Custom week"
-        )
+        val weeksText = resources.getStringArray(R.array.weeks).mapIndexed { index, elem ->
+            if (index < 7) { elem + " (${weeks[0]})" } else { elem }
+        }.toMutableList()
 
         if (selectedIndex == 7) weeksText[7] = "${weeksText[7]} (${viewModel.selectedWeek.value})"
         weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 selected"

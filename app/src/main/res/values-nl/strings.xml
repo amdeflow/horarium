@@ -26,4 +26,15 @@ limitations under the License.
     <string name="download_and_activate">Download en activeer</string>
     <string name="error_recognizing_qr_code">Er is een fout opgetreden bij het uitlezen van de QR-code</string>
     <string name="error_login">Een fout is opgetreden tijdens het inloggen</string>
+
+    <string-array name="weeks">
+        <item>Drie weken geleden</item>
+        <item>Twee weken geleden</item>
+        <item>Vorige week</item>
+        <item>Deze week</item>
+        <item>Volgende week</item>
+        <item>Over twee weken</item>
+        <item>Over drie weken</item>
+        <item>Zelfgekozen week</item>
+    </string-array>
 </resources>

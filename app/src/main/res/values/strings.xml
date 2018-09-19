@@ -38,4 +38,15 @@ limitations under the License.
     <string name="SP_KEY_LAST_NAME" translatable="false">lastName</string>
     <string name="error_recognizing_qr_code">An error occured trying to recognize the QR code</string>
     <string name="error_login">An error occured while trying to login</string>
+
+    <string-array name="weeks">
+        <item>Three weeks ago</item>
+        <item>Two weeks ago</item>
+        <item>Last week</item>
+        <item>Current week</item>
+        <item>Next week</item>
+        <item>In two weeks</item>
+        <item>In three weeks</item>
+        <item>Custom week</item>
+    </string-array>
 </resources>
