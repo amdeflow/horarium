@@ -140,7 +140,7 @@ class ScheduleFragment : Fragment() {
         }
 
         val weeksText = resources.getStringArray(R.array.weeks).mapIndexed { index, elem ->
-            if (index < 7) { elem + " (${weeks[0]})" } else { elem }
+            if (index < 7) { elem + " (${weeks[index]})" } else { elem }
         }.toMutableList()
 
         if (selectedIndex == 7) weeksText[7] = "${weeksText[7]} (${viewModel.selectedWeek.value})"
