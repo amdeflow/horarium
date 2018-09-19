@@ -27,7 +27,7 @@ limitations under the License.
     <string name="SP_KEY_USERS" translatable="false">users</string>
     <string name="title_calvijncollege_cup">Calvijn College: CUP</string>
     <string name="already_downloaded">Already downloaded</string>
-    <string name="must_be_downloaded">Must be downloaded</string>
+    <string name="must_be_downloaded">Has to be downloaded</string>
     <string name="module_installation_instructions">Modules are available for your school. Select the modules you want to download and activate.</string>
     <string name="module_installation">Module installation</string>
     <string name="skip">Skip</string>
