@@ -73,17 +73,17 @@ object DateUtils {
     }
 
     fun dayToString(context: Context?, timestamp: Long): String {
-        var day = ""
+        var dayString = ""
         if (DateUtils.isToday(timestamp * 1000)) {
-            day = "${context?.getString(R.string.today)} \u2015 "
+            dayString = "${context?.getString(R.string.today)} \u2015 "
         }
 
-        day += SimpleDateFormat(
+        dayString += SimpleDateFormat(
             context?.getString(R.string.DATE_FORMAT),
             Locale.getDefault()
         ).format(Date(timestamp * 1000))
 
-        return day.capitalize()
+        return dayString.capitalize()
     }
 
     fun getWeekWithOffset(offset: Int): Int {
