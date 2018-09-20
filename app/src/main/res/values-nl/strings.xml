@@ -43,4 +43,10 @@ limitations under the License.
     <string name="select_week">Selecteer week</string>
     <string name="selected">geselecteerd</string>
     <string name="enter_week_number">Toets een weeknummer in</string>
+    <string name="log_in">Log in</string>
+    <string name="school_name">Schoolnaam</string>
+    <string name="code">Code</string>
+    <string name="scan_qr_code">Scan QR-code</string>
+    <string name="today">vandaag</string>
+    <string name="DATE_FORMAT">EEEE, d MMMM</string>
 </resources>

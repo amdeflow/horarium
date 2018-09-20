@@ -16,11 +16,12 @@
 
 package nl.viasalix.horarium.zermelo.utils
 
+import android.content.Context
 import android.text.format.DateUtils
-import android.util.Log
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
+import nl.viasalix.horarium.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -71,15 +72,18 @@ object DateUtils {
         return currentDayOfWeek != oldDayOfWeek
     }
 
-    fun dayToString(timestamp: Long): String {
+    fun dayToString(context: Context?, timestamp: Long): String {
         var day = ""
         if (DateUtils.isToday(timestamp * 1000)) {
-            day = "Today \u2015 "
+            day = "${context?.getString(R.string.today)} \u2015 "
         }
 
-        day += SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(Date(timestamp * 1000))
+        day += SimpleDateFormat(
+            context?.getString(R.string.DATE_FORMAT),
+            Locale.getDefault()
+        ).format(Date(timestamp * 1000))
 
-        return day
+        return day.capitalize()
     }
 
     fun getWeekWithOffset(offset: Int): Int {

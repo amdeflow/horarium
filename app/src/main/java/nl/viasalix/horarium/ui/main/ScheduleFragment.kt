@@ -116,7 +116,7 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun setupRecyclerView(view: View) {
-        viewAdapter = AppointmentAdapter(emptyList<Appointment>().toMutableList())
+        viewAdapter = AppointmentAdapter(context, emptyList<Appointment>().toMutableList())
 
         recyclerView = view.findViewById(R.id.scheduleRecyclerView)!!
         recyclerView.layoutManager = LinearLayoutManager(context)

@@ -55,4 +55,10 @@ limitations under the License.
     <string name="announcements">Announcements</string>
     <string name="refresh">Refresh</string>
     <string name="enter_week_number">Enter a week number</string>
+    <string name="log_in">Log in</string>
+    <string name="school_name">School name</string>
+    <string name="code">Code</string>
+    <string name="scan_qr_code">Scan QR code</string>
+    <string name="today">Today</string>
+    <string name="DATE_FORMAT">EEEE, MMMM d</string>
 </resources>

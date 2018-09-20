@@ -16,6 +16,7 @@
 
 package nl.viasalix.horarium.ui.main.appointment
 
+import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -27,9 +28,10 @@ import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.utils.DateUtils
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.wrapContent
 import java.util.Calendar
 
-class AppointmentAdapter(private var schedule: MutableList<Appointment>) :
+class AppointmentAdapter(val context: Context?, private var schedule: MutableList<Appointment>) :
     RecyclerView.Adapter<AppointmentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppointmentViewHolder {
@@ -58,11 +60,11 @@ class AppointmentAdapter(private var schedule: MutableList<Appointment>) :
         if (position > 0) {
             if (DateUtils.isOtherDay(schedule[position].start, schedule[position - 1].start)) {
                 holder.day.visibility = View.VISIBLE
-                holder.day.text = DateUtils.dayToString(appointment.start)
+                holder.day.text = DateUtils.dayToString(context, appointment.start)
             }
         } else if (position == 0) {
             holder.day.visibility = View.VISIBLE
-            holder.day.text = DateUtils.dayToString(appointment.start)
+            holder.day.text = DateUtils.dayToString(context, appointment.start)
         }
 
         holder.endSlot.text = appointment.endTimeSlot.toString()
