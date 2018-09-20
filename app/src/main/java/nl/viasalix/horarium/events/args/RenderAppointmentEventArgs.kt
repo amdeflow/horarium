@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Rutger Broekhoff
+ * Copyright 2018 Jochem Broekhoff
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,9 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.ui.main
+package nl.viasalix.horarium.events.args
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import nl.viasalix.horarium.events.UserEvents
-import nl.viasalix.horarium.zermelo.ZermeloInstance
+import nl.viasalix.horarium.events.IEventArgs
 import nl.viasalix.horarium.zermelo.model.Appointment
-import java.util.Calendar
 
-class ScheduleViewModel : ViewModel() {
-    val schedule = MutableLiveData<MutableList<Appointment>>()
-    var selectedWeek = MutableLiveData<Int>()
-    lateinit var instance: ZermeloInstance
-    var userEvents: UserEvents? = null
-
-    init {
-        selectedWeek.value = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)
-    }
-}
+data class RenderAppointmentEventArgs(val appointment: Appointment) : IEventArgs

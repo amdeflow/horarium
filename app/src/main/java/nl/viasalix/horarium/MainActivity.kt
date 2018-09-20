@@ -19,7 +19,6 @@ package nl.viasalix.horarium
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -30,10 +29,12 @@ import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.ui.drawer.BottomDrawer
 import nl.viasalix.horarium.ui.main.ScheduleFragment
 import org.jetbrains.anko.defaultSharedPreferences
+import org.jetbrains.anko.doAsync
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var userSp: SharedPreferences
+    private val userEvents = UserEvents()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val currentUser = defaultSharedPreferences.getString(getString(R.string.SP_KEY_CURRENT_USER), null)
@@ -67,16 +68,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, ScheduleFragment.newInstance())
-                    .commitNow()
+                .replace(R.id.container, ScheduleFragment.newInstance(userEvents))
+                .commitNow()
         }
 
         setSupportActionBar(findViewById(R.id.bottomAppBar))
 
-        AsyncTask.execute {
-            val userEvents = UserEvents()
-            ModuleManager.initializeModules(this, userSp, userEvents)
-            // TODO: Store userEvents instance
+        doAsync {
+            val act = this.weakRef.get()
+            if (act != null)
+                ModuleManager.initializeModules(act, userSp, userEvents)
         }
 
         findViewById<BottomAppBar>(R.id.bottomAppBar).setNavigationOnClickListener { _ ->

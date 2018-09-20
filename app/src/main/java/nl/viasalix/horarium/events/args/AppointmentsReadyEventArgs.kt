@@ -17,5 +17,6 @@
 package nl.viasalix.horarium.events.args
 
 import nl.viasalix.horarium.events.IEventArgs
+import nl.viasalix.horarium.zermelo.model.Appointment
 
-data class TestEventArgs(val message: String) : IEventArgs
+data class AppointmentsReadyEventArgs(val appointments: List<Appointment>) : IEventArgs

@@ -19,6 +19,8 @@ package nl.viasalix.horarium.module.calvijncollege.cup
 import android.content.SharedPreferences
 import android.util.Log
 import nl.viasalix.horarium.events.UserEvents
+import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
+import nl.viasalix.horarium.events.args.RenderAppointmentEventArgs
 import nl.viasalix.horarium.module.HorariumUserModule
 
 class CUPUserModule : HorariumUserModule() {
@@ -30,8 +32,15 @@ class CUPUserModule : HorariumUserModule() {
     override fun init(moduleSp: SharedPreferences, eventsProvider: UserEvents) {
         Log.d(TAG, "Initializing CUP module.")
 
-        eventsProvider.test += { args ->
-            Log.d(TAG, "From event: ${args.message}")
-        }
+        eventsProvider.appointmentsReady += ::appointmentsReady
+        eventsProvider.renderAppointment += ::renderAppointment
+    }
+
+    private fun appointmentsReady(args: AppointmentsReadyEventArgs) {
+
+    }
+
+    private fun renderAppointment(args: RenderAppointmentEventArgs) {
+
     }
 }

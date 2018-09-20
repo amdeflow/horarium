@@ -33,6 +33,8 @@ import androidx.room.Room
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
+import nl.viasalix.horarium.events.UserEvents
+import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
 import nl.viasalix.horarium.persistence.HorariumDatabase
 import nl.viasalix.horarium.ui.main.appointment.AppointmentAdapter
 import nl.viasalix.horarium.ui.main.dialogs.CustomWeekDialog
@@ -48,13 +50,18 @@ import org.jetbrains.anko.uiThread
 class ScheduleFragment : Fragment() {
 
     companion object {
-        fun newInstance() = ScheduleFragment()
+        fun newInstance(userEvents: UserEvents) = with(ScheduleFragment()) {
+            this.userEvents = userEvents
+            this
+        }
     }
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: ScheduleViewModel
     private lateinit var viewAdapter: AppointmentAdapter
     private lateinit var db: HorariumDatabase
+
+    private var userEvents: UserEvents? = null
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -95,6 +102,7 @@ class ScheduleFragment : Fragment() {
             schoolName = schoolName!!,
             accessToken = accessToken!!
         )
+        viewModel.userEvents = userEvents
         binding.viewModel = viewModel
 
         setupRecyclerView(binding.root)
@@ -104,6 +112,8 @@ class ScheduleFragment : Fragment() {
                 viewAdapter.notifyDataSetChanged()
             }
             recyclerView.recycledViewPool.clear()
+
+            userEvents?.appointmentsReady?.invoke(AppointmentsReadyEventArgs(appointments))
         })
 
         viewModel.selectedWeek.observe(this, Observer<Int> { _ -> refresh() })
