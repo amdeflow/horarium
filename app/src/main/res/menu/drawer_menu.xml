@@ -4,8 +4,8 @@
 
     <item
         android:id="@+id/drawer_settings"
-        android:title="Settings" />
+        android:title="@string/settings" />
     <item
         android:id="@+id/drawer_announcements"
-        android:title="Announcements" />
+        android:title="@string/announcements" />
 </menu>
