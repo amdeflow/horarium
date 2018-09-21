@@ -2,12 +2,10 @@
 # Read more about this script on this blog post https://about.gitlab.com/2016/11/30/setting-up-gitlab-ci-for-android-projects/, by Greyson Parrelli
 image: openjdk:8-jdk
 
-variables:
-  ANDROID_COMPILE_SDK: "28"
-  ANDROID_BUILD_TOOLS: "28.0.2"
-  ANDROID_SDK_TOOLS: "26.1.1"
-
 before_script:
+  - export ANDROID_COMPILE_SDK "28"
+  - export ANDROID_BUILD_TOOLS "28.0.2"
+  - export ANDROID_SDK_TOOLS "26.1.1"
   - apt-get --quiet update --yes
   - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
   - wget --quiet --output-document=android-sdk.tgz https://dl.google.com/android/android-sdk_r${ANDROID_SDK_TOOLS}-linux.tgz
