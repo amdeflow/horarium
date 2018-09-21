@@ -3,9 +3,9 @@
 image: openjdk:8-jdk
 
 before_script:
-  - export ANDROID_COMPILE_SDK "28"
-  - export ANDROID_BUILD_TOOLS "28.0.2"
-  - export ANDROID_SDK_TOOLS "26.1.1"
+  - export ANDROID_COMPILE_SDK="28"
+  - export ANDROID_BUILD_TOOLS="28.0.2"
+  - export ANDROID_SDK_TOOLS="26.1.1"
   - apt-get --quiet update --yes
   - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
   - wget --quiet --output-document=android-sdk.tgz https://dl.google.com/android/android-sdk_r${ANDROID_SDK_TOOLS}-linux.tgz
