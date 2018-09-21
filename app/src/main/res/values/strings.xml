@@ -24,13 +24,15 @@ limitations under the License.
     <string name="SP_KEY_USER_IDENTIFIER" translatable="false">userIdentifier</string>
     <string name="SP_KEY_MODULES_PROMPTED" translatable="false">modulesPrompted</string>
     <string name="SP_KEY_MODULES_ACTIVE" translatable="false">modulesActive</string>
+    <string name="SP_KEY_MODULE_INSTALLATION_STATE" translatable="false">moduleInstallationState</string>
     <string name="SP_KEY_USERS" translatable="false">users</string>
     <string name="title_calvijncollege_cup">Calvijn College: CUP</string>
     <string name="already_downloaded">Already downloaded</string>
-    <string name="must_be_downloaded">Has to be downloaded</string>
+    <string name="has_to_be_downloaded">Has to be downloaded</string>
     <string name="module_installation_instructions">Modules are available for your school. Select the modules you want to download and activate.</string>
     <string name="module_installation">Module installation</string>
     <string name="skip">Skip</string>
+    <string name="proceed">Proceed</string>
     <string name="download_and_activate">Download and Activate</string>
     <string name="SP_KEY_CODE" translatable="false">code</string>
     <string name="SP_KEY_FIRST_NAME" translatable="false">firstName</string>
@@ -61,5 +63,7 @@ limitations under the License.
     <string name="scan_qr_code">Scan QR code</string>
     <string name="today">Today</string>
     <string name="DATE_FORMAT">EEEE, MMMM d</string>
+    <string name="try_again_later">Try again later</string>
+    <string name="module_installation_error">Error while downloading and installing modules: %s</string>
     <string name="schedule">Schedule</string>
 </resources>

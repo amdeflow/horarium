@@ -21,4 +21,6 @@ import androidx.lifecycle.ViewModel
 
 class ModuleInstallationViewModel : ViewModel() {
     val proceedButtonText = MutableLiveData<String>()
+    val progress = MutableLiveData<Int>().also { it.value = 0 }
+    val progressIndeterminate = MutableLiveData<Boolean>().also { it.value = true }
 }

@@ -29,7 +29,7 @@ import java.io.InputStreamReader
 
 object ModuleManager {
 
-    private const val TAG: String = "HOR/ModuleManager"
+    private const val TAG: String = "Horarium/ModuleManager"
     private val gson: Gson = GsonBuilder().create()
 
     private var modulesPerInstitute: Map<String, List<String>> = emptyMap()
@@ -91,6 +91,7 @@ object ModuleManager {
             val module = availableModules[i]
 
             return@Array ModuleStatusReport(
+                    module,
                     installedModules.contains(module),
                     "display name", // TODO: Get display name from resources?
                     activeModules.contains(module)
@@ -134,5 +135,9 @@ object ModuleManager {
         }
 
         return initializedModules
+    }
+
+    fun requestAsyncInstallation(callback: () -> Unit) {
+
     }
 }

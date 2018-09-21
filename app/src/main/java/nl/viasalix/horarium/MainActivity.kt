@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import com.google.android.material.bottomappbar.BottomAppBar
 import nl.viasalix.horarium.events.UserEvents
 import nl.viasalix.horarium.module.ModuleManager
@@ -30,8 +31,17 @@ import nl.viasalix.horarium.ui.drawer.BottomDrawer
 import nl.viasalix.horarium.ui.main.ScheduleFragment
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.doAsync
+import android.app.AlarmManager
+import androidx.core.content.ContextCompat.getSystemService
+import android.app.PendingIntent
+
+
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        private const val TAG = "Horarium/Main"
+    }
 
     private lateinit var userSp: SharedPreferences
     private val userEvents = UserEvents()
@@ -49,19 +59,21 @@ class MainActivity : AppCompatActivity() {
 
         userSp = getSharedPreferences(currentUser, Context.MODE_PRIVATE)
 
-        Log.d("HOR", "Checking modules state...")
+        Log.d(TAG, "Checking modules state...")
+
+        var installationPrompted = false
         if (ModuleManager.mustPromptModuleInstallation(this, userSp)) {
             val availableModules = ModuleManager.listAvailableModules(this, userSp)
             val activeModules = ModuleManager.listActiveModules(this, userSp)
 
-            startActivity(Intent(this, ModuleInstallationActivity::class.java).also {
-                it.putStringArrayListExtra("availableModules", ArrayList(availableModules))
-                it.putStringArrayListExtra("activeModules", ArrayList(activeModules))
-            })
+            startActivity(
+                Intent(this, ModuleInstallationActivity::class.java)
+                    .putStringArrayListExtra("availableModules", ArrayList(availableModules))
+                    .putStringArrayListExtra("activeModules", ArrayList(activeModules))
+                    .putExtra("userSpName", currentUser)
+            )
 
-            finish()
-            super.onCreate(savedInstanceState)
-            return
+            installationPrompted = true
         }
 
         super.onCreate(savedInstanceState)
@@ -74,10 +86,8 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.bottomAppBar))
 
-        doAsync {
-            val act = this.weakRef.get()
-            if (act != null)
-                ModuleManager.initializeModules(act, userSp, userEvents)
+        if (!installationPrompted) {
+            initializeModuleAsync()
         }
 
         findViewById<BottomAppBar>(R.id.bottomAppBar).setNavigationOnClickListener { _ ->
@@ -88,5 +98,37 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_activity_menu, menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val installationState = userSp.getInt(getString(R.string.SP_KEY_MODULE_INSTALLATION_STATE), -1)
+
+        if (installationState > -1)
+            userSp.edit (commit = true) {
+                putBoolean(getString(R.string.SP_KEY_MODULES_PROMPTED), true)
+                putInt(getString(R.string.SP_KEY_MODULE_INSTALLATION_STATE), -1)
+            }
+
+        when (installationState) {
+            ModuleInstallationActivity.STATE_SKIPPED -> {
+                // Skipped
+            }
+            ModuleInstallationActivity.STATE_DONE_NOTHING_DOWNLOADED -> {
+                initializeModuleAsync()
+            }
+            ModuleInstallationActivity.STATE_DONE_MODULES_DOWNLOADED -> {
+                HorariumApplication.restart(this)
+            }
+        }
+    }
+
+    private fun initializeModuleAsync() {
+        doAsync {
+            val act = this.weakRef.get()
+            if (act != null)
+                ModuleManager.initializeModules(act, userSp, userEvents)
+        }
     }
 }

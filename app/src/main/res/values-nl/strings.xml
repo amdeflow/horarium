@@ -18,7 +18,7 @@ limitations under the License.
 
 <resources>
     <string name="already_downloaded">Al gedownload</string>
-    <string name="must_be_downloaded">Moet nog gedownload worden</string>
+    <string name="has_to_be_downloaded">Moet nog gedownload worden</string>
     <string name="title_calvijncollege_cup">Calvijn College: CUP</string>
     <string name="module_installation_instructions">Modules zijn beschikbaar voor jouw school. Selecteer de modules die je wilt downloaden en activeren.</string>
     <string name="module_installation">Module-installatie</string>
@@ -49,5 +49,8 @@ limitations under the License.
     <string name="scan_qr_code">Scan QR-code</string>
     <string name="today">vandaag</string>
     <string name="DATE_FORMAT">EEEE d MMMM</string>
+    <string name="proceed">Verder</string>
+    <string name="try_again_later">Probeer later opnieuw</string>
+    <string name="module_installation_error">Fout tijdens het downloaden en installeren van modules: %s</string>
     <string name="schedule">Rooster</string>
 </resources>
