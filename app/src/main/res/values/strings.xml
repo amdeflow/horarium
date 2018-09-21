@@ -61,4 +61,5 @@ limitations under the License.
     <string name="scan_qr_code">Scan QR code</string>
     <string name="today">Today</string>
     <string name="DATE_FORMAT">EEEE, MMMM d</string>
+    <string name="schedule">Schedule</string>
 </resources>

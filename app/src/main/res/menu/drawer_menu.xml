@@ -8,4 +8,7 @@
     <item
         android:id="@+id/drawer_announcements"
         android:title="@string/announcements" />
+    <item
+        android:id="@+id/drawer_schedule"
+        android:title="@string/schedule" />
 </menu>

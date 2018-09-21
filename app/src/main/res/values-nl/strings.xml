@@ -49,4 +49,5 @@ limitations under the License.
     <string name="scan_qr_code">Scan QR-code</string>
     <string name="today">vandaag</string>
     <string name="DATE_FORMAT">EEEE d MMMM</string>
+    <string name="schedule">Rooster</string>
 </resources>
