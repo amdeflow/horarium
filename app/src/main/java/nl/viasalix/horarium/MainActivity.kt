@@ -26,16 +26,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.google.android.material.bottomappbar.BottomAppBar
 import nl.viasalix.horarium.events.UserEvents
+import nl.viasalix.horarium.module.HorariumUserModule
 import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.ui.drawer.BottomDrawer
 import nl.viasalix.horarium.ui.main.ScheduleFragment
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.doAsync
-import android.app.AlarmManager
-import androidx.core.content.ContextCompat.getSystemService
-import android.app.PendingIntent
-
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var userSp: SharedPreferences
     private val userEvents = UserEvents()
+    private var moduleInstances: List<HorariumUserModule> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val currentUser = defaultSharedPreferences.getString(getString(R.string.SP_KEY_CURRENT_USER), null)
@@ -106,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         val installationState = userSp.getInt(getString(R.string.SP_KEY_MODULE_INSTALLATION_STATE), -1)
 
         if (installationState > -1)
-            userSp.edit (commit = true) {
+            userSp.edit(commit = true) {
                 putBoolean(getString(R.string.SP_KEY_MODULES_PROMPTED), true)
                 putInt(getString(R.string.SP_KEY_MODULE_INSTALLATION_STATE), -1)
             }
@@ -126,9 +123,33 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeModuleAsync() {
         doAsync {
-            val act = this.weakRef.get()
-            if (act != null)
-                ModuleManager.initializeModules(act, userSp, userEvents)
+            val act = weakRef.get()
+            if (act != null) {
+                val initializedModules = ModuleManager.initializeModules(act, userSp, userEvents)
+                setupNext(initializedModules.iterator())
+            }
         }
+    }
+
+    private fun setupNext(iterator: Iterator<HorariumUserModule>) {
+        if (!iterator.hasNext()) return
+
+        val activityClass = iterator.next().provideSetupActivityClass()
+
+        if (activityClass == null) {
+            setupNext(iterator)
+            return
+        }
+
+        val finishKey = ModuleManager.requestSetup {
+            setupNext(iterator)
+        }
+
+        Intent(this, activityClass)
+            .putExtra("moduleSharedPreferencesKey", "TODO")
+            .putExtra("setupCompleteId", finishKey)
+            .also {
+                startActivity(it)
+            }
     }
 }

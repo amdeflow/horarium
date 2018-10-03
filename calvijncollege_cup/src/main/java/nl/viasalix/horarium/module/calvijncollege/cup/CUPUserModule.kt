@@ -27,13 +27,23 @@ class CUPUserModule : HorariumUserModule() {
 
     companion object {
         const val TAG: String = "HORARIUM/CC/CUP"
+        const val SP_KEY_SETUP_COMPLETED: String = "setupCompleted"
     }
+
+    private lateinit var moduleSp: SharedPreferences
 
     override fun init(moduleSp: SharedPreferences, eventsProvider: UserEvents) {
         Log.d(TAG, "Initializing CUP module.")
 
+        this.moduleSp = moduleSp
+
         eventsProvider.appointmentsReady += ::appointmentsReady
         eventsProvider.renderAppointment += ::renderAppointment
+    }
+
+    override fun provideSetupActivityClass(): Class<CalvijncollegeCupSetup>? {
+        if (moduleSp.getBoolean(SP_KEY_SETUP_COMPLETED, false)) return null
+        return CalvijncollegeCupSetup::class.java
     }
 
     private fun appointmentsReady(args: AppointmentsReadyEventArgs) {

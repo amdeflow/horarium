@@ -16,17 +16,11 @@
 
 package nl.viasalix.horarium.module
 
+import android.app.Activity
 import android.content.SharedPreferences
 import nl.viasalix.horarium.events.UserEvents
 
 open class HorariumUserModule {
-    /**
-     * Perform installation tasks.
-     * The function [done] must be called when the installation is complete.
-     *
-     * Called only once.
-     */
-    open fun install(institute: String, done: (Boolean) -> Unit) {}
 
     /**
      * Initialize the module, performed upon module instantiation.
@@ -40,6 +34,20 @@ open class HorariumUserModule {
      * @param moduleSp [SharedPreferences] container for this module to store settings.
      */
     open fun init(moduleSp: SharedPreferences, eventsProvider: UserEvents) {}
+
+    /**
+     * Provide the [Activity] class for the setup activity.
+     *
+     * The started intent will contain two keys set as extras:
+     * 1. `moduleSharedPreferencesKey`: (String) Name of the shared preferences container which you can use. It is
+     * specific to the user for which the [Activity] is being launched. You should commit changes to this container
+     * before finishing the activity.
+     * 2. `setupCompleteId`: (String) Identifier to be used to invoke the setup complete method. When the setup is
+     * complete, you should call [ModuleManager.completeSetup] with the value of this extra as parameter.
+     *
+     * @return Return `null` to indicate that no setup activity should be started.
+     */
+    open fun provideSetupActivityClass(): Class<out Activity>? = null
 
     /**
      * Stop the module gracefully. Must not reset anything.

@@ -26,6 +26,7 @@ import nl.viasalix.horarium.HorariumApplication
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.events.UserEvents
 import java.io.InputStreamReader
+import java.util.UUID
 
 object ModuleManager {
 
@@ -35,7 +36,9 @@ object ModuleManager {
     private var modulesPerInstitute: Map<String, List<String>> = emptyMap()
     private var moduleMetadata: Map<String, ModuleMetadata> = emptyMap()
 
-    fun loadDefinitions(context: Context) {
+    private val setupRequests: MutableMap<String, () -> Unit> = HashMap()
+
+    internal fun loadDefinitions(context: Context) {
         context.resources.openRawResource(R.raw.modules_per_institute).use {
             modulesPerInstitute =
                 gson.fromJson(InputStreamReader(it), object : TypeToken<Map<String, List<String>>>() {}.type)
@@ -54,7 +57,7 @@ object ModuleManager {
     /**
      * Check if the current user must be prompted for module installation.
      */
-    fun mustPromptModuleInstallation(context: Context, userSp: SharedPreferences): Boolean {
+    internal fun mustPromptModuleInstallation(context: Context, userSp: SharedPreferences): Boolean {
         Log.d(TAG, "mustPromptModuleInstallation check.")
 
         val prompted = userSp.getBoolean(context.getString(R.string.SP_KEY_MODULES_PROMPTED), false)
@@ -99,7 +102,7 @@ object ModuleManager {
         }
     }
 
-    fun initializeModules(context: Context, userSp: SharedPreferences, eventsProvider: UserEvents): List<HorariumUserModule> {
+    internal fun initializeModules(context: Context, userSp: SharedPreferences, eventsProvider: UserEvents): List<HorariumUserModule> {
         Log.d(TAG, "Initializing active modules...")
 
         val initializedModules: MutableList<HorariumUserModule> = ArrayList()
@@ -137,7 +140,16 @@ object ModuleManager {
         return initializedModules
     }
 
-    fun requestAsyncInstallation(callback: () -> Unit) {
+    internal fun requestSetup(callback: () -> Unit): String {
+        val id = UUID.randomUUID().toString()
+        setupRequests[id] = callback
+        return id
+    }
 
+    /**
+     * Notify the [ModuleManager] that the setup has been completed.
+     */
+    fun completeSetup(id: String) {
+        setupRequests.remove(id)?.invoke()
     }
 }
