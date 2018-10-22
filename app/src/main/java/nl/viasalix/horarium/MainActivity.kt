@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.bottomAppBar))
 
+        // Skip initialization when the installation was just prompted to the user
         if (!installationPrompted) {
             initializeModuleAsync()
         }
@@ -134,7 +135,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupNext(iterator: Iterator<HorariumUserModule>) {
         if (!iterator.hasNext()) return
 
-        val activityClass = iterator.next().provideSetupActivityClass()
+        val next = iterator.next()
+        val activityClass = next.provideSetupActivityClass()
 
         if (activityClass == null) {
             setupNext(iterator)
@@ -145,8 +147,11 @@ class MainActivity : AppCompatActivity() {
             setupNext(iterator)
         }
 
+        val userIdentifier = userSp.getString(getString(R.string.SP_KEY_USER_IDENTIFIER), "")!!
+        val moduleSpKey = userIdentifier + "_module_" + next.javaClass.name
+
         Intent(this, activityClass)
-            .putExtra("moduleSharedPreferencesKey", "TODO")
+            .putExtra("moduleSharedPreferencesKey", moduleSpKey)
             .putExtra("setupCompleteId", finishKey)
             .also {
                 startActivity(it)
