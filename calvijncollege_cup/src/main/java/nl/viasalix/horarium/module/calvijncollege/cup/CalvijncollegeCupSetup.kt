@@ -19,6 +19,8 @@ package nl.viasalix.horarium.module.calvijncollege.cup
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.core.content.edit
 import nl.viasalix.horarium.module.ModuleManager
 
 class CalvijncollegeCupSetup : AppCompatActivity() {
@@ -31,8 +33,13 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
             val moduleSpKey = intent.getStringExtra("moduleSharedPreferencesKey")
             val setupCompleteId = intent.getStringExtra("setupCompleteId")
 
+            Log.i("TESTING", "ModuleSpKey=$moduleSpKey, SetupCompleteId=$setupCompleteId")
+
             // TODO: Code below is just example code.
             val moduleSp = getSharedPreferences(moduleSpKey, Context.MODE_PRIVATE)
+            moduleSp.edit(commit = true) {
+                putBoolean(CUPUserModule.SP_KEY_SETUP_COMPLETED, true)
+            }
             ModuleManager.completeSetup(setupCompleteId)
             finish()
         }
