@@ -1,9 +1,7 @@
 package nl.viasalix.horarium
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -14,6 +12,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.zxing.integration.android.IntentIntegrator
 import nl.viasalix.horarium.databinding.LoginActivityBinding
+import nl.viasalix.horarium.persistence.getUserSharedPreferences
+import nl.viasalix.horarium.persistence.makeUserId
 import nl.viasalix.horarium.ui.login.LoginQr
 import nl.viasalix.horarium.ui.login.LoginViewModel
 import org.jetbrains.anko.defaultSharedPreferences
@@ -21,7 +21,6 @@ import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var view: View
     private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         viewModel.loggedIn.observe(this, Observer { loggedIn ->
             if (loggedIn == true) {
-                onComplete()
+                onLoginDone()
             } else {
                 runOnUiThread {
                     toast(getString(R.string.error_login))
@@ -54,8 +53,6 @@ class LoginActivity : AppCompatActivity() {
 
         // Set the focus on the 'school name' field
         binding.root.findViewById<EditText>(R.id.schoolName).requestFocus()
-
-        view = binding.root
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -63,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
         if (result != null) {
             viewModel.scanQr.value = false
 
-            if (result.contents !== null) {
+            if (result.contents != null) {
                 try {
                     val qrContents = Gson().fromJson(result.contents, LoginQr::class.java)
                     viewModel.schoolName = qrContents.institution
@@ -79,10 +76,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun onComplete() {
-        val userId = "user_${viewModel.authCode}"
+    private fun onLoginDone() {
+        val userId = makeUserId(viewModel.authCode)
 
-        val userSp = getSharedPreferences(userId, Context.MODE_PRIVATE)
+        val userSp = getUserSharedPreferences(userId, this)
         userSp.edit(commit = true) {
             putString(getString(R.string.SP_KEY_ACCESS_TOKEN), viewModel.accessToken)
             putString(getString(R.string.SP_KEY_SCHOOL_NAME), viewModel.schoolName)
@@ -94,8 +91,11 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // Must use .toMutableSet() because default value can be an immutable set
-        val users = defaultSharedPreferences.getStringSet(getString(R.string.SP_KEY_USERS), emptySet())?.toMutableSet()
-        users?.add(viewModel.authCode)
+        val users = defaultSharedPreferences.getStringSet(
+                getString(R.string.SP_KEY_USERS),
+                emptySet()
+        )!!.toMutableSet()
+        users.add(viewModel.authCode)
 
         defaultSharedPreferences.edit(commit = true) {
             putStringSet(getString(R.string.SP_KEY_USERS), users)

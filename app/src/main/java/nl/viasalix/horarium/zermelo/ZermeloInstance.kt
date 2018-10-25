@@ -69,16 +69,8 @@ class ZermeloInstance(
 
     fun getAppointments(args: GetAppointmentsArgs) {
         zermeloService.getAppointments(
-            if (args.from != null) {
-                args.from.time / 1000
-            } else {
-                null
-            },
-            if (args.till != null) {
-                args.till.time / 1000
-            } else {
-                null
-            },
+            args.from.time / 1000,
+            args.till.time / 1000,
             if (args.modifiedSince != null) {
                 args.modifiedSince.time / 1000
             } else {
@@ -93,11 +85,11 @@ class ZermeloInstance(
                 call: Call<ZermeloResponse<Appointment>>?,
                 response: Response<ZermeloResponse<Appointment>>?
             ) {
-                args.callback(response?.body()?.response?.data)
+                args.callback(response?.body()?.response?.data, args.from, args.till)
             }
 
             override fun onFailure(call: Call<ZermeloResponse<Appointment>>?, t: Throwable?) {
-                args.callback(null)
+                args.callback(null, args.from, args.till)
             }
         })
     }

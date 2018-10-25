@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
@@ -167,12 +168,12 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun refresh() {
-        val args = GetAppointmentsArgs(viewModel.selectedWeek.value!!) { appointments ->
+        val args = GetAppointmentsArgs(viewModel.selectedWeek.value!!) { appointments, from, till ->
             if (appointments != null) {
                 doAsync {
-                    for (appointment in appointments) {
-                        db.appointmentDao().insertAppointment(appointment)
-                    }
+                    val appointmentDao = db.appointmentDao()
+                    appointmentDao.deleteAppointmentsFromTill(from.time / 1000, till.time / 1000)
+                    appointmentDao.insertAppointments(appointments)
 
                     viewAppointments()
                 }

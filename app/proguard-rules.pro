@@ -15,3 +15,5 @@
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }
+
+-keep class nl.viasalix.horarium.** { *; }

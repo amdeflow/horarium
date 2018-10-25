@@ -21,7 +21,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -90,11 +89,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<BottomAppBar>(R.id.bottomAppBar).setNavigationOnClickListener { _ ->
             BottomDrawer().showNow(supportFragmentManager, "bottom_drawer")
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_activity_menu, menu)
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onResume() {

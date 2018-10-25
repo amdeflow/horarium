@@ -6,12 +6,12 @@ import java.util.Date
 
 data class GetAppointmentsArgs(
     val week: Int,
-    val from: Date? = DateUtils.startOfWeek(week),
-    val till: Date? = DateUtils.endOfWeek(week),
+    val from: Date = DateUtils.startOfWeek(week),
+    val till: Date = DateUtils.endOfWeek(week),
     val modifiedSince: Date? = null,
     val valid: Boolean? = null,
     val cancelled: Boolean? = null,
     val includeHidden: Boolean? = null,
     val user: String = "~me",
-    val callback: (List<Appointment>?) -> Unit
+    val callback: (List<Appointment>?, Date, Date) -> Unit
 )

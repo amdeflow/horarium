@@ -24,11 +24,9 @@ import nl.viasalix.horarium.persistence.HorariumTypeConverters
 
 @Entity
 data class Appointment(
-    // Does not change across versions
     @ColumnInfo(name = "appointment_instance")
     @PrimaryKey
     var appointmentInstance: Long = -1,
-    // Basically the same as version, changes when modified - therefore should not be primary key
     var id: Long = -1,
     // Start time in seconds since the UNIX Epoch time
     var start: Long = -1,

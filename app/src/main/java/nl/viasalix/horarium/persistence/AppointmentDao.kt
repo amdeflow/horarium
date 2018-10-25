@@ -16,10 +16,7 @@
 
 package nl.viasalix.horarium.persistence
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import nl.viasalix.horarium.zermelo.model.Appointment
 
 @Dao
@@ -33,6 +30,15 @@ interface AppointmentDao {
     @Query("SELECT * FROM `appointment` WHERE `teachers` LIKE '%' || :teacher || '%'")
     fun getAppointmentsByTeacher(teacher: String): List<Appointment>
 
+    @Query("DELETE FROM `appointment` WHERE `start` >= :from AND `end` <= :till")
+    fun deleteAppointmentsFromTill(from: Long, till: Long)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAppointment(appointment: Appointment)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAppointments(appointments: List<Appointment>)
+
+    @Delete
+    fun deleteAppointments(appointments: List<Appointment>)
 }
