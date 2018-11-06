@@ -92,11 +92,13 @@ object ModuleManager {
 
         return  Array(availableModules.size) { i ->
             val module = availableModules[i]
+            val moduleMeta = moduleMetadata[module]
+            val moduleDescription = moduleMeta?.description ?: module
 
             return@Array ModuleStatusReport(
                     module,
                     installedModules.contains(module),
-                    "display name", // TODO: Get display name from resources?
+                    moduleDescription,
                     activeModules.contains(module)
             )
         }

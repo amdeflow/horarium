@@ -3,6 +3,7 @@
     "package": "nl.viasalix.horarium.module.calvijncollege.cup",
     "user_modules": [
       "CUPUserModule"
-    ]
+    ],
+    "description": "Calvijn College CUP"
   }
 }

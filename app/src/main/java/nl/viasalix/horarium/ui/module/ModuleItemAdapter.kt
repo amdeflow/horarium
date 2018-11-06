@@ -41,7 +41,7 @@ class ModuleItemAdapter(
     override fun onBindViewHolder(holder: ModuleItemViewHolder, position: Int) {
         val report = moduleStatusReports[position]
 
-        holder.title.text = report.displayName
+        holder.title.text = report.description
         holder.activationState.isChecked = report.activated
         holder.installationState.text =
             if (report.installed) strInstalled

@@ -19,6 +19,7 @@ package nl.viasalix.horarium
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -111,7 +112,16 @@ class MainActivity : AppCompatActivity() {
                 initializeModuleAsync()
             }
             ModuleInstallationActivity.STATE_DONE_MODULES_DOWNLOADED -> {
-                HorariumApplication.restart(this)
+                /*
+                 * "When downloading dynamic feature modules on-demand, devices running Android 6.0 (API level 23) and
+                 * lower require the app to restart before completing installation of the new modules", as stated in the
+                 * docs: https://developer.android.com/studio/projects/dynamic-delivery
+                 */
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                    HorariumApplication.restart(this)
+                } else {
+                    initializeModuleAsync()
+                }
             }
         }
     }

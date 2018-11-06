@@ -16,4 +16,4 @@
 
 package nl.viasalix.horarium.module
 
-data class ModuleStatusReport(val moduleName: String, val installed: Boolean, val displayName: String, var activated: Boolean)
+data class ModuleStatusReport(val moduleName: String, val installed: Boolean, val description: String, var activated: Boolean)

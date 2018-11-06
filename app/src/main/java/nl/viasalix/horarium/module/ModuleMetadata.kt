@@ -20,5 +20,6 @@ import com.google.gson.annotations.SerializedName
 
 data class ModuleMetadata(
     val `package`: String,
-    @SerializedName("user_modules") val userModules: List<String>
+    @SerializedName("user_modules") val userModules: List<String>,
+    val description: String
 )
