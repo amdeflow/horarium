@@ -17,31 +17,106 @@
 package nl.viasalix.horarium.module.calvijncollege.cup
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.core.content.edit
 import nl.viasalix.horarium.module.ModuleManager
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class CalvijncollegeCupSetup : AppCompatActivity() {
+
+    var firstLettersOfSurname = ""
+    var selectedUser = ""
+    var pin = ""
+
+    lateinit var moduleSpKey: String
+    lateinit var setupCompleteId: String
+    lateinit var moduleSp: SharedPreferences
+
+    private var step = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calvijncollege_cup_setup)
 
         if (intent != null) {
-            val moduleSpKey = intent.getStringExtra("moduleSharedPreferencesKey")
-            val setupCompleteId = intent.getStringExtra("setupCompleteId")
-
-            Log.i("TESTING", "ModuleSpKey=$moduleSpKey, SetupCompleteId=$setupCompleteId")
-
-            // TODO: Code below is just example code.
-            val moduleSp = getSharedPreferences(moduleSpKey, Context.MODE_PRIVATE)
-            moduleSp.edit(commit = true) {
-                putBoolean(CUPUserModule.SP_KEY_SETUP_COMPLETED, true)
-            }
-            ModuleManager.completeSetup(setupCompleteId)
-            finish()
+            moduleSpKey = intent.getStringExtra("moduleSharedPreferencesKey")
+            setupCompleteId = intent.getStringExtra("setupCompleteId")
         }
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey("moduleSharedPreferencesKey")) {
+                moduleSpKey = savedInstanceState.getString("moduleSharedPreferencesKey")!!
+            }
+
+            if (savedInstanceState.containsKey("setupCompleteId")) {
+                setupCompleteId = savedInstanceState.getString("setupCompleteId")!!
+            }
+        }
+
+        Log.i("HOR/CC/Setup", "ModuleSpKey=$moduleSpKey, SetupCompleteId=$setupCompleteId")
+
+        moduleSp = getSharedPreferences(moduleSpKey, Context.MODE_PRIVATE)
+
+        findViewById<Button>(R.id.module_calvijncollege_cup_setup_next).onClick {
+            doAsync { next() }
+        }
+
+        doAsync {
+            weakRef.get()
+            val transaction = supportFragmentManager.beginTransaction()
+            val fragmentStep1 = SetupStep1()
+            transaction.run {
+                replace(R.id.module_calvijncollege_cup_setup_detailContainer, fragmentStep1)
+                addToBackStack(null) // TODO: Support back button press in the future
+                commit()
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.run {
+            putString("setupCompleteId", setupCompleteId)
+            putString("moduleSharedPreferencesKey", moduleSpKey)
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    /**
+     * Will be called from the background thread (by [doAsync]).
+     */
+    fun next() {
+        // TODO: Replace current fragment with loading fragment to indicate progress.
+
+        when (step) {
+            1 -> {
+                // User has entered the first letters of their surname
+                step = 2
+                // TODO: Load fragment SetupStep2
+            }
+            2 -> {
+                // User has selected the right user (with the correct first name, etc.)
+                step = 3
+                // TODO: Load fragment SetupStep3
+            }
+            3 -> {
+                // User has entered the pin code
+                done()
+            }
+        }
+    }
+
+    fun done () {
+        moduleSp.edit(commit = true) {
+            putBoolean(CUPUserModule.SP_KEY_SETUP_COMPLETED, true)
+        }
+
+        ModuleManager.completeSetup(setupCompleteId)
+
+        runOnUiThread { finish() }
     }
 }

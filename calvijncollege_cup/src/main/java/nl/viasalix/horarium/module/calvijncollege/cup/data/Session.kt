@@ -60,6 +60,8 @@ data class Session(val token: String, var internalUsernameIdentifier: String = "
         }
     }
 
+    /* Methods for the CookieJar implementation */
+
     override fun loadForRequest(url: HttpUrl): MutableList<Cookie> = cookies
 
     override fun saveFromResponse(url: HttpUrl, cookies: MutableList<Cookie>) {

@@ -28,17 +28,24 @@ class CUPUserModule : HorariumUserModule() {
     companion object {
         const val TAG: String = "HORARIUM/CC/CUP"
         const val SP_KEY_SETUP_COMPLETED: String = "setupCompleted"
+        const val SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER = "config_internalUsernameIdentifier"
+        const val SP_KEY_CONFIG_PIN = "config_pin"
     }
 
     private lateinit var moduleSp: SharedPreferences
 
     override fun init(moduleSp: SharedPreferences, eventsProvider: UserEvents) {
-        Log.d(TAG, "Initializing CUP module.")
+        Log.d(TAG, "Initializing CUP module...")
 
         this.moduleSp = moduleSp
 
         eventsProvider.appointmentsReady += ::appointmentsReady
         eventsProvider.renderAppointment += ::renderAppointment
+
+        if (moduleSp.contains(SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER) &&
+            moduleSp.contains(SP_KEY_CONFIG_PIN)) {
+            // TODO: Create CUPClient instance?
+        }
     }
 
     override fun provideSetupActivityClass(): Class<CalvijncollegeCupSetup>? {

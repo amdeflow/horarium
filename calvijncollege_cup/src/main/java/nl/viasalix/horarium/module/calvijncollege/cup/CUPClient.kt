@@ -16,6 +16,7 @@
 
 package nl.viasalix.horarium.module.calvijncollege.cup
 
+import android.util.Log
 import nl.viasalix.horarium.module.calvijncollege.cup.data.Session
 import okhttp3.Call
 import okhttp3.FormBody
@@ -26,7 +27,7 @@ import okio.Buffer
 import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
 
-class CUPClient(host: String) {
+class CUPClient(host: String = "ccgobb.cupweb6.nl") {
     private val baseUrl = HttpUrl.Builder()
         .scheme("https")
         .host(host)
@@ -47,8 +48,6 @@ class CUPClient(host: String) {
 
         val response = client.newCall(request).execute()
         val token = response.request().url().pathSegments()[0]
-
-        // TODO: Store cookies from session init
 
         val newSession = Session(token)
         newSession.cookies = plainCookieJar.cookies
@@ -93,10 +92,12 @@ class CUPClient(host: String) {
 
             requestBuilder.post(body)
 
-            print("RequestBody: ")
-            Buffer().also {
-                body.writeTo(it)
-                println(it.readUtf8())
+            if (Log.isLoggable("CUPClient", Log.DEBUG)) {
+                Log.d("CUPClient", "RequestBody: <next message>")
+                Buffer().also {
+                    body.writeTo(it)
+                    Log.d("CUPClient", it.readUtf8())
+                }
             }
         }
 
