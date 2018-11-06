@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.module.ModuleStatusReport
-import org.jetbrains.anko.sdk25.coroutines.onCheckedChange
+import org.jetbrains.anko.sdk27.coroutines.onCheckedChange
 
 class ModuleItemAdapter(
     private val moduleStatusReports: Array<ModuleStatusReport>,

@@ -17,10 +17,8 @@
 package nl.viasalix.horarium
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -40,7 +38,7 @@ import nl.viasalix.horarium.module.ModuleStatusReport
 import nl.viasalix.horarium.ui.module.ModuleItemAdapter
 import nl.viasalix.horarium.ui.module.installation.ModuleInstallationViewModel
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.uiThread
 
 class ModuleInstallationActivity : AppCompatActivity() {
