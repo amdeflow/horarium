@@ -10,7 +10,7 @@
     </dist:module>
 
     <application>
-        <activity android:name=".CalvijncollegeCupSetup"></activity>
+        <activity android:name=".ui.CalvijncollegeCupSetup"></activity>
     </application>
 
 </manifest>

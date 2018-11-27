@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.module.calvijncollege.cup
+package nl.viasalix.horarium.module.calvijncollege.cup.ui
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -24,6 +24,10 @@ import android.util.Log
 import android.widget.Button
 import androidx.core.content.edit
 import nl.viasalix.horarium.module.ModuleManager
+import nl.viasalix.horarium.module.calvijncollege.cup.CUPClient
+import nl.viasalix.horarium.module.calvijncollege.cup.CUPUserModule
+import nl.viasalix.horarium.module.calvijncollege.cup.R
+import nl.viasalix.horarium.module.calvijncollege.cup.method.SearchUsers
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
@@ -37,6 +41,8 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
     lateinit var setupCompleteId: String
     lateinit var moduleSp: SharedPreferences
 
+    @Volatile
+    private var loading = false
     private var step = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,24 +96,42 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
      * Will be called from the background thread (by [doAsync]).
      */
     fun next() {
-        // TODO: Replace current fragment with loading fragment to indicate progress.
+        if (loading) return
+        loading = true
+
+        val loadingTransaction = supportFragmentManager.beginTransaction()
+        val loadingProgress = LoadingFragment()
+        loadingTransaction.run {
+            replace(R.id.module_calvijncollege_cup_setup_detailContainer, loadingProgress)
+            addToBackStack(null)
+            commit()
+        }
 
         when (step) {
-            1 -> {
-                // User has entered the first letters of their surname
-                step = 2
-                // TODO: Load fragment SetupStep2
+            1 -> { // User has entered the first letters of their surname
+                val cupClient = CUPClient()
+                cupClient.init()
+
+                val searchResult = SearchUsers.execute(cupClient, "bro")
+                if (searchResult.success) {
+                    step = 2
+                } else {
+
+                }
             }
-            2 -> {
-                // User has selected the right user (with the correct first name, etc.)
+            2 -> { // User has selected the a user
                 step = 3
                 // TODO: Load fragment SetupStep3
             }
-            3 -> {
-                // User has entered the pin code
+            3 -> { // User has entered the pin code
+                val cupClient = CUPClient()
+                var initResult = cupClient.init("bro", "1", "1275")
+
                 done()
             }
         }
+
+        loading = false
     }
 
     fun done () {

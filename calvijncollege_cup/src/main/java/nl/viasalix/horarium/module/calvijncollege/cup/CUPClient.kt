@@ -18,6 +18,8 @@ package nl.viasalix.horarium.module.calvijncollege.cup
 
 import android.util.Log
 import nl.viasalix.horarium.module.calvijncollege.cup.data.Session
+import nl.viasalix.horarium.module.calvijncollege.cup.method.SearchUsers
+import nl.viasalix.horarium.module.calvijncollege.cup.method.SignIn
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.HttpUrl
@@ -53,6 +55,31 @@ class CUPClient(host: String = "ccgobb.cupweb6.nl") {
         newSession.cookies = plainCookieJar.cookies
         newSession.extractAspFields(Jsoup.parse(response.body()!!.string()))
         init(newSession)
+    }
+
+    fun init(surnameFirstLetters: String, internalUsernameIdentifier: String, pin: String): Pair<Boolean, String> {
+        init()
+
+        val searchResult = SearchUsers.execute(this, surnameFirstLetters)
+
+        if (!searchResult.success) {
+            return Pair(false, searchResult.failReason)
+        }
+
+        if (!searchResult.result.containsKey(internalUsernameIdentifier)) {
+            return Pair(false, "E_CUPClient_ProvidedInternalUsernameIdentifierNotFound")
+        }
+
+        session.internalUsernameIdentifier = internalUsernameIdentifier
+        session.pin = pin
+
+        val signInResult = SignIn.execute(this)
+
+        if (!signInResult.success) {
+            return Pair(signInResult.success, signInResult.failReason)
+        }
+
+        return Pair(true, "")
     }
 
     fun init(loadedSession: Session) {

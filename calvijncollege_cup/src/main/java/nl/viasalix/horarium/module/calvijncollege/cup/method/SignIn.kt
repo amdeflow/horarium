@@ -45,7 +45,7 @@ class SignIn(override val success: Boolean, override val result: String = "") : 
 
             doc.getElementById("_errorLabel").also { errorLabel ->
                 if (errorLabel != null && !errorLabel.text().trim().contentEquals("Error Label")) {
-                    return SignIn(false).also { it.failReason = errorLabel.text() }
+                    return SignIn(false).also { it.failReason = "E_SignIn_Plain_" + errorLabel.text() }
                 }
             }
 

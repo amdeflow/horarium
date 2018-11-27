@@ -22,6 +22,7 @@ import nl.viasalix.horarium.events.UserEvents
 import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
 import nl.viasalix.horarium.events.args.RenderAppointmentEventArgs
 import nl.viasalix.horarium.module.HorariumUserModule
+import nl.viasalix.horarium.module.calvijncollege.cup.ui.CalvijncollegeCupSetup
 
 class CUPUserModule : HorariumUserModule() {
 
