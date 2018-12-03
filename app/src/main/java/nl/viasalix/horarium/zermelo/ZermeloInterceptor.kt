@@ -19,7 +19,7 @@ package nl.viasalix.horarium.zermelo
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class ZermeloInterceptor(var accessToken: String = "") : Interceptor {
+class ZermeloInterceptor(var accessToken: String) : Interceptor {
     /**
      * intercept: Intercepts the request and adds an authentication header
      */

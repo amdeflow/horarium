@@ -22,6 +22,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -30,6 +31,7 @@ import nl.viasalix.horarium.module.HorariumUserModule
 import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.ui.drawer.BottomDrawer
 import nl.viasalix.horarium.ui.main.ScheduleFragment
+import nl.viasalix.horarium.utils.*
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.doAsync
 
@@ -44,9 +46,9 @@ class MainActivity : AppCompatActivity() {
     private var moduleInstances: List<HorariumUserModule> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val currentUser = defaultSharedPreferences.getString(getString(R.string.SP_KEY_CURRENT_USER), null)
+        val currentUser = defaultSharedPreferences.getString(SP_KEY_CURRENT_USER, null)
 
-        if (!defaultSharedPreferences.contains(getString(R.string.SP_KEY_USERS)) || currentUser == null) {
+        if (!defaultSharedPreferences.contains(SP_KEY_USERS) || currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
 
             finish()
@@ -76,8 +78,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
+            // TODO: Add userEvents back
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, ScheduleFragment.newInstance(userEvents))
+                .replace(R.id.container, ScheduleFragment())
                 .commitNow()
         }
 
@@ -93,15 +96,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_activity_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onResume() {
         super.onResume()
 
-        val installationState = userSp.getInt(getString(R.string.SP_KEY_MODULE_INSTALLATION_STATE), -1)
+        val installationState = userSp.getInt(SP_KEY_MODULE_INSTALLATION_STATE, -1)
 
         if (installationState > -1)
             userSp.edit(commit = true) {
-                putBoolean(getString(R.string.SP_KEY_MODULES_PROMPTED), true)
-                putInt(getString(R.string.SP_KEY_MODULE_INSTALLATION_STATE), -1)
+                putBoolean(SP_KEY_MODULES_PROMPTED, true)
+                putInt(SP_KEY_MODULE_INSTALLATION_STATE, -1)
             }
 
         when (installationState) {
@@ -151,7 +159,7 @@ class MainActivity : AppCompatActivity() {
             setupNext(iterator)
         }
 
-        val userIdentifier = userSp.getString(getString(R.string.SP_KEY_USER_IDENTIFIER), "")!!
+        val userIdentifier = userSp.getString(SP_KEY_USER_IDENTIFIER, "")!!
         val moduleSpKey = userIdentifier + "_module_" + next.javaClass.name
 
         Intent(this, activityClass)

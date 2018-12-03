@@ -32,11 +32,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.play.core.splitinstall.SplitInstallRequest
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
+import nl.viasalix.horarium.utils.SP_KEY_MODULE_INSTALLATION_STATE
 import nl.viasalix.horarium.databinding.ActivityModuleInstallationBinding
 import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.module.ModuleStatusReport
 import nl.viasalix.horarium.ui.module.ModuleItemAdapter
 import nl.viasalix.horarium.ui.module.installation.ModuleInstallationViewModel
+import nl.viasalix.horarium.utils.SP_KEY_MODULES_ACTIVE
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.uiThread
@@ -102,13 +104,13 @@ class ModuleInstallationActivity : AppCompatActivity() {
             val noActivated = activatedModules.size
 
             if (noActivated == 0) {
-                userSp.edit { putInt(getString(R.string.SP_KEY_MODULE_INSTALLATION_STATE), STATE_SKIPPED) }
+                userSp.edit { putInt(SP_KEY_MODULE_INSTALLATION_STATE, STATE_SKIPPED) }
                 uiThread { finish() }
             } else {
                 if (statusReports.count { it.installed } == noActivated) {
                     userSp.edit {
-                        putInt(getString(R.string.SP_KEY_MODULE_INSTALLATION_STATE), STATE_DONE_NOTHING_DOWNLOADED)
-                        putStringSet(getString(R.string.SP_KEY_MODULES_ACTIVE), activatedModules.map { it.moduleName }.toSet())
+                        putInt(SP_KEY_MODULE_INSTALLATION_STATE, STATE_DONE_NOTHING_DOWNLOADED)
+                        putStringSet(SP_KEY_MODULES_ACTIVE, activatedModules.map { it.moduleName }.toSet())
                     }
                     uiThread { finish() }
                 } else {
@@ -151,8 +153,8 @@ class ModuleInstallationActivity : AppCompatActivity() {
                 }
                 SplitInstallSessionStatus.INSTALLED -> {
                     userSp.edit {
-                        putInt(getString(R.string.SP_KEY_MODULE_INSTALLATION_STATE), STATE_DONE_MODULES_DOWNLOADED)
-                        putStringSet(getString(R.string.SP_KEY_MODULES_ACTIVE), modulesToActivate.map { it.moduleName }.toSet())
+                        putInt(SP_KEY_MODULE_INSTALLATION_STATE, STATE_DONE_MODULES_DOWNLOADED)
+                        putStringSet(SP_KEY_MODULES_ACTIVE, modulesToActivate.map { it.moduleName }.toSet())
                     }
 
                     finish()
@@ -181,7 +183,7 @@ class ModuleInstallationActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setMessage(getString(R.string.module_installation_error).format(message))
             .setNegativeButton(R.string.skip) { _, _ ->
-                userSp.edit { putInt(getString(R.string.SP_KEY_MODULE_INSTALLATION_STATE), STATE_SKIPPED) }
+                userSp.edit { putInt(SP_KEY_MODULE_INSTALLATION_STATE, STATE_SKIPPED) }
                 finish()
             }
             .setPositiveButton(R.string.try_again_later) { _, _ ->

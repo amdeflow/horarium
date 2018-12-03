@@ -16,22 +16,24 @@
 
 package nl.viasalix.horarium.persistence
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import nl.viasalix.horarium.zermelo.model.Appointment
+import java.util.*
 
 @Dao
 interface AppointmentDao {
     @Query("SELECT * FROM `appointment`")
-    fun getAppointments(): List<Appointment>
+    fun getAppointments(): LiveData<List<Appointment>>
 
     @Query("SELECT * FROM `appointment` WHERE `start` >= :from AND `end` <= :till")
-    fun getAppointmentsFromTill(from: Long, till: Long): List<Appointment>
+    fun getAppointmentsFromTill(from: Date, till: Date): LiveData<List<Appointment>>
 
     @Query("SELECT * FROM `appointment` WHERE `teachers` LIKE '%' || :teacher || '%'")
-    fun getAppointmentsByTeacher(teacher: String): List<Appointment>
+    fun getAppointmentsByTeacher(teacher: String): LiveData<List<Appointment>>
 
     @Query("DELETE FROM `appointment` WHERE `start` >= :from AND `end` <= :till")
-    fun deleteAppointmentsFromTill(from: Long, till: Long)
+    fun deleteAppointmentsFromTill(from: Date, till: Date)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAppointment(appointment: Appointment)

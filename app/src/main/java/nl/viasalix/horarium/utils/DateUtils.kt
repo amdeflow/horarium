@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.zermelo.utils
+package nl.viasalix.horarium.utils
 
 import android.content.Context
 import android.text.format.DateUtils
@@ -31,9 +31,10 @@ object DateUtils {
     fun unixSecondsToDate(timestamp: Long) = Date(timestamp * 1000)
     fun Date.unixSeconds() = this.time / 1000
 
-    fun startOfWeek(week: Int): Date {
+    fun startOfWeek(week: Int, year: Int): Date {
         val cal = Calendar.getInstance()
-        with(cal) {
+        cal.apply {
+            set(Calendar.YEAR, year)
             set(Calendar.WEEK_OF_YEAR, week)
             set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
             set(Calendar.HOUR_OF_DAY, 0)
@@ -45,9 +46,11 @@ object DateUtils {
         return cal.time
     }
 
-    fun endOfWeek(week: Int): Date {
+    fun endOfWeek(week: Int, year: Int): Date {
         val cal = Calendar.getInstance()
-        with(cal) {
+
+        cal.apply {
+            set(Calendar.YEAR, year)
             set(Calendar.WEEK_OF_YEAR, week)
             set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY)
             set(Calendar.HOUR_OF_DAY, 23)
@@ -58,6 +61,10 @@ object DateUtils {
 
         return cal.time
     }
+
+    fun getCurrentYear() = with (Calendar.getInstance()) { get(Calendar.YEAR) }
+
+    fun getCurrentWeek() = with (Calendar.getInstance()) { get(Calendar.WEEK_OF_YEAR) }
 
     fun getCurrentUnixSeconds() = System.currentTimeMillis() / 1000
 
@@ -79,7 +86,7 @@ object DateUtils {
         }
 
         dayString += SimpleDateFormat(
-            context?.getString(R.string.DATE_FORMAT),
+            context?.getString(R.string.date_format),
             Locale.getDefault()
         ).format(Date(timestamp * 1000))
 

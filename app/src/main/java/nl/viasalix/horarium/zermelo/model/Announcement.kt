@@ -18,18 +18,22 @@ package nl.viasalix.horarium.zermelo.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import nl.viasalix.horarium.converters.HorariumTypeConverters
+import java.util.*
 
 @Entity
+@TypeConverters(HorariumTypeConverters::class)
 data class Announcement(
-    // The id of the announcement
-    @PrimaryKey
-    var id: Long = -1,
-    // The time from which the announcement should be shown
-    var start: Long = -1,
-    // The time from which the announcement should be hidden
-    var end: Long = -1,
-    // The title of the announcement
-    var title: String = "",
-    // The details on the announcement
-    var text: String = ""
+        // The id of the announcement
+        @PrimaryKey
+        var id: Long = -1,
+        // The time from which the announcement should be shown
+        var start: Date = Date(0),
+        // The time from which the announcement should be hidden
+        var end: Date = Date(0),
+        // The title of the announcement
+        var title: String = "",
+        // The details on the announcement
+        var text: String = ""
 )

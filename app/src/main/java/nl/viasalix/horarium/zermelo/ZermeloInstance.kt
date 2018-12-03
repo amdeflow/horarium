@@ -24,7 +24,7 @@ import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.model.ParentTeacherNight
 import nl.viasalix.horarium.zermelo.model.User
 import nl.viasalix.horarium.zermelo.model.ZermeloAuthResponse
-import nl.viasalix.horarium.zermelo.utils.DateUtils
+import nl.viasalix.horarium.utils.DateUtils
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,13 +32,14 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Date
+import nl.viasalix.horarium.utils.DateUtils.unixSeconds
 
 class ZermeloInstance(
     schoolName: String,
     accessToken: String = "",
     apiVer: Int = 3
 ) {
-    private var interceptor: ZermeloInterceptor = ZermeloInterceptor(accessToken = accessToken)
+    private var interceptor: ZermeloInterceptor = ZermeloInterceptor(accessToken)
 
     private val zermeloService: ZermeloService
     private val baseUrl = Uri.Builder().scheme("https")
@@ -65,14 +66,12 @@ class ZermeloInstance(
         zermeloService = retrofit.create(ZermeloService::class.java)
     }
 
-
-
     fun getAppointments(args: GetAppointmentsArgs) {
         zermeloService.getAppointments(
-            args.from.time / 1000,
-            args.till.time / 1000,
+            args.from.unixSeconds(),
+            args.till.unixSeconds(),
             if (args.modifiedSince != null) {
-                args.modifiedSince.time / 1000
+                args.modifiedSince.unixSeconds()
             } else {
                 null
             },
@@ -82,20 +81,20 @@ class ZermeloInstance(
             args.user
         ).enqueue(object : Callback<ZermeloResponse<Appointment>> {
             override fun onResponse(
-                call: Call<ZermeloResponse<Appointment>>?,
-                response: Response<ZermeloResponse<Appointment>>?
+                call: Call<ZermeloResponse<Appointment>>,
+                response: Response<ZermeloResponse<Appointment>>
             ) {
-                args.callback(response?.body()?.response?.data, args.from, args.till)
+                args.callback(response.body()?.response?.data, args.from, args.till)
             }
 
-            override fun onFailure(call: Call<ZermeloResponse<Appointment>>?, t: Throwable?) {
+            override fun onFailure(call: Call<ZermeloResponse<Appointment>>, t: Throwable) {
                 args.callback(null, args.from, args.till)
             }
         })
     }
 
     fun getAnnouncements(
-        current: Boolean? = null,
+        current: Boolean = true,
         user: String = "~me",
         callback: (List<Announcement>?) -> Unit
     ) {
@@ -147,7 +146,10 @@ class ZermeloInstance(
     fun getCurrentUser(callback: (User?) -> Unit) {
         zermeloService.getUser()
             .enqueue(object : Callback<ZermeloResponse<User>> {
-                override fun onResponse(call: Call<ZermeloResponse<User>>, response: Response<ZermeloResponse<User>>) {
+                override fun onResponse(
+                    call: Call<ZermeloResponse<User>>,
+                    response: Response<ZermeloResponse<User>>
+                ) {
                     if (response.isSuccessful) {
                         callback(response.body()?.response?.data?.get(0))
                     } else {
@@ -163,7 +165,10 @@ class ZermeloInstance(
 
     fun tryLogin(authCode: String, callback: (Boolean, String) -> Unit) {
         zermeloService.login(authCode).enqueue(object : Callback<ZermeloAuthResponse> {
-            override fun onResponse(call: Call<ZermeloAuthResponse>, response: Response<ZermeloAuthResponse>) {
+            override fun onResponse(
+                call: Call<ZermeloAuthResponse>,
+                response: Response<ZermeloAuthResponse>
+            ) {
                 val body = response.body()
                 if (body != null) {
                     interceptor.accessToken = body.accessToken
@@ -180,10 +185,4 @@ class ZermeloInstance(
             }
         })
     }
-
-    val accessToken: String
-        get() = interceptor.accessToken
-
-    val ginterceptor: ZermeloInterceptor
-        get() = interceptor
 }

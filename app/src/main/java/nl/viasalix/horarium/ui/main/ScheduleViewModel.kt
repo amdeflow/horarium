@@ -16,20 +16,37 @@
 
 package nl.viasalix.horarium.ui.main
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import nl.viasalix.horarium.events.UserEvents
-import nl.viasalix.horarium.zermelo.ZermeloInstance
+import nl.viasalix.horarium.persistence.ScheduleRepository
+import nl.viasalix.horarium.utils.DateUtils.getCurrentWeek
+import nl.viasalix.horarium.utils.DateUtils.getCurrentYear
 import nl.viasalix.horarium.zermelo.model.Appointment
-import java.util.Calendar
 
-class ScheduleViewModel : ViewModel() {
-    val schedule = MutableLiveData<MutableList<Appointment>>()
-    var selectedWeek = MutableLiveData<Int>()
-    lateinit var instance: ZermeloInstance
-    var userEvents: UserEvents? = null
+class ScheduleViewModel internal constructor(
+        private val scheduleRepository: ScheduleRepository
+): ViewModel() {
+
+    private val week = MutableLiveData<Int>()
+    private val year = MutableLiveData<Int>()
+    private val schedule = MediatorLiveData<List<Appointment>>()
 
     init {
-        selectedWeek.value = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)
+        val liveSchedule = scheduleRepository.getAppointmentsInWeekOfYear(
+                week.value ?: getCurrentWeek(), year.value ?: getCurrentYear())
+
+        schedule.addSource(liveSchedule, schedule::setValue)
     }
+
+    fun getSchedule() = schedule
+
+    fun setWeek(week: Int) {
+        this.week.value = week
+    }
+
+    fun setYear(year: Int) {
+        this.year.value = year
+    }
+
 }

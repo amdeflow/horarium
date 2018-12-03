@@ -16,198 +16,46 @@
 
 package nl.viasalix.horarium.ui.main
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import nl.viasalix.horarium.R
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
-import nl.viasalix.horarium.events.UserEvents
-import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
-import nl.viasalix.horarium.persistence.HorariumDatabase
-import nl.viasalix.horarium.ui.main.appointment.AppointmentAdapter
-import nl.viasalix.horarium.ui.main.dialogs.CustomWeekDialog
-import nl.viasalix.horarium.zermelo.ZermeloInstance
-import nl.viasalix.horarium.zermelo.args.GetAppointmentsArgs
-import nl.viasalix.horarium.zermelo.model.Appointment
-import nl.viasalix.horarium.zermelo.utils.DateUtils
-import org.jetbrains.anko.defaultSharedPreferences
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.selector
-import org.jetbrains.anko.uiThread
+import nl.viasalix.horarium.ui.main.recyclerview.ScheduleAdapter
+import nl.viasalix.horarium.utils.InjectorUtils
 
 class ScheduleFragment : Fragment() {
 
-    companion object {
-        fun newInstance(userEvents: UserEvents) = with(ScheduleFragment()) {
-            this.userEvents = userEvents
-            this
-        }
-    }
-
-    private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: ScheduleViewModel
-    private lateinit var viewAdapter: AppointmentAdapter
-    private lateinit var db: HorariumDatabase
-
-    private var userEvents: UserEvents? = null
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.refresh -> {
-                refresh(); true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val binding: ScheduleFragmentBinding =
-            DataBindingUtil.inflate(inflater, R.layout.schedule_fragment, container, false)
-        binding.setLifecycleOwner(this)
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
+        val binding = ScheduleFragmentBinding.inflate(inflater, container, false)
+        val context = context ?: return binding.root
 
-        val currentUser = activity?.defaultSharedPreferences?.getString(getString(R.string.SP_KEY_CURRENT_USER), "")
-        val currentUserSp = activity?.getSharedPreferences(currentUser, Context.MODE_PRIVATE)
-        val accessToken = currentUserSp?.getString(getString(R.string.SP_KEY_ACCESS_TOKEN), "")
-        val schoolName = currentUserSp?.getString(getString(R.string.SP_KEY_SCHOOL_NAME), "")
+        val factory = InjectorUtils.provideScheduleViewModelFactory(context)
+        viewModel = ViewModelProviders.of(this, factory).get(ScheduleViewModel::class.java)
 
-        db = Room.databaseBuilder<HorariumDatabase>(
-            activity!!.applicationContext,
-            HorariumDatabase::class.java,
-            "horarium-db_$currentUser"
-        ).build()
-
-        viewModel = ViewModelProviders.of(this).get(ScheduleViewModel::class.java)
-        viewModel.instance = ZermeloInstance(
-            schoolName = schoolName!!,
-            accessToken = accessToken!!
-        )
-        viewModel.userEvents = userEvents
-        binding.viewModel = viewModel
-
-        setupRecyclerView(binding.root)
-
-        viewModel.schedule.observe(this, Observer<MutableList<Appointment>> { appointments ->
-            viewAdapter.updateSchedule(appointments) {
-                viewAdapter.notifyDataSetChanged()
-            }
-            recyclerView.recycledViewPool.clear()
-
-            userEvents?.appointmentsReady?.invoke(AppointmentsReadyEventArgs(appointments))
-        })
-
-        viewModel.selectedWeek.observe(this, Observer<Int> { _ -> refresh() })
-
-        activity?.findViewById<FloatingActionButton>(R.id.weekSelector)?.setOnClickListener {
-            weekSelector()
-        }
+        val adapter = ScheduleAdapter()
+        binding.schedule.adapter = adapter
+        subscribeSchedule(adapter)
 
         return binding.root
     }
 
-    private fun setupRecyclerView(view: View) {
-        viewAdapter = AppointmentAdapter(context, emptyList<Appointment>().toMutableList())
-
-        recyclerView = view.findViewById(R.id.scheduleRecyclerView)!!
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = viewAdapter
-        recyclerView.itemAnimator = DefaultItemAnimator()
+    private fun subscribeSchedule(adapter: ScheduleAdapter) {
+        viewModel.getSchedule().observe(viewLifecycleOwner, Observer { schedule ->
+            if (schedule != null) adapter.submitList(schedule)
+        })
     }
 
-    private fun weekSelector() {
-        val weeks = mutableListOf<Int>()
-        for (offset in -3..3) {
-            weeks.add(DateUtils.getWeekWithOffset(offset))
-        }
+    private fun updateData() {
 
-        var selectedIndex = 7
-
-        for (week in weeks) {
-            if (week == viewModel.selectedWeek.value!!) {
-                selectedIndex = weeks.indexOf(week)
-                break
-            }
-        }
-
-        val weeksText = resources.getStringArray(R.array.weeks).mapIndexed { index, elem ->
-            if (index < 7) { elem + " (${weeks[index]})" } else { elem }
-        }.toMutableList()
-
-        if (selectedIndex == 7) weeksText[7] = "${weeksText[7]} (${viewModel.selectedWeek.value})"
-        weeksText[selectedIndex] = "${weeksText[selectedIndex]} \u2015 ${getString(R.string.selected)}"
-
-        activity!!.selector(getString(R.string.select_week), weeksText) { _, i ->
-            if (i < 7) viewModel.selectedWeek.value = weeks[i]
-            else CustomWeekDialog.show(context) { done, week ->
-                if (done) {
-                    viewModel.selectedWeek.value = week
-                }
-            }
-        }
-    }
-
-    private fun refresh() {
-        val args = GetAppointmentsArgs(viewModel.selectedWeek.value!!) { appointments, from, till ->
-            if (appointments != null) {
-                doAsync {
-                    val appointmentDao = db.appointmentDao()
-                    appointmentDao.deleteAppointmentsFromTill(from.time / 1000, till.time / 1000)
-                    appointmentDao.insertAppointments(appointments)
-
-                    viewAppointments()
-                }
-            } else {
-                viewAppointments()
-            }
-        }
-
-        viewModel.instance.getAppointments(args)
-    }
-
-    private fun viewAppointments() {
-        doAsync {
-            // Collect appointments and sort
-            val dbAppointments = db.appointmentDao().getAppointmentsFromTill(
-                DateUtils.startOfWeek(viewModel.selectedWeek.value!!).time / 1000,
-                DateUtils.endOfWeek(viewModel.selectedWeek.value!!).time / 1000
-            ).asSequence().sortedWith(compareBy(Appointment::start)).toMutableList()
-
-            uiThread {
-                viewModel.schedule.value = dbAppointments
-
-                if (viewModel.selectedWeek.value == DateUtils.getWeekWithOffset(0)) {
-                    scrollToToday()
-                }
-            }
-        }
-    }
-
-    private fun scrollToToday() {
-        val firstToday = viewModel.schedule.value?.find { DateUtils.isToday(it.start * 1000) }
-        if (firstToday != null) {
-            val position = viewModel.schedule.value?.indexOf(firstToday)
-            if (position != null) view?.findViewById<RecyclerView>(R.id.scheduleRecyclerView)?.scrollToPosition(position)
-        }
     }
 }

@@ -16,9 +16,14 @@
 
 package nl.viasalix.horarium.persistence
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
+import nl.viasalix.horarium.converters.HorariumTypeConverters
+import nl.viasalix.horarium.utils.DatabaseUtils.formatDatabaseName
 import nl.viasalix.horarium.zermelo.model.Announcement
 import nl.viasalix.horarium.zermelo.model.Appointment
 import nl.viasalix.horarium.zermelo.model.ParentTeacherNight
@@ -29,4 +34,26 @@ abstract class HorariumDatabase : RoomDatabase() {
     abstract fun announcementDao(): AnnouncementDao
     abstract fun appointmentDao(): AppointmentDao
     abstract fun parentTeacherNightDao(): ParentTeacherNightDao
+
+    companion object {
+
+        @Volatile private var instance: HorariumDatabase? = null
+
+        fun getInstance(user: String, context: Context): HorariumDatabase {
+            return instance?: synchronized(this) {
+                instance ?: buildDatabase(user, context).also { instance = it }
+            }
+        }
+
+        private fun buildDatabase(user: String, context: Context): HorariumDatabase {
+            return Room.databaseBuilder(context, HorariumDatabase::class.java,
+                    formatDatabaseName(user)).addCallback(object: RoomDatabase.Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            // TODO: get WorkManager up and running
+                        }
+                    })
+                    .build()
+        }
+    }
 }

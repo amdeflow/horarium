@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.persistence
+package nl.viasalix.horarium.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.*
 
 class HorariumTypeConverters {
     private val gson = Gson()
@@ -34,4 +35,12 @@ class HorariumTypeConverters {
     fun stringListToString(data: List<String>?): String? {
         return gson.toJson(data)
     }
+
+    @TypeConverter
+    fun dateToLong(date: Date): Long =
+            date.time
+
+    @TypeConverter
+    fun longToDate(date: Long) =
+            Date(date)
 }
