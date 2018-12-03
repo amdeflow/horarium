@@ -3,7 +3,7 @@
 A very skeer :mega: Zermelo schedule viewer made specifically for people using a phone running Android
 
 #### Code
-If you're on GitHub staring at this repo, considering looking at the [GitLab version](https://gitlab.com/amdeflow/horarium) where all the real stuff gets done.
+If you're on GitHub staring at this repo, considering looking at the [GitLab version](https://gitlab.com/rutgerbrf/horarium) where all the real stuff gets done.
 
 #### Main motivation
 The default Zermelo app is very ugly. I don't like it. I think humans (and teachers?) have the right to look at a nice app which (mainly) functions correctly.
