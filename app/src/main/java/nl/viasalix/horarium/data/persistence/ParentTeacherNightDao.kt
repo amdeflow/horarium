@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.zermelo
+package nl.viasalix.horarium.data.persistence
 
-data class ZermeloResponseInner<T>(
-    val status: Int,
-    val message: String,
-    val details: String,
-    val eventId: Long,
-    val startRow: Long,
-    val endRow: Long,
-    val totalRows: Long,
-    val data: List<T>
-)
+import androidx.room.Dao
+import androidx.room.Query
+import nl.viasalix.horarium.data.zermelo.model.ParentTeacherNight
+
+@Dao
+interface ParentTeacherNightDao {
+    @Query("SELECT * FROM parent_teacher_night")
+    fun getParentTeacherNights(): List<ParentTeacherNight>
+}

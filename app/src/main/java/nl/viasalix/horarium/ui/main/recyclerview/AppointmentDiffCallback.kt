@@ -1,7 +1,7 @@
 package nl.viasalix.horarium.ui.main.recyclerview
 
 import androidx.recyclerview.widget.DiffUtil
-import nl.viasalix.horarium.zermelo.model.Appointment
+import nl.viasalix.horarium.data.zermelo.model.Appointment
 
 class AppointmentDiffCallback : DiffUtil.ItemCallback<Appointment>() {
 

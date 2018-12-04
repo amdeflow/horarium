@@ -9,12 +9,18 @@ object SharedPreferencesUtils {
     fun makeUserId(authCode: String) = "user_$authCode"
 
     fun getUserSharedPreferences(userId: String?, context: Context) =
-        context.getSharedPreferences(userId, Context.MODE_PRIVATE)
+            context.getSharedPreferences(userId, Context.MODE_PRIVATE)
 
     fun getCurrentUser(context: Context) =
-        context.defaultSharedPreferences.getString(SP_KEY_CURRENT_USER, "")!!
+            context.defaultSharedPreferences.getString(SP_KEY_CURRENT_USER, "")!!
+
+    fun getSchoolName(context: Context) =
+            context.defaultSharedPreferences.getString(SP_KEY_SCHOOL_NAME, "")!!
+
+    fun getAccessToken(user: String, context: Context) =
+            getUserSharedPreferences(user, context).getString(SP_KEY_ACCESS_TOKEN, "")!!
 
     fun getCurrentUserSharedPreferences(context: Context): SharedPreferences =
-        getUserSharedPreferences(getCurrentUser(context), context)
+            getUserSharedPreferences(getCurrentUser(context), context)
 }
 

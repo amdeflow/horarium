@@ -19,10 +19,12 @@ package nl.viasalix.horarium.ui.main
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import nl.viasalix.horarium.persistence.ScheduleRepository
+import nl.viasalix.horarium.data.repository.ScheduleRepository
 import nl.viasalix.horarium.utils.DateUtils.getCurrentWeek
 import nl.viasalix.horarium.utils.DateUtils.getCurrentYear
-import nl.viasalix.horarium.zermelo.model.Appointment
+import nl.viasalix.horarium.data.zermelo.model.Appointment
+import nl.viasalix.horarium.utils.DateUtils.endOfWeek
+import nl.viasalix.horarium.utils.DateUtils.startOfWeek
 
 class ScheduleViewModel internal constructor(
         private val scheduleRepository: ScheduleRepository
@@ -33,8 +35,10 @@ class ScheduleViewModel internal constructor(
     private val schedule = MediatorLiveData<List<Appointment>>()
 
     init {
-        val liveSchedule = scheduleRepository.getAppointmentsInWeekOfYear(
-                week.value ?: getCurrentWeek(), year.value ?: getCurrentYear())
+        val liveSchedule = scheduleRepository.getAppointmentsFromTill(
+                startOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear()),
+                endOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear())
+        )
 
         schedule.addSource(liveSchedule, schedule::setValue)
     }

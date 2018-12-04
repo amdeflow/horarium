@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.zermelo
+package nl.viasalix.horarium.data.zermelo.model
 
-import okhttp3.Interceptor
-import okhttp3.Response
+import com.google.gson.annotations.SerializedName
 
-class ZermeloInterceptor(var accessToken: String) : Interceptor {
-    /**
-     * intercept: Intercepts the request and adds an authentication header
-     */
-    override fun intercept(chain: Interceptor.Chain): Response {
-        // Add the authorization header to the request
-        val newRequest = chain.request().newBuilder()
-            .header("Authorization", "Bearer $accessToken")
-            .build()
-
-        return chain.proceed(newRequest)
-    }
-}
+data class ZermeloAuthResponse(
+    @SerializedName("access_token")
+    val accessToken: String,
+    @SerializedName("token_type")
+    val tokenType: String,
+    @SerializedName("expires_in")
+    val expiresIn: Long
+)

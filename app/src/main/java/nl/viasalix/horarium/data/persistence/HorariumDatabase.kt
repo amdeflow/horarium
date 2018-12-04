@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.persistence
+package nl.viasalix.horarium.data.persistence
 
 import android.content.Context
 import androidx.room.Database
@@ -24,9 +24,9 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import nl.viasalix.horarium.converters.HorariumTypeConverters
 import nl.viasalix.horarium.utils.DatabaseUtils.formatDatabaseName
-import nl.viasalix.horarium.zermelo.model.Announcement
-import nl.viasalix.horarium.zermelo.model.Appointment
-import nl.viasalix.horarium.zermelo.model.ParentTeacherNight
+import nl.viasalix.horarium.data.zermelo.model.Announcement
+import nl.viasalix.horarium.data.zermelo.model.Appointment
+import nl.viasalix.horarium.data.zermelo.model.ParentTeacherNight
 
 @Database(entities = [Announcement::class, Appointment::class, ParentTeacherNight::class], version = 1)
 @TypeConverters(HorariumTypeConverters::class)
@@ -50,10 +50,10 @@ abstract class HorariumDatabase : RoomDatabase() {
                     formatDatabaseName(user)).addCallback(object: RoomDatabase.Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)
-                            // TODO: get WorkManager up and running
                         }
                     })
                     .build()
         }
+
     }
 }

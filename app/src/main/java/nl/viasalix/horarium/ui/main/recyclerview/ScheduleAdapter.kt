@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import nl.viasalix.horarium.databinding.ListItemAppointmentBinding
-import nl.viasalix.horarium.zermelo.model.Appointment
+import nl.viasalix.horarium.data.zermelo.model.Appointment
 
 class ScheduleAdapter : ListAdapter<Appointment, AppointmentViewHolder>(AppointmentDiffCallback()) {
 

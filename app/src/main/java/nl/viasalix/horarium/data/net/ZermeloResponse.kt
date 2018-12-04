@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.zermelo
+package nl.viasalix.horarium.data.net
 
 data class ZermeloResponse<T>(val response: ZermeloResponseInner<T>)

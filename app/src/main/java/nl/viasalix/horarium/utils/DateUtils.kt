@@ -62,11 +62,9 @@ object DateUtils {
         return cal.time
     }
 
-    fun getCurrentYear() = with (Calendar.getInstance()) { get(Calendar.YEAR) }
+    fun getCurrentYear() = with(Calendar.getInstance()) { get(Calendar.YEAR) }
 
-    fun getCurrentWeek() = with (Calendar.getInstance()) { get(Calendar.WEEK_OF_YEAR) }
-
-    fun getCurrentUnixSeconds() = System.currentTimeMillis() / 1000
+    fun getCurrentWeek() = with(Calendar.getInstance()) { get(Calendar.WEEK_OF_YEAR) }
 
     fun isOtherDay(currentTime: Long, oldTime: Long): Boolean {
         val calendar = Calendar.getInstance()
@@ -86,21 +84,32 @@ object DateUtils {
         }
 
         dayString += SimpleDateFormat(
-            context?.getString(R.string.date_format),
-            Locale.getDefault()
+                context?.getString(R.string.date_format),
+                Locale.getDefault()
         ).format(Date(timestamp * 1000))
 
         return dayString.capitalize()
     }
 
-    fun getWeekWithOffset(offset: Int): Int {
+    /**
+     * Get week with offset
+     * @param week Week to calculate offset from
+     * @param year The year week is in
+     * @param offset By how many weeks to offset
+     * @return Pair consisting of <year, week>
+     */
+    fun getWeekWithOffset(week: Int, year: Int, offset: Int): Pair<Int, Int> {
         with(Calendar.getInstance()) {
+            set(Calendar.YEAR, year)
+            set(Calendar.WEEK_OF_YEAR, week)
             add(Calendar.WEEK_OF_YEAR, offset)
-            return get(Calendar.WEEK_OF_YEAR)
+
+            return Pair(
+                    get(Calendar.YEAR),
+                    get(Calendar.WEEK_OF_YEAR)
+            )
         }
     }
-
-    fun isToday(timestamp: Long): Boolean = DateUtils.isToday(timestamp)
 
     class DateTypeAdapter : TypeAdapter<Date>() {
         override fun read(`in`: JsonReader): Date = unixSecondsToDate(`in`.nextLong())

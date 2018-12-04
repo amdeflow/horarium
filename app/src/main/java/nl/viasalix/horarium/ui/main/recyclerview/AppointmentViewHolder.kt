@@ -2,7 +2,7 @@ package nl.viasalix.horarium.ui.main.recyclerview
 
 import androidx.recyclerview.widget.RecyclerView
 import nl.viasalix.horarium.databinding.ListItemAppointmentBinding
-import nl.viasalix.horarium.zermelo.model.Appointment
+import nl.viasalix.horarium.data.zermelo.model.Appointment
 
 class AppointmentViewHolder(
         private val binding: ListItemAppointmentBinding

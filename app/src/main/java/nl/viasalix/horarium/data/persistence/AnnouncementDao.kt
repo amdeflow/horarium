@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.persistence
+package nl.viasalix.horarium.data.persistence
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import nl.viasalix.horarium.zermelo.model.Announcement
+import nl.viasalix.horarium.data.zermelo.model.Announcement
 
 @Dao
 interface AnnouncementDao {

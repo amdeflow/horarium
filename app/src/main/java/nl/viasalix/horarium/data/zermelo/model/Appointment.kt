@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.zermelo.model
+package nl.viasalix.horarium.data.zermelo.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

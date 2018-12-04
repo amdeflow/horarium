@@ -2,7 +2,7 @@ package nl.viasalix.horarium.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import nl.viasalix.horarium.persistence.ScheduleRepository
+import nl.viasalix.horarium.data.repository.ScheduleRepository
 
 class ScheduleViewModelFactory(
         private val repository: ScheduleRepository

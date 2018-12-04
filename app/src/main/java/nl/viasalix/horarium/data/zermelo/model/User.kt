@@ -1,4 +1,4 @@
-package nl.viasalix.horarium.zermelo.model
+package nl.viasalix.horarium.data.zermelo.model
 
 data class User(
     var code: String = "",

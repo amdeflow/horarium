@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.persistence
+package nl.viasalix.horarium.data.persistence
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import nl.viasalix.horarium.zermelo.model.Appointment
+import nl.viasalix.horarium.data.zermelo.model.Appointment
 import java.util.*
 
 @Dao
