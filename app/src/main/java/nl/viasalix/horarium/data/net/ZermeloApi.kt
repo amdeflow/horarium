@@ -66,17 +66,6 @@ interface ZermeloApi {
     ):
         Call<ZermeloResponse<Appointment>>
 
-    fun getAppointmentsWithArgs(args: GetAppointmentsArgs): Call<ZermeloResponse<Appointment>> {
-        return getAppointments(
-                start = args.from?.unixSeconds(),
-                end = args.till?.unixSeconds(),
-                modifiedSince = args.modifiedSince?.unixSeconds(),
-                valid = args.valid,
-                cancelled = args.cancelled,
-                includeHidden = args.includeHidden
-        )
-    }
-
     @GET("parentteachernights")
     fun getParentTeacherNights(): Call<ZermeloResponse<ParentTeacherNight>>
 
@@ -108,6 +97,17 @@ interface ZermeloApi {
                             )
                     ).client(zermeloClient).build()
             return retrofit.create(ZermeloApi::class.java)
+        }
+
+        fun ZermeloApi.getAppointmentsWithArgs(args: GetAppointmentsArgs): Call<ZermeloResponse<Appointment>> {
+            return getAppointments(
+                    start = args.from?.unixSeconds(),
+                    end = args.till?.unixSeconds(),
+                    modifiedSince = args.modifiedSince?.unixSeconds(),
+                    valid = args.valid,
+                    cancelled = args.cancelled,
+                    includeHidden = args.includeHidden
+            )
         }
 
     }

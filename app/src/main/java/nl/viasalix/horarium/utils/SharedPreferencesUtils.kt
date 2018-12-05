@@ -14,11 +14,11 @@ object SharedPreferencesUtils {
     fun getCurrentUser(context: Context) =
             context.defaultSharedPreferences.getString(SP_KEY_CURRENT_USER, "")!!
 
-    fun getSchoolName(context: Context) =
-            context.defaultSharedPreferences.getString(SP_KEY_SCHOOL_NAME, "")!!
+    fun getSchoolName(userSp: SharedPreferences) =
+            userSp.getString(SP_KEY_SCHOOL_NAME, "")!!
 
-    fun getAccessToken(user: String, context: Context) =
-            getUserSharedPreferences(user, context).getString(SP_KEY_ACCESS_TOKEN, "")!!
+    fun getAccessToken(userSp: SharedPreferences) =
+            userSp.getString(SP_KEY_ACCESS_TOKEN, "")!!
 
     fun getCurrentUserSharedPreferences(context: Context): SharedPreferences =
             getUserSharedPreferences(getCurrentUser(context), context)

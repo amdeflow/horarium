@@ -8,6 +8,7 @@ import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.utils.DateUtils.endOfWeek
 import nl.viasalix.horarium.utils.DateUtils.getWeekWithOffset
 import nl.viasalix.horarium.utils.DateUtils.startOfWeek
+import nl.viasalix.horarium.data.net.ZermeloApi.Companion.getAppointmentsWithArgs
 import org.jetbrains.anko.doAsync
 import java.util.*
 

@@ -17,6 +17,7 @@
 package nl.viasalix.horarium.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +53,10 @@ class ScheduleFragment : Fragment() {
     private fun subscribeSchedule(adapter: ScheduleAdapter) {
         viewModel.getSchedule().observe(viewLifecycleOwner, Observer { schedule ->
             if (schedule != null) adapter.submitList(schedule)
+
+            for (item in schedule) {
+                Log.d("schedule item", item.toString())
+            }
         })
     }
 

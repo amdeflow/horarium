@@ -8,6 +8,7 @@ import nl.viasalix.horarium.ui.main.ScheduleViewModelFactory
 import nl.viasalix.horarium.utils.SharedPreferencesUtils.getAccessToken
 import nl.viasalix.horarium.utils.SharedPreferencesUtils.getCurrentUser
 import nl.viasalix.horarium.utils.SharedPreferencesUtils.getSchoolName
+import nl.viasalix.horarium.utils.SharedPreferencesUtils.getUserSharedPreferences
 
 object InjectorUtils {
 
@@ -19,8 +20,9 @@ object InjectorUtils {
 
     fun getCurrentUserScheduleRepository(context: Context): ScheduleRepository {
         val currentUser = getCurrentUser(context)
-        val schoolName = getSchoolName(context)
-        val accessToken = getAccessToken(currentUser, context)
+        val userSp = getUserSharedPreferences(currentUser, context)
+        val schoolName = getSchoolName(userSp)
+        val accessToken = getAccessToken(userSp)
         return getScheduleRepository(schoolName, accessToken, currentUser, context)
     }
 
