@@ -16,6 +16,7 @@
 
 package nl.viasalix.horarium.data.persistence
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -25,16 +26,16 @@ import nl.viasalix.horarium.data.zermelo.model.Announcement
 @Dao
 interface AnnouncementDao {
     @Query("SELECT * FROM `announcement`")
-    fun getAll(): List<Announcement>
+    fun getAll(): LiveData<List<Announcement>>
 
     @Query("SELECT * FROM `announcement` WHERE `id` IN (:ids)")
-    fun loadAllById(ids: List<Int>): List<Announcement>
+    fun loadAllById(ids: List<Int>): LiveData<List<Announcement>>
 
     @Query("SELECT * FROM `announcement` WHERE `text` LIKE :text")
-    fun loadAllByText(text: String): List<Announcement>
+    fun loadAllByText(text: String): LiveData<List<Announcement>>
 
     @Query("SELECT * FROM `announcement` WHERE `start` >= :from AND `end` <= :till")
-    fun getAnnouncementsFromTill(from: Long, till: Long): List<Announcement>
+    fun getAnnouncementsFromTill(from: Long, till: Long): LiveData<List<Announcement>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(announcement: Announcement)

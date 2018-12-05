@@ -24,7 +24,7 @@ import java.util.*
 @Dao
 interface AppointmentDao {
     @Query("SELECT * FROM `appointment`")
-    fun getAppointments(): LiveData<List<Appointment>>
+    fun getAll(): LiveData<List<Appointment>>
 
     @Query("SELECT * FROM `appointment` WHERE `start` >= :from AND `end` <= :till")
     fun getAppointmentsFromTill(from: Date, till: Date): LiveData<List<Appointment>>

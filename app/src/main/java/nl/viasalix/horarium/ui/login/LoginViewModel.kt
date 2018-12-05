@@ -25,7 +25,7 @@ class LoginViewModel : ViewModel() {
         val authCodeMatches = authCode.length == 12
         if (schoolNameMatches && authCodeMatches) {
             doAsync {
-                val response = ZermeloApi.getInstance(schoolName, "")
+                val response = ZermeloApi.buildApi(schoolName, "")
                         .login(authCode).execute()
 
                 accessToken = response.body()?.accessToken ?: ""
@@ -33,7 +33,7 @@ class LoginViewModel : ViewModel() {
                     _loggedIn.value = response.isSuccessful
                 }
 
-                val currentUser = ZermeloApi.getInstance(schoolName, accessToken)
+                val currentUser = ZermeloApi.buildApi(schoolName, accessToken)
                         .getUser().execute()
                 user = currentUser.body()?.response?.data?.get(0)
             }

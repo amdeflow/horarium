@@ -1,6 +1,7 @@
 package nl.viasalix.horarium.utils
 
 import android.content.Context
+import android.util.Log
 import nl.viasalix.horarium.data.net.ZermeloApi
 import nl.viasalix.horarium.data.persistence.HorariumDatabase
 import nl.viasalix.horarium.data.repository.ScheduleRepository
@@ -14,7 +15,7 @@ object InjectorUtils {
 
     fun getScheduleRepository(schoolName: String, accessToken: String, user: String, context: Context) =
             ScheduleRepository.getInstance(
-                    ZermeloApi.getInstance(schoolName, accessToken),
+                    ZermeloApi.buildApi(schoolName, accessToken),
                     HorariumDatabase.getInstance(user, context).appointmentDao()
             )
 

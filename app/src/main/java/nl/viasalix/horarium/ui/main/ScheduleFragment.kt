@@ -19,11 +19,14 @@ package nl.viasalix.horarium.ui.main
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import nl.viasalix.horarium.R
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
 import nl.viasalix.horarium.ui.main.recyclerview.ScheduleAdapter
@@ -32,6 +35,19 @@ import nl.viasalix.horarium.utils.InjectorUtils
 class ScheduleFragment : Fragment() {
 
     private lateinit var viewModel: ScheduleViewModel
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.refresh -> { updateData(); true }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -54,14 +70,12 @@ class ScheduleFragment : Fragment() {
     private fun subscribeSchedule(adapter: ScheduleAdapter) {
         viewModel.getSchedule().observe(viewLifecycleOwner, Observer { schedule ->
             if (schedule != null) adapter.submitList(schedule.sortedBy(Appointment::start))
-
-            for (item in schedule) {
-                Log.d("schedule item", item.toString())
-            }
+            else Log.e("hor.ScheduleFragment", "schedule is null")
         })
     }
 
     private fun updateData() {
-
+        viewModel.forceUpdateSchedule()
     }
+
 }

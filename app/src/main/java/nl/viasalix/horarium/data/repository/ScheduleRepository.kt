@@ -1,5 +1,6 @@
 package nl.viasalix.horarium.data.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import nl.viasalix.horarium.data.net.ZermeloApi
 import nl.viasalix.horarium.data.persistence.AppointmentDao
@@ -19,13 +20,20 @@ class ScheduleRepository(
 
     fun getAppointmentsFromTill(from: Date, till: Date): LiveData<List<Appointment>> {
         refreshAppointmentsFromTill(from, till)
-        return appointmentDao.getAppointments()
+        return appointmentDao.getAppointmentsFromTill(from, till)
     }
 
     private fun refreshAppointmentsFromTill(from: Date, till: Date) {
         doAsync {
             val response = api.getAppointmentsWithArgs(GetAppointmentsArgs(from, till)).execute()
-            response.body()?.response?.data?.run(appointmentDao::insertAppointments)
+            if (response.body() == null) {
+                Log.e("hor.ScheduleRepository", "response body is null")
+            }
+
+            response.body()?.response?.data?.run {
+                appointmentDao.deleteAppointmentsFromTill(from, till)
+                appointmentDao.insertAppointments(this)
+            }
         }
     }
 
@@ -36,11 +44,7 @@ class ScheduleRepository(
             val from = startOfWeek(twoWeeksAgo.second, twoWeeksAgo.first)
             val till = endOfWeek(inTwoWeeks.second, inTwoWeeks.first)
 
-            val response = api.getAppointmentsWithArgs(GetAppointmentsArgs(from, till)).execute()
-            response.body()?.response?.data?.run {
-                appointmentDao.deleteAppointmentsFromTill(from, till)
-                appointmentDao::insertAppointments
-            }
+            refreshAppointmentsFromTill(from, till)
         }
     }
 

@@ -16,6 +16,7 @@
 
 package nl.viasalix.horarium.ui.main
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,7 +33,7 @@ class ScheduleViewModel internal constructor(
 
     private val week = MutableLiveData<Int>()
     private val year = MutableLiveData<Int>()
-    private val schedule = MediatorLiveData<List<Appointment>>()
+    private var schedule = MediatorLiveData<List<Appointment>>()
 
     init {
         val liveSchedule = scheduleRepository.getAppointmentsFromTill(
@@ -44,6 +45,11 @@ class ScheduleViewModel internal constructor(
     }
 
     fun getSchedule() = schedule
+
+    fun forceUpdateSchedule() = scheduleRepository.getAppointmentsFromTill(
+            startOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear()),
+            endOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear())
+    )
 
     fun setWeek(week: Int) {
         this.week.value = week

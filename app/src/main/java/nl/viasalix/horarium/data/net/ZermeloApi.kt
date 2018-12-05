@@ -74,15 +74,7 @@ interface ZermeloApi {
 
     companion object {
 
-        @Volatile private var instance: ZermeloApi? = null
-
-        fun getInstance(schoolName: String, accessToken: String): ZermeloApi {
-            return instance?: synchronized(this) {
-                instance ?: buildApi(schoolName, accessToken).also { instance = it }
-            }
-        }
-
-        private fun buildApi(schoolName: String, accessToken: String): ZermeloApi {
+        fun buildApi(schoolName: String, accessToken: String): ZermeloApi {
             // TODO: Use Dagger for dependency injection
             val interceptor = ZermeloInterceptor(accessToken)
             val zermeloClient = OkHttpClient.Builder().addInterceptor(interceptor).build()

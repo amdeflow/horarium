@@ -16,6 +16,7 @@
 
 package nl.viasalix.horarium.data.net
 
+import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
 
