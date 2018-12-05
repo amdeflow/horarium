@@ -16,11 +16,14 @@
 
 package nl.viasalix.horarium.data.zermelo.model
 
+import android.text.format.DateUtils
+import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import nl.viasalix.horarium.converters.HorariumTypeConverters
+import java.text.DateFormat
 import java.util.*
 
 @Entity
@@ -83,4 +86,11 @@ data class Appointment(
     fun locationsString() = locations.joinToString()
     fun subjectsString() = subjects.joinToString()
     fun teachersString() = teachers.joinToString()
+    fun timeString(): String {
+        val dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
+        val startFormatted = dateFormat.format(start)
+        val endFormatted = dateFormat.format(end)
+
+        return "$startFormatted \u2015 $endFormatted"
+    }
 }
