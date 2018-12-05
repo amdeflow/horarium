@@ -77,4 +77,9 @@ data class Appointment(
         var branchOfSchool: Long = -1,
         // Branch code of the branchOfSchool
         var branch: String = ""
-)
+) {
+    fun groupsString() = groups.joinToString()
+    fun locationsString() = locations.joinToString()
+    fun subjectsString() = subjects.joinToString()
+    fun teachersString() = teachers.joinToString()
+}
