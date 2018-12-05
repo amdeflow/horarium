@@ -16,4 +16,15 @@
 
 package nl.viasalix.horarium.data.net
 
-data class ZermeloResponse<T>(val response: ZermeloResponseInner<T>)
+data class ZermeloResponse<T>(val response: ZermeloResponseInner<T>) {
+    data class ZermeloResponseInner<T>(
+            val status: Int,
+            val message: String,
+            val details: String,
+            val eventId: Long,
+            val startRow: Long,
+            val endRow: Long,
+            val totalRows: Long,
+            val data: List<T>
+    )
+}
