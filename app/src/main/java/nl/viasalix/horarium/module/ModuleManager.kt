@@ -25,10 +25,10 @@ import com.google.gson.reflect.TypeToken
 import nl.viasalix.horarium.HorariumApplication
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.events.UserEvents
-import nl.viasalix.horarium.utils.SP_KEY_MODULES_ACTIVE
-import nl.viasalix.horarium.utils.SP_KEY_MODULES_PROMPTED
-import nl.viasalix.horarium.utils.SP_KEY_SCHOOL_NAME
-import nl.viasalix.horarium.utils.SP_KEY_USER_IDENTIFIER
+import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_ACTIVE
+import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_PROMPTED
+import nl.viasalix.horarium.utils.Constants.SP_KEY_SCHOOL_NAME
+import nl.viasalix.horarium.utils.Constants.SP_KEY_USER_IDENTIFIER
 import java.io.InputStreamReader
 import java.util.UUID
 

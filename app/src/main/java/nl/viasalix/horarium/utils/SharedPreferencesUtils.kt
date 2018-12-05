@@ -2,7 +2,9 @@ package nl.viasalix.horarium.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import nl.viasalix.horarium.R
+import nl.viasalix.horarium.utils.Constants.SP_KEY_ACCESS_TOKEN
+import nl.viasalix.horarium.utils.Constants.SP_KEY_CURRENT_USER
+import nl.viasalix.horarium.utils.Constants.SP_KEY_SCHOOL_NAME
 import org.jetbrains.anko.defaultSharedPreferences
 
 object SharedPreferencesUtils {

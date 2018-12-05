@@ -32,6 +32,11 @@ import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.ui.drawer.BottomDrawer
 import nl.viasalix.horarium.ui.main.ScheduleFragment
 import nl.viasalix.horarium.utils.*
+import nl.viasalix.horarium.utils.Constants.SP_KEY_CURRENT_USER
+import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_PROMPTED
+import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULE_INSTALLATION_STATE
+import nl.viasalix.horarium.utils.Constants.SP_KEY_USERS
+import nl.viasalix.horarium.utils.Constants.SP_KEY_USER_IDENTIFIER
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.doAsync
 

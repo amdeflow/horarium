@@ -32,13 +32,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.play.core.splitinstall.SplitInstallRequest
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
-import nl.viasalix.horarium.utils.SP_KEY_MODULE_INSTALLATION_STATE
+import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULE_INSTALLATION_STATE
 import nl.viasalix.horarium.databinding.ActivityModuleInstallationBinding
 import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.module.ModuleStatusReport
 import nl.viasalix.horarium.ui.module.ModuleItemAdapter
 import nl.viasalix.horarium.ui.module.installation.ModuleInstallationViewModel
-import nl.viasalix.horarium.utils.SP_KEY_MODULES_ACTIVE
+import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_ACTIVE
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.uiThread

@@ -15,6 +15,15 @@ import nl.viasalix.horarium.databinding.LoginActivityBinding
 import nl.viasalix.horarium.ui.login.LoginQr
 import nl.viasalix.horarium.ui.login.LoginViewModel
 import nl.viasalix.horarium.utils.*
+import nl.viasalix.horarium.utils.Constants.SP_KEY_ACCESS_TOKEN
+import nl.viasalix.horarium.utils.Constants.SP_KEY_CODE
+import nl.viasalix.horarium.utils.Constants.SP_KEY_CURRENT_USER
+import nl.viasalix.horarium.utils.Constants.SP_KEY_FIRST_NAME
+import nl.viasalix.horarium.utils.Constants.SP_KEY_LAST_NAME
+import nl.viasalix.horarium.utils.Constants.SP_KEY_PREFIX
+import nl.viasalix.horarium.utils.Constants.SP_KEY_SCHOOL_NAME
+import nl.viasalix.horarium.utils.Constants.SP_KEY_USERS
+import nl.viasalix.horarium.utils.Constants.SP_KEY_USER_IDENTIFIER
 import nl.viasalix.horarium.utils.SharedPreferencesUtils.getUserSharedPreferences
 import nl.viasalix.horarium.utils.SharedPreferencesUtils.makeUserId
 import org.jetbrains.anko.defaultSharedPreferences
