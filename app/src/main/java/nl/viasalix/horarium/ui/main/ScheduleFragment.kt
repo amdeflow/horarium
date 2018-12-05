@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
 import nl.viasalix.horarium.ui.main.recyclerview.ScheduleAdapter
 import nl.viasalix.horarium.utils.InjectorUtils
@@ -52,7 +53,7 @@ class ScheduleFragment : Fragment() {
 
     private fun subscribeSchedule(adapter: ScheduleAdapter) {
         viewModel.getSchedule().observe(viewLifecycleOwner, Observer { schedule ->
-            if (schedule != null) adapter.submitList(schedule)
+            if (schedule != null) adapter.submitList(schedule.sortedBy(Appointment::start))
 
             for (item in schedule) {
                 Log.d("schedule item", item.toString())
