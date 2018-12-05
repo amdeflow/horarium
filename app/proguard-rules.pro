@@ -16,4 +16,4 @@
     volatile <fields>;
 }
 
--keep class nl.viasalix.horarium.** { *; }
+-keep class nl.viasalix.horarium.module.** { *; }
