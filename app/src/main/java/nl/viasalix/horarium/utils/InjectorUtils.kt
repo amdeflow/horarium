@@ -13,13 +13,13 @@ import nl.viasalix.horarium.utils.SharedPreferencesUtils.getUserSharedPreference
 
 object InjectorUtils {
 
-    fun getScheduleRepository(schoolName: String, accessToken: String, user: String, context: Context) =
+    private fun getScheduleRepository(schoolName: String, accessToken: String, user: String, context: Context) =
             ScheduleRepository.getInstance(
                     ZermeloApi.buildApi(schoolName, accessToken),
                     HorariumDatabase.getInstance(user, context).appointmentDao()
             )
 
-    fun getCurrentUserScheduleRepository(context: Context): ScheduleRepository {
+    private fun getCurrentUserScheduleRepository(context: Context): ScheduleRepository {
         val currentUser = getCurrentUser(context)
         val userSp = getUserSharedPreferences(currentUser, context)
         val schoolName = getSchoolName(userSp)
