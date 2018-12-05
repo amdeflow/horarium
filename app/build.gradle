@@ -30,11 +30,7 @@ android {
     dataBinding {
         enabled = true
     }
-
-
     dynamicFeatures = [":calvijncollege_cup"]
-
-
 }
 
 dependencies {
