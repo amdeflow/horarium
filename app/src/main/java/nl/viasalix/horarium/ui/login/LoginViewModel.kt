@@ -24,8 +24,6 @@ class LoginViewModel : ViewModel() {
         val schoolNameMatches = schoolName.isNotEmpty()
         val authCodeMatches = authCode.length == 12
         if (schoolNameMatches && authCodeMatches) {
-            // TODO: Make this work again
-
             doAsync {
                 val response = ZermeloApi.getInstance(schoolName, "")
                         .login(authCode).execute()
