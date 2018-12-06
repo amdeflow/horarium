@@ -16,7 +16,6 @@
 
 package nl.viasalix.horarium.ui.main
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

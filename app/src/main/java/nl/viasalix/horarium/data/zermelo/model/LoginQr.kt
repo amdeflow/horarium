@@ -1,4 +1,4 @@
-package nl.viasalix.horarium.ui.login
+package nl.viasalix.horarium.data.zermelo.model
 
 data class LoginQr(
     var institution: String = "",

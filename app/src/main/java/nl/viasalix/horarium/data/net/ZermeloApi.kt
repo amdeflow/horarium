@@ -16,14 +16,11 @@
 
 package nl.viasalix.horarium.data.net
 
+import android.util.Log
 import com.google.gson.GsonBuilder
+import nl.viasalix.horarium.converters.DateTypeAdapter
 import nl.viasalix.horarium.data.net.args.GetAppointmentsArgs
-import nl.viasalix.horarium.data.zermelo.model.Announcement
-import nl.viasalix.horarium.data.zermelo.model.Appointment
-import nl.viasalix.horarium.data.zermelo.model.ParentTeacherNight
-import nl.viasalix.horarium.data.zermelo.model.User
-import nl.viasalix.horarium.data.zermelo.model.ZermeloAuthResponse
-import nl.viasalix.horarium.utils.DateUtils
+import nl.viasalix.horarium.data.zermelo.model.*
 import nl.viasalix.horarium.utils.DateUtils.unixSeconds
 import nl.viasalix.horarium.utils.RetrofitUtils
 import okhttp3.OkHttpClient
@@ -84,7 +81,7 @@ interface ZermeloApi {
                             GsonConverterFactory.create(
                                     GsonBuilder().registerTypeAdapter(
                                             Date::class.java,
-                                            DateUtils.DateTypeAdapter()
+                                            DateTypeAdapter()
                                     ).create()
                             )
                     ).client(zermeloClient).build()

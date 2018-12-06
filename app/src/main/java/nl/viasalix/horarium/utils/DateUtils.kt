@@ -110,11 +110,4 @@ object DateUtils {
             )
         }
     }
-
-    class DateTypeAdapter : TypeAdapter<Date>() {
-        override fun read(`in`: JsonReader): Date = unixSecondsToDate(`in`.nextLong())
-        override fun write(out: JsonWriter, value: Date) {
-            out.value(value.unixSeconds())
-        }
-    }
 }

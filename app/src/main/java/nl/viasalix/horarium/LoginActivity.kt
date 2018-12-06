@@ -12,9 +12,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.zxing.integration.android.IntentIntegrator
 import nl.viasalix.horarium.databinding.LoginActivityBinding
-import nl.viasalix.horarium.ui.login.LoginQr
+import nl.viasalix.horarium.data.zermelo.model.LoginQr
 import nl.viasalix.horarium.ui.login.LoginViewModel
-import nl.viasalix.horarium.utils.*
 import nl.viasalix.horarium.utils.Constants.SP_KEY_ACCESS_TOKEN
 import nl.viasalix.horarium.utils.Constants.SP_KEY_CODE
 import nl.viasalix.horarium.utils.Constants.SP_KEY_CURRENT_USER
@@ -41,18 +40,14 @@ class LoginActivity : AppCompatActivity() {
             if (loggedIn == true) {
                 onLoginDone()
             } else {
-                runOnUiThread {
-                    toast(getString(R.string.error_login))
-                }
+                toast(getString(R.string.error_login))
             }
         })
         viewModel.scanQr.observe(this, Observer { scanQr ->
             if (scanQr == true) {
-                runOnUiThread {
-                    val intentIntegrator = IntentIntegrator(this)
-                    intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
-                    intentIntegrator.initiateScan()
-                }
+                val intentIntegrator = IntentIntegrator(this)
+                intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+                intentIntegrator.initiateScan()
             }
         })
 
