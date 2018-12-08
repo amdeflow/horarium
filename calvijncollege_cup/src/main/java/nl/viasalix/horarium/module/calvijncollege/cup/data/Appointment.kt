@@ -19,8 +19,8 @@ package nl.viasalix.horarium.module.calvijncollege.cup.data
 import java.util.Date
 
 /**
- * @param start Start date.
- * @param end End date, can be null.
+ * @param start Start dateString.
+ * @param end End dateString, can be null.
  * @param slot Slot for timetable.
  * @param selectedOption Selected [Option], can be null.
  * @param fixed `true` if this appointment is fixed. This probably means that no choices are available.

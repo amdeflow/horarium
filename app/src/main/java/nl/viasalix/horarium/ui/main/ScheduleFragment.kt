@@ -29,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
+import nl.viasalix.horarium.ui.main.bottomsheets.WeekSelectorDialog
 import nl.viasalix.horarium.ui.main.recyclerview.ScheduleAdapter
 import nl.viasalix.horarium.utils.InjectorUtils
 
@@ -60,9 +61,22 @@ class ScheduleFragment : Fragment() {
         val factory = InjectorUtils.provideScheduleViewModelFactory(context)
         viewModel = ViewModelProviders.of(this, factory).get(ScheduleViewModel::class.java)
 
-        val adapter = ScheduleAdapter()
+        val adapter = ScheduleAdapter(context)
         binding.schedule.adapter = adapter
+        // Disable recycling so appointments won't show up twice
+        binding.schedule.recycledViewPool.setMaxRecycledViews(0, 0)
         subscribeSchedule(adapter)
+
+        activity?.findViewById<FloatingActionButton>(R.id.weekSelector)?.setOnClickListener {
+            val sheet = WeekSelectorDialog()
+            sheet.setup(viewModel.year.value, viewModel.week.value)
+            sheet.onResultCallback = { year, week ->
+                viewModel.year.value = year
+                viewModel.week.value = week
+                updateData()
+            }
+            sheet.show(fragmentManager, "")
+        }
 
         return binding.root
     }

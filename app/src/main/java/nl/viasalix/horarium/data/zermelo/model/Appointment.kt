@@ -16,18 +16,16 @@
 
 package nl.viasalix.horarium.data.zermelo.model
 
-import android.text.format.DateUtils
-import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import nl.viasalix.horarium.converters.HorariumTypeConverters
+import nl.viasalix.horarium.converters.RoomTypeConverters
 import java.text.DateFormat
 import java.util.*
 
 @Entity
-@TypeConverters(HorariumTypeConverters::class)
+@TypeConverters(RoomTypeConverters::class)
 data class Appointment(
         @ColumnInfo(name = "appointment_instance")
         @PrimaryKey

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewmodel"
+            type="nl.viasalix.horarium.ui.main.bottomsheets.WeekSelectorDialogViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/viewTop"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:background="@color/primaryColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/btnCancel"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:insetTop="-4dp"
+            android:insetBottom="-4dp"
+            android:text="@android:string/cancel"
+            app:backgroundTint="@color/secondaryColor"
+            app:cornerRadius="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnOk"
+            app:layout_constraintTop_toBottomOf="@+id/viewTop" />
+
+        <TextView
+            android:id="@+id/tvLitStartDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="@string/start_date"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            app:fontFamily="sans-serif-smallcaps"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/viewTop"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/etYear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="4"
+            android:text="@={`` + viewmodel.year}"
+            app:layout_constraintBottom_toBottomOf="@+id/fbDecrementYear"
+            app:layout_constraintEnd_toStartOf="@+id/fbIncrementYear"
+            app:layout_constraintStart_toEndOf="@+id/fbDecrementYear"
+            app:layout_constraintTop_toTopOf="@+id/fbDecrementYear" />
+
+        <EditText
+            android:id="@+id/etYear2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="2"
+            android:text="@={`` + viewmodel.week}"
+            app:layout_constraintBottom_toBottomOf="@+id/fbDecrementWeek"
+            app:layout_constraintEnd_toStartOf="@+id/fbIncrementWeek"
+            app:layout_constraintStart_toEndOf="@+id/fbDecrementWeek"
+            app:layout_constraintTop_toTopOf="@+id/fbDecrementWeek" />
+
+        <TextView
+            android:id="@+id/tvWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/week"
+            app:fontFamily="sans-serif-smallcaps"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fbDecrementYear" />
+
+        <TextView
+            android:id="@+id/tvYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/year"
+            app:fontFamily="sans-serif-smallcaps"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fbIncrementWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="96dp"
+            android:layout_marginLeft="96dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:clickable="true"
+            android:onClick="@{() -> viewmodel.incrementWeek()}"
+            android:src="@drawable/ic_chevron_right_black_24dp"
+            app:backgroundTint="#dddddd"
+            app:elevation="0dp"
+            app:fabCustomSize="36dp"
+            app:layout_constraintEnd_toStartOf="@+id/viewTop"
+            app:layout_constraintStart_toEndOf="@+id/fbDecrementWeek"
+            app:layout_constraintTop_toTopOf="@+id/fbDecrementWeek" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fbDecrementWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:onClick="@{() -> viewmodel.decrementWeek()}"
+            android:src="@drawable/ic_chevron_left_black_24dp"
+            app:backgroundTint="#dddddd"
+            app:elevation="0dp"
+            app:fabCustomSize="36dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvWeek" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fbDecrementYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:onClick="@{() -> viewmodel.decrementYear()}"
+            android:src="@drawable/ic_chevron_left_black_24dp"
+            app:backgroundTint="#dddddd"
+            app:elevation="0dp"
+            app:fabCustomSize="36dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvYear" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fbIncrementYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="96dp"
+            android:layout_marginLeft="96dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:clickable="true"
+            android:onClick="@{() -> viewmodel.incrementYear()}"
+            android:src="@drawable/ic_chevron_right_black_24dp"
+            app:backgroundTint="#dddddd"
+            app:elevation="0dp"
+            app:fabCustomSize="36dp"
+            app:layout_constraintEnd_toStartOf="@+id/viewTop"
+            app:layout_constraintStart_toEndOf="@+id/fbDecrementYear"
+            app:layout_constraintTop_toTopOf="@+id/fbDecrementYear" />
+
+        <TextView
+            android:id="@+id/tvStartDay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="@{viewmodel.dayString}"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            app:fontFamily="sans-serif-smallcaps"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/viewTop"
+            app:layout_constraintTop_toBottomOf="@+id/tvLitStartDate" />
+
+        <TextView
+            android:id="@+id/tvStartDate"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@{viewmodel.dateString}"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            app:fontFamily="sans-serif-smallcaps"
+            app:layout_constraintBottom_toBottomOf="@+id/viewTop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/viewTop"
+            app:layout_constraintTop_toBottomOf="@+id/tvStartDay" />
+
+        <Button
+            android:id="@+id/btnOk"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:insetTop="-4dp"
+            android:insetBottom="-4dp"
+            android:text="@android:string/ok"
+            android:textColor="@color/secondaryColor"
+            app:backgroundTint="#dddddd"
+            app:cornerRadius="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/btnReset"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:insetTop="-4dp"
+            android:insetBottom="-4dp"
+            android:onClick="@{() -> viewmodel.resetToCurrent()}"
+            android:text="@string/reset_to_current"
+            android:textColor="@color/secondaryColor"
+            app:backgroundTint="#dddddd"
+            app:cornerRadius="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnCancel"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

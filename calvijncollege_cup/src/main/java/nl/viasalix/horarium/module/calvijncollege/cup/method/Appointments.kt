@@ -57,7 +57,7 @@ class Appointments(override val success: Boolean, override val result: List<Appo
 
                     when (column) {
                         0 -> {
-                            // Primary start date
+                            // Primary start dateString
                             try {
                                 startDate = CUPClient.appointmentDateFormatter.parse(columnStringContent)
                             } catch (pe: ParseException) {

@@ -98,7 +98,7 @@ class PrintableTimetable(
                     justFoundWeekMark = true
                 } else if (!justFoundWeekMark) {
                     lastKnownDate = try {
-                        // Parse the date and remove the unnecessary column
+                        // Parse the dateString and remove the unnecessary column
                         CUPClient.appointmentDateFormatter.parse(tableColumns.removeAt(0).text().replace("\u00a0", ""))
                     } catch (pe: ParseException) {
                         null

@@ -50,8 +50,12 @@ limitations under the License.
     <string name="code">Code</string>
     <string name="scan_qr_code">Scan QR code</string>
     <string name="today">Today</string>
-    <string name="date_format">EEEE, MMMM d</string>
+    <string name="date_format">MMMM d</string>
     <string name="try_again_later">Try again later</string>
     <string name="module_installation_error">Error while downloading and installing modules: %s</string>
     <string name="schedule">Schedule</string>
+    <string name="week">Week</string>
+    <string name="year">Year</string>
+    <string name="reset_to_current">Reset to current</string>
+    <string name="start_date">Start date</string>
 </resources>

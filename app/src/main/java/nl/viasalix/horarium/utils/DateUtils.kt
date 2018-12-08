@@ -18,9 +18,6 @@ package nl.viasalix.horarium.utils
 
 import android.content.Context
 import android.text.format.DateUtils
-import com.google.gson.TypeAdapter
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonWriter
 import nl.viasalix.horarium.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -66,28 +63,35 @@ object DateUtils {
 
     fun getCurrentWeek() = with(Calendar.getInstance()) { get(Calendar.WEEK_OF_YEAR) }
 
-    fun isOtherDay(currentTime: Long, oldTime: Long): Boolean {
+    fun isOtherDay(currentTime: Date, oldTime: Date): Boolean {
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = currentTime * 1000
+        calendar.time = currentTime
         val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
-        calendar.timeInMillis = oldTime * 1000
+        calendar.time = oldTime
         val oldDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
         return currentDayOfWeek != oldDayOfWeek
     }
 
-    fun dayToString(context: Context?, timestamp: Long): String {
+    fun dayToString(timestamp: Date): String {
+        return SimpleDateFormat("EEEE", Locale.getDefault()).format(timestamp)
+    }
+
+    fun dateToString(context: Context?, timestamp: Date): String {
+        return SimpleDateFormat(
+                context?.getString(R.string.date_format),
+                Locale.getDefault()
+        ).format(timestamp)
+    }
+
+    fun dayToString(context: Context?, timestamp: Date): String {
         var dayString = ""
-        if (DateUtils.isToday(timestamp * 1000)) {
+        if (DateUtils.isToday(timestamp.time)) {
             dayString = "${context?.getString(R.string.today)} \u2015 "
         }
 
-        dayString += SimpleDateFormat(
-                context?.getString(R.string.date_format),
-                Locale.getDefault()
-        ).format(Date(timestamp * 1000))
-
+        dayString += dayToString(timestamp) + ", " + this.dateToString(context, timestamp)
         return dayString.capitalize()
     }
 

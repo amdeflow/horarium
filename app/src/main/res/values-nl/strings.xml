@@ -48,9 +48,13 @@ limitations under the License.
     <string name="code">Code</string>
     <string name="scan_qr_code">Scan QR-code</string>
     <string name="today">vandaag</string>
-    <string name="date_format">EEEE d MMMM</string>
+    <string name="date_format">d MMMM</string>
     <string name="proceed">Verder</string>
     <string name="try_again_later">Probeer later opnieuw</string>
     <string name="module_installation_error">Fout tijdens het downloaden en installeren van modules: %s</string>
     <string name="schedule">Rooster</string>
+    <string name="week">Week</string>
+    <string name="year">Jaar</string>
+    <string name="reset_to_current">Herstel naar huidige</string>
+    <string name="start_date">Startdatum</string>
 </resources>
