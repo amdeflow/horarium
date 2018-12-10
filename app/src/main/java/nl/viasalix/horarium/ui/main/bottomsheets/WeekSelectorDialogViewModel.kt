@@ -5,11 +5,16 @@ import androidx.lifecycle.ViewModel
 import nl.viasalix.horarium.utils.DateUtils.getCurrentWeek
 import nl.viasalix.horarium.utils.DateUtils.getCurrentYear
 
-class WeekSelectorDialogViewModel : ViewModel() {
+class WeekSelectorDialogViewModel(year: Int, week: Int) : ViewModel() {
     val year = MutableLiveData<Int>()
     val week = MutableLiveData<Int>()
     val dayString = MutableLiveData<String>()
     val dateString = MutableLiveData<String>()
+
+    init {
+        this.year.value = year
+        this.week.value = week
+    }
 
     fun decrementYear() {
         year.value = (year.value ?: getCurrentYear()) - 1

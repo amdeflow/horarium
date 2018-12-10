@@ -20,7 +20,6 @@ import java.util.*
 class WeekSelectorDialog : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: WeekSelectorDialogViewModel
-    private lateinit var binding: WeekSelectorDialogBinding
     private var initYear: Int? = null
     private var initWeek: Int? = null
     var onResultCallback: ((Int?, Int?) -> Unit)? = null
@@ -30,15 +29,16 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        binding = WeekSelectorDialogBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProviders.of(this).get(WeekSelectorDialogViewModel::class.java)
-        viewModel.year.value = initYear ?: getCurrentYear()
-        viewModel.week.value = initWeek ?: getCurrentWeek()
+        val binding = WeekSelectorDialogBinding.inflate(inflater, container, false)
+        val factory = WeekSelectorDialogViewModelFactory(
+                initYear ?: getCurrentYear(),
+                initWeek ?: getCurrentWeek()
+        )
+        viewModel = ViewModelProviders.of(this, factory).get(WeekSelectorDialogViewModel::class.java)
         initWeekObserver()
 
         binding.viewmodel = viewModel
         binding.setLifecycleOwner(this)
-
         binding.btnCancel.setOnClickListener { dismiss() }
         binding.btnOk.setOnClickListener {
             dismiss()
