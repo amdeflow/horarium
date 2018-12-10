@@ -20,9 +20,7 @@ import android.content.Context
 import android.text.format.DateUtils
 import nl.viasalix.horarium.R
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 object DateUtils {
     fun unixSecondsToDate(timestamp: Long) = Date(timestamp * 1000)
@@ -94,6 +92,8 @@ object DateUtils {
         dayString += dayToString(timestamp) + ", " + this.dateToString(context, timestamp)
         return dayString.capitalize()
     }
+
+    fun isLeapYear(year: Int): Boolean = GregorianCalendar().isLeapYear(year)
 
     /**
      * Get week with offset

@@ -12,6 +12,7 @@ import nl.viasalix.horarium.utils.DateUtils.dateToString
 import nl.viasalix.horarium.utils.DateUtils.dayToString
 import nl.viasalix.horarium.utils.DateUtils.getCurrentWeek
 import nl.viasalix.horarium.utils.DateUtils.getCurrentYear
+import nl.viasalix.horarium.utils.DateUtils.isLeapYear
 import nl.viasalix.horarium.utils.DateUtils.startOfWeek
 import java.lang.NumberFormatException
 import java.util.*
@@ -20,8 +21,8 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: WeekSelectorDialogViewModel
     var onResultCallback: ((Int?, Int?) -> Unit)? = null
-    var initYear: Int? = null
-    var initWeek: Int? = null
+    private var initYear: Int? = null
+    private var initWeek: Int? = null
     private lateinit var binding: WeekSelectorDialogBinding
 
     override fun onCreateView(
@@ -31,9 +32,9 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
     ): View? {
         binding = WeekSelectorDialogBinding.inflate(inflater, container, false)
         viewModel = ViewModelProviders.of(this).get(WeekSelectorDialogViewModel::class.java)
-        viewModel.year.value = (initYear ?: getCurrentYear()).toString()
-        viewModel.week.value = (initWeek ?: getCurrentWeek()).toString()
-        initObservers()
+        viewModel.year.value = initYear ?: getCurrentYear()
+        viewModel.week.value = initWeek ?: getCurrentWeek()
+        initWeekObserver()
 
         binding.viewmodel = viewModel
         binding.setLifecycleOwner(this)
@@ -41,19 +42,29 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
         binding.btnCancel.setOnClickListener { dismiss() }
         binding.btnOk.setOnClickListener {
             dismiss()
-            viewModel.correctWeekAndYear()
-
-            onResultCallback?.invoke(viewModel.year.value?.toInt(), viewModel.week.value?.toInt())
+            onResultCallback?.invoke(viewModel.year.value, viewModel.week.value)
         }
 
         return binding.root
     }
 
-    private fun initObservers() {
-        viewModel.year.observe(this, Observer {
-            updateDate()
-        })
-        viewModel.week.observe(this, Observer {
+    private fun initWeekObserver() {
+        viewModel.week.observe(this, Observer { week ->
+            val year = viewModel.year.value ?: getCurrentYear()
+            if (week > 52 && !isLeapYear(year)) {
+                viewModel.incrementYear()
+                viewModel.week.value = 1
+                return@Observer
+            }
+            if (week < 1) {
+                viewModel.decrementYear()
+                viewModel.week.value = if (isLeapYear(year - 1)) {
+                    53
+                } else {
+                    52
+                }
+            }
+
             updateDate()
         })
     }
@@ -61,8 +72,8 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
     private fun updateDate() {
         val startOfWeek = Calendar.getInstance()
         try {
-            val weekValue = viewModel.week.value?.toInt() ?: getCurrentWeek()
-            val yearValue = viewModel.year.value?.toInt() ?: getCurrentYear()
+            val weekValue = viewModel.week.value ?: getCurrentWeek()
+            val yearValue = viewModel.year.value ?: getCurrentYear()
 
             startOfWeek.time = startOfWeek(weekValue, yearValue)
         } catch (e: NumberFormatException) {
