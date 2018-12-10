@@ -7,6 +7,8 @@
         android:id="@+id/schedule"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="?attr/actionBarSize"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context="nl.viasalix.horarium.MainActivity"
         tools:listitem="@layout/list_item_appointment" />

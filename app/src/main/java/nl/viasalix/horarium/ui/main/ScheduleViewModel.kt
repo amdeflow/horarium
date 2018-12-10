@@ -26,6 +26,7 @@ import nl.viasalix.horarium.utils.DateUtils.getCurrentYear
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.utils.DateUtils.endOfWeek
 import nl.viasalix.horarium.utils.DateUtils.startOfWeek
+import java.util.*
 
 class ScheduleViewModel internal constructor(
         private val scheduleRepository: ScheduleRepository
