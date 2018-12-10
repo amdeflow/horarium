@@ -66,6 +66,7 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
                 } else {
                     52
                 }
+                return@Observer
             }
 
             updateDate()
