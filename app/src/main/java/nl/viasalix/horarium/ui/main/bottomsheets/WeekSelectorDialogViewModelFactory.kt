@@ -9,5 +9,5 @@ class WeekSelectorDialogViewModelFactory(
 ) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>) = WeekSelectorDialogViewModel(week, year) as T
+    override fun <T : ViewModel?> create(modelClass: Class<T>) = WeekSelectorDialogViewModel(year, week) as T
 }
