@@ -1,6 +1,7 @@
 package nl.viasalix.horarium.ui.main.recyclerview
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import kotlinx.android.synthetic.main.list_item_appointment.view.*
 import nl.viasalix.horarium.databinding.ListItemAppointmentBinding
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.utils.DateUtils
+import org.jetbrains.anko.backgroundColor
 
 class ScheduleAdapter(private val context: Context) :
         ListAdapter<Appointment, AppointmentViewHolder>(AppointmentDiffCallback()) {
@@ -33,6 +35,9 @@ class ScheduleAdapter(private val context: Context) :
             if (newDay) {
                 itemView.tvDay.text = dayString
                 itemView.tvDay.visibility = View.VISIBLE
+            }
+            if (appointment.cancelled) {
+                itemView.backgroundColor = Color.RED
             }
         }
     }
