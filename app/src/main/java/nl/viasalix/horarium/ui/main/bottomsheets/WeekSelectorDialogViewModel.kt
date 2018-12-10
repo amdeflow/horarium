@@ -4,31 +4,44 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import nl.viasalix.horarium.utils.DateUtils.getCurrentWeek
 import nl.viasalix.horarium.utils.DateUtils.getCurrentYear
+import java.lang.NumberFormatException
 
 class WeekSelectorDialogViewModel : ViewModel() {
-    val year = MutableLiveData<Int>()
-    val week = MutableLiveData<Int>()
+    val year = MutableLiveData<String>()
+    val week = MutableLiveData<String>()
     val dayString = MutableLiveData<String>()
     val dateString = MutableLiveData<String>()
 
+    private fun sumString(str: String, delta: Int): String {
+        return if (str.isNotEmpty()) {
+            try {
+                (str.toInt() + delta).toString()
+            } catch (e: NumberFormatException) {
+                str
+            }
+        } else {
+            str
+        }
+    }
+
     fun decrementYear() {
-        year.value = (year.value ?: getCurrentYear()) - 1
+        year.value = sumString(year.value ?: getCurrentYear().toString(), -1)
     }
 
     fun incrementYear() {
-        year.value = (year.value ?: getCurrentYear()) + 1
+        year.value = sumString(year.value ?: getCurrentYear().toString(), +1)
     }
 
     fun decrementWeek() {
-        week.value = (week.value ?: getCurrentWeek()) - 1
+        week.value = sumString(week.value ?: getCurrentWeek().toString(), -1)
     }
 
     fun incrementWeek() {
-        week.value = (week.value ?: getCurrentWeek()) + 1
+        week.value = sumString(week.value ?: getCurrentWeek().toString(), +1)
     }
 
     fun resetToCurrent() {
-        this.year.value = getCurrentYear()
-        this.week.value = getCurrentWeek()
+        this.year.value = getCurrentYear().toString()
+        this.week.value = getCurrentWeek().toString()
     }
 }

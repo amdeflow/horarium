@@ -65,15 +65,14 @@
             android:layout_marginRight="4dp"
             android:ems="10"
             android:inputType="number"
-            android:maxLength="4"
-            android:text="@={`` + viewmodel.year}"
+            android:text="@={viewmodel.year}"
             app:layout_constraintBottom_toBottomOf="@+id/fbDecrementYear"
             app:layout_constraintEnd_toStartOf="@+id/fbIncrementYear"
             app:layout_constraintStart_toEndOf="@+id/fbDecrementYear"
             app:layout_constraintTop_toTopOf="@+id/fbDecrementYear" />
 
         <EditText
-            android:id="@+id/etYear2"
+            android:id="@+id/etWeek"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -82,8 +81,7 @@
             android:layout_marginRight="4dp"
             android:ems="10"
             android:inputType="number"
-            android:maxLength="2"
-            android:text="@={`` + viewmodel.week}"
+            android:text="@={viewmodel.week}"
             app:layout_constraintBottom_toBottomOf="@+id/fbDecrementWeek"
             app:layout_constraintEnd_toStartOf="@+id/fbIncrementWeek"
             app:layout_constraintStart_toEndOf="@+id/fbDecrementWeek"
