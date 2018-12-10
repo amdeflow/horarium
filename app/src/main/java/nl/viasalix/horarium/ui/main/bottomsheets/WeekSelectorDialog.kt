@@ -20,10 +20,10 @@ import java.util.*
 class WeekSelectorDialog : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: WeekSelectorDialogViewModel
-    var onResultCallback: ((Int?, Int?) -> Unit)? = null
+    private lateinit var binding: WeekSelectorDialogBinding
     private var initYear: Int? = null
     private var initWeek: Int? = null
-    private lateinit var binding: WeekSelectorDialogBinding
+    var onResultCallback: ((Int?, Int?) -> Unit)? = null
 
     override fun onCreateView(
             inflater: LayoutInflater,
