@@ -44,8 +44,18 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
             if (viewModel.year.value == "") viewModel.year.value = getCurrentYear().toString()
             if (viewModel.week.value == "") viewModel.week.value = getCurrentWeek().toString()
 
-            val week = (viewModel.week.value ?: getCurrentWeek().toString()).toInt()
-            val year = (viewModel.year.value ?: getCurrentYear().toString()).toInt()
+            val week = try {
+                (viewModel.week.value ?: getCurrentWeek().toString()).toInt()
+            } catch (e: NumberFormatException) {
+                viewModel.week.value = getCurrentWeek().toString()
+                (viewModel.week.value ?: getCurrentWeek().toString()).toInt()
+            }
+            val year = try {
+                (viewModel.year.value ?: getCurrentYear().toString()).toInt()
+            } catch (e: NumberFormatException) {
+                viewModel.week.value = getCurrentWeek().toString()
+                (viewModel.year.value ?: getCurrentYear().toString()).toInt()
+            }
             if (year < 1970) viewModel.year.value = 1970.toString()
             if (week < 1) viewModel.week.value = 1.toString()
             if (week > 53) viewModel.week.value = 52.toString()
