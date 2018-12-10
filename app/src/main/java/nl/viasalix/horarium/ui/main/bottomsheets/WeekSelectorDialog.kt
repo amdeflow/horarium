@@ -41,24 +41,7 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
         binding.btnCancel.setOnClickListener { dismiss() }
         binding.btnOk.setOnClickListener {
             dismiss()
-            if (viewModel.year.value == "") viewModel.year.value = getCurrentYear().toString()
-            if (viewModel.week.value == "") viewModel.week.value = getCurrentWeek().toString()
-
-            val week = try {
-                (viewModel.week.value ?: getCurrentWeek().toString()).toInt()
-            } catch (e: NumberFormatException) {
-                viewModel.week.value = getCurrentWeek().toString()
-                (viewModel.week.value ?: getCurrentWeek().toString()).toInt()
-            }
-            val year = try {
-                (viewModel.year.value ?: getCurrentYear().toString()).toInt()
-            } catch (e: NumberFormatException) {
-                viewModel.week.value = getCurrentWeek().toString()
-                (viewModel.year.value ?: getCurrentYear().toString()).toInt()
-            }
-            if (year < 1970) viewModel.year.value = 1970.toString()
-            if (week < 1) viewModel.week.value = 1.toString()
-            if (week > 53) viewModel.week.value = 52.toString()
+            viewModel.correctWeekAndYear()
 
             onResultCallback?.invoke(viewModel.year.value?.toInt(), viewModel.week.value?.toInt())
         }
@@ -78,10 +61,10 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
     private fun updateDate() {
         val startOfWeek = Calendar.getInstance()
         try {
-            startOfWeek.time = startOfWeek(
-                    viewModel.week.value?.toInt() ?: getCurrentWeek(),
-                    viewModel.year.value?.toInt() ?: getCurrentYear()
-            )
+            val weekValue = viewModel.week.value?.toInt() ?: getCurrentWeek()
+            val yearValue = viewModel.year.value?.toInt() ?: getCurrentYear()
+
+            startOfWeek.time = startOfWeek(weekValue, yearValue)
         } catch (e: NumberFormatException) {
             return
         }

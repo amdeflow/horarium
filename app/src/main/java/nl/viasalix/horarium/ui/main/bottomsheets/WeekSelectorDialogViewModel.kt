@@ -44,4 +44,25 @@ class WeekSelectorDialogViewModel : ViewModel() {
         this.year.value = getCurrentYear().toString()
         this.week.value = getCurrentWeek().toString()
     }
+
+    fun correctWeekAndYear() {
+        if (year.value == "") year.value = getCurrentYear().toString()
+        if (week.value == "") week.value = getCurrentWeek().toString()
+
+        val week = try {
+            (week.value ?: getCurrentWeek().toString()).toInt()
+        } catch (e: NumberFormatException) {
+            week.value = getCurrentWeek().toString()
+            (week.value ?: getCurrentWeek().toString()).toInt()
+        }
+        val year = try {
+            (year.value ?: getCurrentYear().toString()).toInt()
+        } catch (e: NumberFormatException) {
+            this.year.value = getCurrentYear().toString()
+            (year.value ?: getCurrentYear().toString()).toInt()
+        }
+        if (year < 1970) this.year.value = 1970.toString()
+        if (week < 1) this.week.value = 1.toString()
+        if (week > 53) this.week.value = 52.toString()
+    }
 }
