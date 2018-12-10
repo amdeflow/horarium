@@ -12,18 +12,6 @@ class WeekSelectorDialogViewModel : ViewModel() {
     val dayString = MutableLiveData<String>()
     val dateString = MutableLiveData<String>()
 
-    private fun sumString(str: String, delta: Int): String {
-        return if (str.isNotEmpty()) {
-            try {
-                (str.toInt() + delta).toString()
-            } catch (e: NumberFormatException) {
-                str
-            }
-        } else {
-            str
-        }
-    }
-
     fun decrementYear() {
         year.value = sumString(year.value ?: getCurrentYear().toString(), -1)
     }
