@@ -43,8 +43,9 @@ class ScheduleAdapter(private val context: Context) :
             if (appointment.cancelled) {
                 val chip = Chip(context)
                 chip.setTextColor(Color.WHITE)
-                chip.text = context.getString(R.string.cancelled)
                 chip.chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.chip_cancelled)
+                chip.chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_twotone_remove_circle_24px)
+                chip.text = context.getString(R.string.cancelled)
                 itemView.cgInfo.addView(chip)
             }
         }
