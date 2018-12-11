@@ -54,7 +54,8 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
         })
         viewModel.week.observe(this, Observer { week ->
             val year = viewModel.year.value ?: getCurrentYear()
-            if (week > 52 && !isLeapYear(year)) {
+            if (week > 52) {
+                if (isLeapYear(year) && week < 53) return@Observer
                 viewModel.incrementYear()
                 viewModel.week.value = 1
                 return@Observer
