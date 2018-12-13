@@ -38,27 +38,7 @@ class ScheduleAdapter(private val context: Context) :
                 itemView.tvDay.text = dayString
                 itemView.tvDay.visibility = View.VISIBLE
             }
-            if (appointment.cancelled) {
-                val chip = Chip(context)
-                chip.setTextColor(Color.WHITE)
-                chip.chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.chip_cancelled)
-                chip.chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_twotone_remove_circle_24dp)
-                chip.chipIconTint = ContextCompat.getColorStateList(context, android.R.color.white)
-                chip.text = context.getString(R.string.cancelled)
-                itemView.cgInfo.addView(chip)
-            }
-            if (appointment.moved) {
-                val chip = Chip(context)
-                chip.setTextColor(Color.WHITE)
-                chip.chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.chip_moved)
-                chip.chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_arrow_forward_black_24dp)
-                chip.chipIconTint = ContextCompat.getColorStateList(context, android.R.color.white)
-                chip.text = context.getString(R.string.moved)
-                itemView.cgInfo.addView(chip)
-            }
-            if (appointment.modified) {
-
-            }
+            addChips(context, appointment)
         }
     }
 

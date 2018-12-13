@@ -43,13 +43,6 @@ class ScheduleFragment : Fragment() {
     private lateinit var viewModel: ScheduleViewModel
     private lateinit var scheduleView: RecyclerView
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.refresh -> { updateData(); true }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -80,12 +73,25 @@ class ScheduleFragment : Fragment() {
             sheet.onResultCallback = { year, week ->
                 viewModel.year.value = year
                 viewModel.week.value = week
-                updateData()
+                viewModel.updateSchedule()
             }
             sheet.show(fragmentManager, "")
         }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.updateSchedule()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.refresh -> { viewModel.updateSchedule(); true }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun subscribeSchedule(adapter: ScheduleAdapter) {
@@ -106,10 +112,6 @@ class ScheduleFragment : Fragment() {
             }
             else Log.e("hor.ScheduleFragment", "schedule is null")
         })
-    }
-
-    private fun updateData() {
-        viewModel.forceUpdateSchedule()
     }
 
 }

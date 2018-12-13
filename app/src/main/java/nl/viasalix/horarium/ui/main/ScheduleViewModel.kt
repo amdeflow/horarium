@@ -36,30 +36,23 @@ class ScheduleViewModel internal constructor(
 
     val year = MutableLiveData<Int>()
     val week = MutableLiveData<Int>()
-    private var liveSchedule: LiveData<List<Appointment>>
+    private var liveSchedule: LiveData<List<Appointment>>? = null
     private val schedule = MediatorLiveData<List<Appointment>>()
 
     init {
         this.year.value = initYear
         this.week.value = initWeek
-
-        liveSchedule = scheduleRepository.getAppointmentsFromTill(
-                startOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear()),
-                endOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear())
-        )
-
-        schedule.addSource(liveSchedule, schedule::setValue)
     }
 
     fun getSchedule() = schedule
 
-    fun forceUpdateSchedule() {
-        schedule.removeSource(liveSchedule)
+    fun updateSchedule() {
+        liveSchedule?.also { it -> schedule.removeSource(it) }
         liveSchedule = scheduleRepository.getAppointmentsFromTill(
-            startOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear()),
-            endOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear())
+                startOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear()),
+                endOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear())
         )
-        schedule.addSource(liveSchedule, schedule::setValue)
+        schedule.addSource(liveSchedule ?: return, schedule::setValue)
     }
 
 }

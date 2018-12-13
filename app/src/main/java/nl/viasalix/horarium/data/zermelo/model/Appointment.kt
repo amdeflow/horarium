@@ -79,7 +79,7 @@ data class Appointment(
         // Branch code of the branchOfSchool
         var branch: String = ""
 ) {
-    fun startTimeSlotString() = startTimeSlot.toString()
+    fun startTimeSlotString() = if (startTimeSlot < 0) "" else startTimeSlot.toString()
     fun groupsString() = groups.joinToString()
     fun locationsString() = locations.joinToString()
     fun subjectsString() = subjects.joinToString()

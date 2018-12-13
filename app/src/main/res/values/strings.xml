@@ -60,4 +60,5 @@ limitations under the License.
     <string name="start_date">Start date</string>
     <string name="cancelled">Cancelled</string>
     <string name="moved">Moved</string>
+    <string name="modified">Modified</string>
 </resources>

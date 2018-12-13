@@ -59,4 +59,5 @@ limitations under the License.
     <string name="start_date">Startdatum</string>
     <string name="cancelled">Geannuleerd</string>
     <string name="moved">Verplaatst</string>
+    <string name="modified">Gewijzigd</string>
 </resources>
