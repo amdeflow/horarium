@@ -58,4 +58,5 @@ limitations under the License.
     <string name="reset_to_current">Herstel naar huidige</string>
     <string name="start_date">Startdatum</string>
     <string name="cancelled">Geannuleerd</string>
+    <string name="moved">Verplaatst</string>
 </resources>

@@ -29,15 +29,20 @@ import nl.viasalix.horarium.utils.DateUtils.startOfWeek
 import java.util.*
 
 class ScheduleViewModel internal constructor(
-        private val scheduleRepository: ScheduleRepository
+        private val scheduleRepository: ScheduleRepository,
+        initYear: Int,
+        initWeek: Int
 ): ViewModel() {
 
-    val week = MutableLiveData<Int>()
     val year = MutableLiveData<Int>()
+    val week = MutableLiveData<Int>()
     private var liveSchedule: LiveData<List<Appointment>>
     private val schedule = MediatorLiveData<List<Appointment>>()
 
     init {
+        this.year.value = initYear
+        this.week.value = initWeek
+
         liveSchedule = scheduleRepository.getAppointmentsFromTill(
                 startOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear()),
                 endOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear())

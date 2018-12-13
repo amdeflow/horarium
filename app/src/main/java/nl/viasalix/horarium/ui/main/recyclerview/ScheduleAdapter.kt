@@ -1,7 +1,6 @@
 package nl.viasalix.horarium.ui.main.recyclerview
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,6 @@ import nl.viasalix.horarium.R
 import nl.viasalix.horarium.databinding.ListItemAppointmentBinding
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.utils.DateUtils
-import org.jetbrains.anko.backgroundColor
 
 class ScheduleAdapter(private val context: Context) :
         ListAdapter<Appointment, AppointmentViewHolder>(AppointmentDiffCallback()) {
@@ -44,9 +42,22 @@ class ScheduleAdapter(private val context: Context) :
                 val chip = Chip(context)
                 chip.setTextColor(Color.WHITE)
                 chip.chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.chip_cancelled)
-                chip.chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_twotone_remove_circle_24px)
+                chip.chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_twotone_remove_circle_24dp)
+                chip.chipIconTint = ContextCompat.getColorStateList(context, android.R.color.white)
                 chip.text = context.getString(R.string.cancelled)
                 itemView.cgInfo.addView(chip)
+            }
+            if (appointment.moved) {
+                val chip = Chip(context)
+                chip.setTextColor(Color.WHITE)
+                chip.chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.chip_moved)
+                chip.chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_arrow_forward_black_24dp)
+                chip.chipIconTint = ContextCompat.getColorStateList(context, android.R.color.white)
+                chip.text = context.getString(R.string.moved)
+                itemView.cgInfo.addView(chip)
+            }
+            if (appointment.modified) {
+
             }
         }
     }

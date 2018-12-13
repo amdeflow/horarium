@@ -6,6 +6,8 @@ import nl.viasalix.horarium.data.net.ZermeloApi
 import nl.viasalix.horarium.data.persistence.HorariumDatabase
 import nl.viasalix.horarium.data.repository.ScheduleRepository
 import nl.viasalix.horarium.ui.main.ScheduleViewModelFactory
+import nl.viasalix.horarium.utils.DateUtils.getCurrentWeek
+import nl.viasalix.horarium.utils.DateUtils.getCurrentYear
 import nl.viasalix.horarium.utils.SharedPreferencesUtils.getAccessToken
 import nl.viasalix.horarium.utils.SharedPreferencesUtils.getCurrentUser
 import nl.viasalix.horarium.utils.SharedPreferencesUtils.getSchoolName
@@ -29,7 +31,7 @@ object InjectorUtils {
 
     fun provideScheduleViewModelFactory(context: Context): ScheduleViewModelFactory {
         val repository = getCurrentUserScheduleRepository(context)
-        return ScheduleViewModelFactory(repository)
+        return ScheduleViewModelFactory(repository, getCurrentYear(), getCurrentWeek())
     }
 
 }

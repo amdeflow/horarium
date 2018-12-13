@@ -59,4 +59,5 @@ limitations under the License.
     <string name="reset_to_current">Reset to current</string>
     <string name="start_date">Start date</string>
     <string name="cancelled">Cancelled</string>
+    <string name="moved">Moved</string>
 </resources>

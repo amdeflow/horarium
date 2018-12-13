@@ -17,6 +17,7 @@
 package nl.viasalix.horarium.ui.main
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -25,17 +26,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
 import nl.viasalix.horarium.ui.main.bottomsheets.WeekSelectorDialog
 import nl.viasalix.horarium.ui.main.recyclerview.ScheduleAdapter
+import nl.viasalix.horarium.utils.DateUtils.getCurrentWeek
 import nl.viasalix.horarium.utils.InjectorUtils
+import java.util.*
 
 class ScheduleFragment : Fragment() {
 
     private lateinit var viewModel: ScheduleViewModel
+    private lateinit var scheduleView: RecyclerView
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -62,9 +68,10 @@ class ScheduleFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, factory).get(ScheduleViewModel::class.java)
 
         val adapter = ScheduleAdapter(context)
-        binding.schedule.adapter = adapter
+        scheduleView = binding.schedule
+        scheduleView.adapter = adapter
         // Disable recycling so appointments won't show up twice
-        binding.schedule.recycledViewPool.setMaxRecycledViews(0, 0)
+        scheduleView.recycledViewPool.setMaxRecycledViews(0, 0)
         subscribeSchedule(adapter)
 
         activity?.findViewById<FloatingActionButton>(R.id.weekSelector)?.setOnClickListener {
@@ -83,7 +90,20 @@ class ScheduleFragment : Fragment() {
 
     private fun subscribeSchedule(adapter: ScheduleAdapter) {
         viewModel.getSchedule().observe(viewLifecycleOwner, Observer { schedule ->
-            if (schedule != null) adapter.submitList(schedule.sortedBy(Appointment::start))
+            if (schedule != null) {
+                adapter.submitList(schedule.sortedBy(Appointment::start))
+                if (viewModel.week.value == getCurrentWeek()) {
+                    Log.v("hor.ScheduleFragment", "scrolling to today")
+                    val index = schedule.indexOfFirst { DateUtils.isToday(it.start.time) }
+                    Log.v("hor.ScheduleFragment", "scrolling to position $index")
+                    try {
+                        val layoutManager = scheduleView.layoutManager as LinearLayoutManager?
+                        layoutManager?.scrollToPositionWithOffset(index, 0)
+                    } catch (e: IllegalArgumentException) {
+                        return@Observer
+                    }
+                }
+            }
             else Log.e("hor.ScheduleFragment", "schedule is null")
         })
     }
