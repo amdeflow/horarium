@@ -23,9 +23,11 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import nl.viasalix.horarium.events.UserEvents
 import nl.viasalix.horarium.module.HorariumUserModule
 import nl.viasalix.horarium.module.ModuleManager
@@ -96,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             initializeModuleAsync()
         }
 
-        findViewById<BottomAppBar>(R.id.bottomAppBar).setNavigationOnClickListener { _ ->
+        findViewById<BottomAppBar>(R.id.bottomAppBar).setNavigationOnClickListener {
             BottomDrawer().showNow(supportFragmentManager, "bottom_drawer")
         }
     }

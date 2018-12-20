@@ -64,6 +64,7 @@ limitations under the License.
             android:digits="abcdefghijklmnopqrstuvwxyz1234567890"
             android:ems="10"
             android:hint="@string/school_name"
+            android:inputType="text"
             android:singleLine="true"
             android:text="@={viewModel.schoolName}"
             app:layout_constraintEnd_toEndOf="parent"

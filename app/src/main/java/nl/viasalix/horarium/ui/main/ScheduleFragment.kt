@@ -99,15 +99,9 @@ class ScheduleFragment : Fragment() {
             if (schedule != null) {
                 adapter.submitList(schedule.sortedBy(Appointment::start))
                 if (viewModel.week.value == getCurrentWeek()) {
-                    Log.v("hor.ScheduleFragment", "scrolling to today")
                     val index = schedule.indexOfFirst { DateUtils.isToday(it.start.time) }
-                    Log.v("hor.ScheduleFragment", "scrolling to position $index")
-                    try {
-                        val layoutManager = scheduleView.layoutManager as LinearLayoutManager?
-                        layoutManager?.scrollToPositionWithOffset(index, 0)
-                    } catch (e: IllegalArgumentException) {
-                        return@Observer
-                    }
+                    val layoutManager = scheduleView.layoutManager as LinearLayoutManager?
+                    layoutManager?.scrollToPositionWithOffset(index, 0)
                 }
             }
             else Log.e("hor.ScheduleFragment", "schedule is null")
