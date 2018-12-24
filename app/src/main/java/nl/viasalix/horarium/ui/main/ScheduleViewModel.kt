@@ -16,20 +16,43 @@
 
 package nl.viasalix.horarium.ui.main
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import nl.viasalix.horarium.events.UserEvents
-import nl.viasalix.horarium.zermelo.ZermeloInstance
-import nl.viasalix.horarium.zermelo.model.Appointment
-import java.util.Calendar
+import nl.viasalix.horarium.data.repository.ScheduleRepository
+import nl.viasalix.horarium.utils.DateUtils.getCurrentWeek
+import nl.viasalix.horarium.utils.DateUtils.getCurrentYear
+import nl.viasalix.horarium.data.zermelo.model.Appointment
+import nl.viasalix.horarium.utils.DateUtils.endOfWeek
+import nl.viasalix.horarium.utils.DateUtils.startOfWeek
+import java.util.*
 
-class ScheduleViewModel : ViewModel() {
-    val schedule = MutableLiveData<MutableList<Appointment>>()
-    var selectedWeek = MutableLiveData<Int>()
-    lateinit var instance: ZermeloInstance
-    var userEvents: UserEvents? = null
+class ScheduleViewModel internal constructor(
+        private val scheduleRepository: ScheduleRepository,
+        initYear: Int,
+        initWeek: Int
+): ViewModel() {
+
+    val year = MutableLiveData<Int>()
+    val week = MutableLiveData<Int>()
+    private var liveSchedule: LiveData<List<Appointment>>? = null
+    private val schedule = MediatorLiveData<List<Appointment>>()
 
     init {
-        selectedWeek.value = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)
+        this.year.value = initYear
+        this.week.value = initWeek
     }
+
+    fun getSchedule() = schedule
+
+    fun updateSchedule() {
+        liveSchedule?.also { it -> schedule.removeSource(it) }
+        liveSchedule = scheduleRepository.getAppointmentsFromTill(
+                startOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear()),
+                endOfWeek(week.value ?: getCurrentWeek(), year.value ?: getCurrentYear())
+        )
+        schedule.addSource(liveSchedule ?: return, schedule::setValue)
+    }
+
 }

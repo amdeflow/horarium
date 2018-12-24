@@ -16,4 +16,17 @@
     volatile <fields>;
 }
 
--keep class nl.viasalix.horarium.** { *; }
+-keep class nl.viasalix.horarium.data.zermelo.model.** { *; }
+
+# ModuleManager rules
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}
+
+# Per-module rules
+
+# calvijncollege_cup
+-keep class nl.viasalix.horarium.module.calvijncollege.cup.CUPUserModule

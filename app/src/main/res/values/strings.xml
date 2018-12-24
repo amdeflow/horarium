@@ -18,14 +18,6 @@ limitations under the License.
 
 <resources>
     <string name="app_name" translatable="false">Horarium</string>
-    <string name="SP_KEY_CURRENT_USER" translatable="false">currentUser</string>
-    <string name="SP_KEY_ACCESS_TOKEN" translatable="false">accessToken</string>
-    <string name="SP_KEY_SCHOOL_NAME" translatable="false">schoolName</string>
-    <string name="SP_KEY_USER_IDENTIFIER" translatable="false">userIdentifier</string>
-    <string name="SP_KEY_MODULES_PROMPTED" translatable="false">modulesPrompted</string>
-    <string name="SP_KEY_MODULES_ACTIVE" translatable="false">modulesActive</string>
-    <string name="SP_KEY_MODULE_INSTALLATION_STATE" translatable="false">moduleInstallationState</string>
-    <string name="SP_KEY_USERS" translatable="false">users</string>
     <string name="title_calvijncollege_cup">Calvijn College: CUP</string>
     <string name="already_downloaded">Already downloaded</string>
     <string name="has_to_be_downloaded">Has to be downloaded</string>
@@ -34,12 +26,8 @@ limitations under the License.
     <string name="skip">Skip</string>
     <string name="proceed">Proceed</string>
     <string name="download_and_activate">Download and Activate</string>
-    <string name="SP_KEY_CODE" translatable="false">code</string>
-    <string name="SP_KEY_FIRST_NAME" translatable="false">firstName</string>
-    <string name="SP_KEY_PREFIX" translatable="false">prefix</string>
-    <string name="SP_KEY_LAST_NAME" translatable="false">lastName</string>
-    <string name="error_recognizing_qr_code">An error occured trying to recognize the QR code</string>
-    <string name="error_login">An error occured while trying to login</string>
+    <string name="error_recognizing_qr_code">An error occurred trying to recognize the QR code</string>
+    <string name="error_login">An error occurred while trying to login</string>
 
     <string-array name="weeks">
         <item>Three weeks ago</item>
@@ -62,8 +50,15 @@ limitations under the License.
     <string name="code">Code</string>
     <string name="scan_qr_code">Scan QR code</string>
     <string name="today">Today</string>
-    <string name="DATE_FORMAT">EEEE, MMMM d</string>
+    <string name="date_format">MMMM d</string>
     <string name="try_again_later">Try again later</string>
     <string name="module_installation_error">Error while downloading and installing modules: %s</string>
     <string name="schedule">Schedule</string>
+    <string name="week">Week</string>
+    <string name="year">Year</string>
+    <string name="reset_to_current">Reset to current</string>
+    <string name="start_date">Start date</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="moved">Moved</string>
+    <string name="modified">Modified</string>
 </resources>

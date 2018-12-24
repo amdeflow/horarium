@@ -25,6 +25,10 @@ import com.google.gson.reflect.TypeToken
 import nl.viasalix.horarium.HorariumApplication
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.events.UserEvents
+import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_ACTIVE
+import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_PROMPTED
+import nl.viasalix.horarium.utils.Constants.SP_KEY_SCHOOL_NAME
+import nl.viasalix.horarium.utils.Constants.SP_KEY_USER_IDENTIFIER
 import java.io.InputStreamReader
 import java.util.UUID
 
@@ -60,7 +64,7 @@ object ModuleManager {
     internal fun mustPromptModuleInstallation(context: Context, userSp: SharedPreferences): Boolean {
         Log.d(TAG, "mustPromptModuleInstallation check.")
 
-        val prompted = userSp.getBoolean(context.getString(R.string.SP_KEY_MODULES_PROMPTED), false)
+        val prompted = userSp.getBoolean(SP_KEY_MODULES_PROMPTED, false)
 
         if (prompted) return false
 
@@ -68,7 +72,7 @@ object ModuleManager {
     }
 
     fun listAvailableModules(context: Context, userSp: SharedPreferences): List<String> {
-        var schoolName = userSp.getString(context.getString(R.string.SP_KEY_SCHOOL_NAME), "")
+        var schoolName = userSp.getString(SP_KEY_SCHOOL_NAME, "")
 
         if (schoolName == null)
             schoolName = ""
@@ -82,7 +86,7 @@ object ModuleManager {
     }
 
     fun listActiveModules(context: Context, userSp: SharedPreferences): Set<String> {
-        return userSp.getStringSet(context.getString(R.string.SP_KEY_MODULES_ACTIVE), emptySet())!!
+        return userSp.getStringSet(SP_KEY_MODULES_ACTIVE, emptySet())!!
     }
 
     fun createStatusReport(availableModules: List<String>, activeModules: List<String>): Array<ModuleStatusReport> {
@@ -90,7 +94,7 @@ object ModuleManager {
 
         val installedModules = listInstalledModules()
 
-        return  Array(availableModules.size) { i ->
+        return Array(availableModules.size) { i ->
             val module = availableModules[i]
             val moduleMeta = moduleMetadata[module]
             val moduleDescription = moduleMeta?.description ?: module
@@ -115,7 +119,7 @@ object ModuleManager {
 
             moduleMeta?.userModules?.forEach { userModuleClassName ->
                 val className = "${moduleMeta.`package`}.$userModuleClassName"
-                val userIdentifier = userSp.getString(context.getString(R.string.SP_KEY_USER_IDENTIFIER), null)
+                val userIdentifier = userSp.getString(SP_KEY_USER_IDENTIFIER, null)
                 Log.d(TAG, "Initializing module from class $className")
 
                 if (userIdentifier != null) {

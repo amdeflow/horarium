@@ -3,8 +3,10 @@ package nl.viasalix.horarium.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import nl.viasalix.horarium.zermelo.ZermeloInstance
-import nl.viasalix.horarium.zermelo.model.User
+import nl.viasalix.horarium.data.net.ZermeloApi
+import nl.viasalix.horarium.data.zermelo.model.User
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class LoginViewModel : ViewModel() {
     var schoolName: String = ""
@@ -22,16 +24,19 @@ class LoginViewModel : ViewModel() {
         val schoolNameMatches = schoolName.isNotEmpty()
         val authCodeMatches = authCode.length == 12
         if (schoolNameMatches && authCodeMatches) {
-            ZermeloInstance(schoolName).tryLogin(authCode) { success, newAccessToken ->
-                accessToken = newAccessToken
-                _loggedIn.value = success
+            doAsync {
+                val response = ZermeloApi.buildApi(schoolName, "")
+                        .login(authCode).execute()
 
-                ZermeloInstance(schoolName, accessToken).getCurrentUser { newUser ->
-                    user = newUser
+                accessToken = response.body()?.accessToken ?: ""
+                uiThread {
+                    _loggedIn.value = response.isSuccessful
                 }
-            }
 
-            return
+                val currentUser = ZermeloApi.buildApi(schoolName, accessToken)
+                        .getUser().execute()
+                user = currentUser.body()?.response?.data?.get(0)
+            }
         }
     }
 

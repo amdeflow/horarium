@@ -19,7 +19,7 @@ package nl.viasalix.horarium.module.calvijncollege.cup.data
 import java.util.Date
 
 /**
- * @param day Day of this historical option. Usually only contains day, month and year.
+ * @param day Day of this historical option. Usually only contains dayString, month and year.
  * @param slot Slot for timetable.
  * @param option The appropriate [Option].
  */
