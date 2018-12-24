@@ -33,9 +33,16 @@ import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class CalvijncollegeCupSetup : AppCompatActivity() {
 
+    companion object {
+        const val TAG: String = "HOR/CC/Setup"
+    }
+
     var firstLettersOfSurname = ""
+    var availableUsers: Map<String, String> = emptyMap()
     var selectedUser = ""
     var pin = ""
+
+    var mNextHandler: (() -> Unit)? = null
 
     lateinit var moduleSpKey: String
     lateinit var setupCompleteId: String
@@ -64,7 +71,7 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
             }
         }
 
-        Log.i("HOR/CC/Setup", "ModuleSpKey=$moduleSpKey, SetupCompleteId=$setupCompleteId")
+        Log.i(TAG, "ModuleSpKey=$moduleSpKey, SetupCompleteId=$setupCompleteId")
 
         moduleSp = getSharedPreferences(moduleSpKey, Context.MODE_PRIVATE)
 
@@ -95,9 +102,11 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
     /**
      * Will be called from the background thread (by [doAsync]).
      */
-    fun next() {
+    private fun next() {
         if (loading) return
         loading = true
+
+        Log.d(TAG, "Pressed NEXT. Current step = $step")
 
         val loadingTransaction = supportFragmentManager.beginTransaction()
         val loadingProgress = LoadingFragment()
@@ -107,25 +116,50 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
             commit()
         }
 
+        // Invoke the next handler
+        mNextHandler?.invoke()
+
         when (step) {
             1 -> { // User has entered the first letters of their surname
                 val cupClient = CUPClient()
                 cupClient.init()
 
-                val searchResult = SearchUsers.execute(cupClient, "bro")
+                val searchResult = SearchUsers.execute(cupClient, firstLettersOfSurname)
                 if (searchResult.success) {
                     step = 2
-                } else {
+                    availableUsers = searchResult.result
 
+                    Log.d(TAG, "Result of SearchUsers:")
+                    for ((identifier, value) in availableUsers) {
+                        Log.d(TAG, "$identifier -> $value")
+                    }
+
+//                    val step2Transaction = supportFragmentManager.beginTransaction()
+//                    val step2 = SetupStep2()
+//                    step2Transaction.run {
+//                        replace(R.id.module_calvijncollege_cup_setup_detailContainer, step2)
+//                        addToBackStack(null)
+//                        commit()
+//                    }
+                } else {
+                    // TODO: Display error
+                    Log.e(TAG, "Step 1 failed: ${searchResult.failReason}")
                 }
             }
             2 -> { // User has selected the a user
                 step = 3
-                // TODO: Load fragment SetupStep3
+
+                val step3Transaction = supportFragmentManager.beginTransaction()
+                val step3 = SetupStep3()
+                step3Transaction.run {
+                    replace(R.id.module_calvijncollege_cup_setup_detailContainer, step3)
+                    addToBackStack(null)
+                    commit()
+                }
             }
             3 -> { // User has entered the pin code
                 val cupClient = CUPClient()
-                var initResult = cupClient.init("bro", "1", "1275")
+                var (initSuccess, initFailReason) = cupClient.init("bro", "1", "1275")
 
                 done()
             }
@@ -134,7 +168,7 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
         loading = false
     }
 
-    fun done () {
+    private fun done () {
         moduleSp.edit(commit = true) {
             putBoolean(CUPUserModule.SP_KEY_SETUP_COMPLETED, true)
         }
@@ -142,5 +176,9 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
         ModuleManager.completeSetup(setupCompleteId)
 
         runOnUiThread { finish() }
+    }
+
+    fun setNextHandler(handler: () -> Unit) {
+        mNextHandler = handler
     }
 }

@@ -1,5 +1,6 @@
 package nl.viasalix.horarium.module.calvijncollege.cup.ui
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,10 +10,6 @@ import android.view.ViewGroup
 import nl.viasalix.horarium.module.calvijncollege.cup.R
 
 class SetupStep3 : Fragment() {
-
-    companion object {
-        fun newInstance() = SetupStep3()
-    }
 
     private lateinit var viewModel: SetupStep3ViewModel
 
@@ -27,5 +24,13 @@ class SetupStep3 : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(SetupStep3ViewModel::class.java)
         // TODO: Use the ViewModel
+    }
+
+    override fun onAttach(context: Context?) {
+        if (context != null && context is CalvijncollegeCupSetup) {
+            // TODO: Attach to parent: register Next callback or sth like that
+        }
+
+        super.onAttach(context)
     }
 }

@@ -15,8 +15,10 @@ import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 class SetupStep1 : Fragment() {
 
     companion object {
-        fun newInstance() = SetupStep1()
+        const val TAG: String = "HOR/CC/SETUP/STEP1"
     }
+
+    var firstLettersOfSurname = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,15 +31,19 @@ class SetupStep1 : Fragment() {
         val tv = view.findViewById<EditText>(R.id.module_calvijncollege_cup_setup_step1_firstLettersOfSurname)
         tv.textChangedListener {
             onTextChanged { _, _, _, _ ->
-                Log.i("TEXT", tv.text.toString())
+                firstLettersOfSurname = tv.text.toString()
+                Log.d(TAG, "firstLettersOfSurname = $firstLettersOfSurname")
             }
         }
     }
 
     override fun onAttach(context: Context?) {
-//        if (context != null && context is CalvijncollegeCupSetup) {
-//            // TODO: Attach to parent: register Next callback or sth like that
-//        }
+        if (context != null && context is CalvijncollegeCupSetup) {
+            context.setNextHandler {
+                Log.d(TAG, "Next handler of step 1 is executing")
+                context.firstLettersOfSurname = firstLettersOfSurname
+            }
+        }
 
         super.onAttach(context)
     }

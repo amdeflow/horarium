@@ -57,6 +57,11 @@ class CUPClient(host: String = "ccgobb.cupweb6.nl") {
         init(newSession)
     }
 
+    /**
+     * First element: success.
+     *
+     * Second element: fail reason
+     */
     fun init(surnameFirstLetters: String, internalUsernameIdentifier: String, pin: String): Pair<Boolean, String> {
         init()
 
