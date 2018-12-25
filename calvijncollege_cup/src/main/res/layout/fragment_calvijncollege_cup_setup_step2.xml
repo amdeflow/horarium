@@ -3,25 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.SetupStep3">
+    tools:context=".ui.SetupStep2">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/module_calvijncollege_cup_setup_step3_pin"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+        <RadioGroup
+            android:id="@+id/module_calvijncollege_cup_setup_step2_usernameSelection"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Pin (4 digits)"
-            android:digits="0123456789"
-            android:maxLength="4"
-            android:inputType="numberPassword"/>
+            android:layout_width="200dp"
+            android:layout_height="match_parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

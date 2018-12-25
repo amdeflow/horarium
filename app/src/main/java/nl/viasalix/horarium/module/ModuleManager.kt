@@ -153,7 +153,7 @@ object ModuleManager {
     }
 
     /**
-     * Notify the [ModuleManager] that the setup has been completed.
+     * Notify the [ModuleManager] that the module setup with the given [id] has finished and is ready to use.
      */
     fun completeSetup(id: String) {
         setupRequests.remove(id)?.invoke()

@@ -23,6 +23,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.core.content.edit
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPClient
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPUserModule
@@ -80,14 +82,7 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
         }
 
         doAsync {
-            weakRef.get()
-            val transaction = supportFragmentManager.beginTransaction()
-            val fragmentStep1 = SetupStep1()
-            transaction.run {
-                replace(R.id.module_calvijncollege_cup_setup_detailContainer, fragmentStep1)
-                addToBackStack(null) // TODO: Support back button press in the future
-                commit()
-            }
+            replaceDetail(SetupStep1())
         }
     }
 
@@ -99,6 +94,15 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
+    private fun replaceDetail(newFragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.run {
+            replace(R.id.module_calvijncollege_cup_setup_detailContainer, newFragment)
+            disallowAddToBackStack()
+            commit()
+        }
+    }
+
     /**
      * Will be called from the background thread (by [doAsync]).
      */
@@ -108,13 +112,7 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
 
         Log.d(TAG, "Pressed NEXT. Current step = $step")
 
-        val loadingTransaction = supportFragmentManager.beginTransaction()
-        val loadingProgress = LoadingFragment()
-        loadingTransaction.run {
-            replace(R.id.module_calvijncollege_cup_setup_detailContainer, loadingProgress)
-            addToBackStack(null)
-            commit()
-        }
+        replaceDetail(LoadingFragment())
 
         // Invoke the next handler
         mNextHandler?.invoke()
@@ -125,7 +123,7 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
                 cupClient.init()
 
                 val searchResult = SearchUsers.execute(cupClient, firstLettersOfSurname)
-                if (searchResult.success) {
+                if (searchResult.success && searchResult.result.isNotEmpty()) {
                     step = 2
                     availableUsers = searchResult.result
 
@@ -134,42 +132,67 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
                         Log.d(TAG, "$identifier -> $value")
                     }
 
-//                    val step2Transaction = supportFragmentManager.beginTransaction()
-//                    val step2 = SetupStep2()
-//                    step2Transaction.run {
-//                        replace(R.id.module_calvijncollege_cup_setup_detailContainer, step2)
-//                        addToBackStack(null)
-//                        commit()
-//                    }
+                    replaceDetail(SetupStep2())
                 } else {
-                    // TODO: Display error
-                    Log.e(TAG, "Step 1 failed: ${searchResult.failReason}")
+                    if (searchResult.success && searchResult.result.isEmpty()) {
+                        Log.e(TAG, "Step 1 failed: No users found for the given first letters of the surname.")
+                    } else {
+                        val failReason = searchResult.failReason
+                        if (failReason.startsWith("E_SearchUsers_Plain_")) {
+                            val plainFailReason = failReason.substring(20)
+                            // TODO: Display plain error
+                            Log.e(TAG, "Step 1 failed (plain error): $plainFailReason")
+                        } else {
+                            // TODO: Display error
+                            Log.e(TAG, "Step 1 failed: ${searchResult.failReason}")
+                        }
+                    }
+
+                    // Reload step 1
+                    replaceDetail(SetupStep1())
                 }
             }
             2 -> { // User has selected the a user
-                step = 3
+                // No additional checks have to be performed
 
-                val step3Transaction = supportFragmentManager.beginTransaction()
-                val step3 = SetupStep3()
-                step3Transaction.run {
-                    replace(R.id.module_calvijncollege_cup_setup_detailContainer, step3)
-                    addToBackStack(null)
-                    commit()
-                }
+                step = 3
+                replaceDetail(SetupStep3())
             }
             3 -> { // User has entered the pin code
                 val cupClient = CUPClient()
-                var (initSuccess, initFailReason) = cupClient.init("bro", "1", "1275")
+                val (initSuccess, initFailReason) = cupClient.init(firstLettersOfSurname, selectedUser, pin)
 
-                done()
+                if (initSuccess) {
+                    done()
+                } else {
+                    Log.e(TAG, "Step 3 failed: $initFailReason")
+
+                    if (initFailReason.startsWith("E_SignIn_Plain_")) {
+                        val plainFailReason = initFailReason.substring(15)
+                        // TODO: Display plain error
+                        Log.e(TAG, "Step 3 failed (plain error): $plainFailReason")
+                    } else {
+                        // TODO: Display error message
+                        Log.e(TAG, "Step 3 failed: $initFailReason")
+                    }
+
+                    // Reload step 3
+                    replaceDetail(SetupStep3())
+                }
             }
         }
 
         loading = false
     }
 
-    private fun done () {
+    /**
+     * Store the configured [selectedUser] and [pin] into the module storage and mark the setup as completed.
+     * This also notifies the [ModuleManager] that that the setup is complete.
+     */
+    private fun done() {
         moduleSp.edit(commit = true) {
+            putString(CUPUserModule.SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER, selectedUser)
+            putString(CUPUserModule.SP_KEY_CONFIG_PIN, pin)
             putBoolean(CUPUserModule.SP_KEY_SETUP_COMPLETED, true)
         }
 

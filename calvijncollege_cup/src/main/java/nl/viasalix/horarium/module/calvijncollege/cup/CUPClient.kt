@@ -135,6 +135,8 @@ class CUPClient(host: String = "ccgobb.cupweb6.nl") {
 
         val request = requestBuilder
             .url(urlBuilder.build())
+            // Fake the UA to make sure CUPWeb performs like how it performs in a regular browser
+            .addHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36")
             .build()
 
         return client.newCall(request)

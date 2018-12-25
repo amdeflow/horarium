@@ -43,8 +43,8 @@ class SignIn(override val success: Boolean, override val result: String = "") : 
             val doc = Jsoup.parse(response.body()!!.string())
             cupClient.session.extractAspFields(doc)
 
-            doc.getElementById("_errorLabel").also { errorLabel ->
-                if (errorLabel != null && !errorLabel.text().trim().contentEquals("Error Label")) {
+            doc.getElementById("_errorLabel")?.also { errorLabel ->
+                if (!errorLabel.text().trim().contentEquals("Error Label")) {
                     return SignIn(false).also { it.failReason = "E_SignIn_Plain_" + errorLabel.text() }
                 }
             }

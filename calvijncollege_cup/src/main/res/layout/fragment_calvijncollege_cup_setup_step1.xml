@@ -20,7 +20,8 @@
             android:layout_marginRight="8dp"
             android:hint="First 3 to 7 letters of surname"
             android:maxLength="7"
-            android:text="" />
+            android:maxLines="1"
+            android:text=""/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

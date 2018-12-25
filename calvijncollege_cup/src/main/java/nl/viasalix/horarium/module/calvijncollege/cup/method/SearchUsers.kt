@@ -41,6 +41,12 @@ class SearchUsers(override val success: Boolean, override val result: Map<String
             val doc = Jsoup.parse(body)
             cupClient.session.extractAspFields(doc)
 
+            for (errContainer in doc.select(".clsError")) {
+                if (errContainer.attr("isvalid").equals("False")) {
+                    return SearchUsers(false).also { it.failReason = "E_SearchUsers_Plain_" + errContainer.text() }
+                }
+            }
+
             val names = doc
                 .select("#_nameDropDownList option")
                 .map { it.`val`() to it.text() }.toMap()
