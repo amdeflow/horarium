@@ -18,6 +18,7 @@ package nl.viasalix.horarium.data.persistence
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import nl.viasalix.horarium.data.AppointmentCustomizations
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import java.util.*
 
@@ -40,6 +41,9 @@ interface AppointmentDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAppointments(appointments: List<Appointment>)
+
+    @Query("UPDATE `appointment` SET `customizations` = :appointmentCustomizations WHERE `appointment_instance` = :appointmentInstance")
+    fun updateAppointmentCustomizations(appointmentInstance: Long, appointmentCustomizations: AppointmentCustomizations)
 
     @Delete
     fun deleteAppointments(appointments: List<Appointment>)

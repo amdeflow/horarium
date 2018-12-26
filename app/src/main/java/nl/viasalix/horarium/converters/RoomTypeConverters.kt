@@ -19,6 +19,7 @@ package nl.viasalix.horarium.converters
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import nl.viasalix.horarium.data.AppointmentCustomizations
 import java.util.*
 
 class RoomTypeConverters {
@@ -43,4 +44,14 @@ class RoomTypeConverters {
     @TypeConverter
     fun longToDate(date: Long) =
             Date(date)
+
+    @TypeConverter
+    fun appointmentCustomizationsToString(appointmentCustomizations: AppointmentCustomizations): String {
+        return gson.toJson(appointmentCustomizations)
+    }
+
+    @TypeConverter
+    fun stringToAppointmentCustomizations(appointmentCustomizations: String): AppointmentCustomizations {
+        return gson.fromJson(appointmentCustomizations, AppointmentCustomizations::class.java)
+    }
 }

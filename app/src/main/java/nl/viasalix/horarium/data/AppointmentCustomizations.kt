@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.events.args
+package nl.viasalix.horarium.data
 
-import nl.viasalix.horarium.data.AppointmentCustomizations
-import nl.viasalix.horarium.data.zermelo.model.Appointment
-import nl.viasalix.horarium.events.IEventArgs
-
-data class AppointmentsReadyEventArgs(val appointments: List<Appointment>, val updateAppointmentCustomDataCallback: (Long, AppointmentCustomizations) -> Unit) : IEventArgs
+/**
+ * When a value is `null`, it is assumed to be not edited.
+ */
+data class AppointmentCustomizations(
+    val subjects: List<String>? = null,
+    val teachers: List<String>? = null,
+    val locations: List<String>? = null
+)

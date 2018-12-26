@@ -124,7 +124,15 @@ class ScheduleFragment : Fragment() {
                 doAsync {
                     val context = context
                     if (context != null && context is MainActivity) {
-                        context.userEvents.appointmentsReady.invoke(AppointmentsReadyEventArgs(schedule))
+                        context.userEvents.appointmentsReady.invoke(AppointmentsReadyEventArgs(schedule) { appointmentInstance, appointmentCustomizations ->
+                            // Make sure that the module does not modify other appointments
+                            if (schedule.any { it.appointmentInstance == appointmentInstance }) {
+                                viewModel.scheduleRepository.updateCustomizations(
+                                    appointmentInstance,
+                                    appointmentCustomizations
+                                )
+                            }
+                        })
                     }
                 }
 

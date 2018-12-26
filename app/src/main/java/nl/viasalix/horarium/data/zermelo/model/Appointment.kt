@@ -21,6 +21,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import nl.viasalix.horarium.converters.RoomTypeConverters
+import nl.viasalix.horarium.data.AppointmentCustomizations
 import java.text.DateFormat
 import java.util.*
 
@@ -77,7 +78,8 @@ data class Appointment(
         @ColumnInfo(name = "branch_of_school")
         var branchOfSchool: Long = -1,
         // Branch code of the branchOfSchool
-        var branch: String = ""
+        var branch: String = "",
+        var customizations: AppointmentCustomizations = AppointmentCustomizations()
 ) {
     fun startTimeSlotString() = if (startTimeSlot < 0) "" else startTimeSlot.toString()
     fun groupsString() = groups.joinToString()

@@ -27,9 +27,9 @@ import nl.viasalix.horarium.module.calvijncollege.cup.ui.setup.CalvijncollegeCup
 class CUPUserModule : HorariumUserModule() {
 
     companion object {
-        const val TAG: String = "HORARIUM/CC/CUP"
+        const val TAG: String = "HOR/CC/CUP"
         const val SP_KEY_SETUP_COMPLETED: String = "setupCompleted"
-        const val SP_KEY_CONFIG_FIRST_LETTERS_OF_SURNAME = "config_firstLettersOfSurname";
+        const val SP_KEY_CONFIG_FIRST_LETTERS_OF_SURNAME = "config_firstLettersOfSurname"
         const val SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER = "config_internalUsernameIdentifier"
         const val SP_KEY_CONFIG_PIN = "config_pin"
     }

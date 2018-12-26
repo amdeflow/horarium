@@ -2,6 +2,7 @@ package nl.viasalix.horarium.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import nl.viasalix.horarium.data.AppointmentCustomizations
 import nl.viasalix.horarium.data.net.ZermeloApi
 import nl.viasalix.horarium.data.persistence.AppointmentDao
 import nl.viasalix.horarium.data.net.args.GetAppointmentsArgs
@@ -21,6 +22,10 @@ class ScheduleRepository(
     fun getAppointmentsFromTill(from: Date, till: Date): LiveData<List<Appointment>> {
         refreshAppointmentsFromTill(from, till)
         return appointmentDao.getAppointmentsFromTill(from, till)
+    }
+
+    fun updateCustomizations(appointmentInstance: Long, customizations: AppointmentCustomizations) {
+        appointmentDao.updateAppointmentCustomizations(appointmentInstance, customizations)
     }
 
     private fun refreshAppointmentsFromTill(from: Date, till: Date) {

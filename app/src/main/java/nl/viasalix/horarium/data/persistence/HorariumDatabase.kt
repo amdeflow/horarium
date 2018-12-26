@@ -21,6 +21,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import nl.viasalix.horarium.converters.RoomTypeConverters
 import nl.viasalix.horarium.utils.DatabaseUtils.formatDatabaseName
@@ -28,7 +29,7 @@ import nl.viasalix.horarium.data.zermelo.model.Announcement
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.data.zermelo.model.ParentTeacherNight
 
-@Database(entities = [Announcement::class, Appointment::class, ParentTeacherNight::class], version = 1)
+@Database(entities = [Announcement::class, Appointment::class, ParentTeacherNight::class], version = 2)
 @TypeConverters(RoomTypeConverters::class)
 abstract class HorariumDatabase : RoomDatabase() {
     abstract fun announcementDao(): AnnouncementDao
@@ -45,6 +46,12 @@ abstract class HorariumDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE `appointment` ADD COLUMN `customizations` TEXT NOT NULL DEFAULT '{\"subjects\":null,\"teachers\":null,\"locations\":null}'")
+            }
+        }
+
         private fun buildDatabase(user: String, context: Context): HorariumDatabase {
             return Room.databaseBuilder(context, HorariumDatabase::class.java,
                     formatDatabaseName(user)).addCallback(object: RoomDatabase.Callback() {
@@ -52,6 +59,7 @@ abstract class HorariumDatabase : RoomDatabase() {
                             super.onCreate(db)
                         }
                     })
+                    .addMigrations(MIGRATION_1_2)
                     .build()
         }
 
