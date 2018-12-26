@@ -30,6 +30,8 @@ class SignIn(override val success: Boolean, override val result: String = "") : 
                 return SignIn(false).also { it.failReason = "E_SignIn_UsernameOrPinEmpty" }
             }
 
+            if (!cupClient.checkSession()) return SignIn(false).also { it.failReason = "E_CupClient_SessionExpired" }
+
             val extraFields = mapOf(
                 "_nameDropDownList" to cupClient.session.internalUsernameIdentifier,
                 "_pincodeTextBox" to cupClient.session.pin,

@@ -33,6 +33,7 @@ class CUPClient(host: String = "ccgobb.cupweb6.nl") {
         .host(host)
         .build()
 
+    private var lastRequestTimestamp: Long = 0
     private lateinit var client: OkHttpClient
     lateinit var session: Session
 
@@ -90,6 +91,8 @@ class CUPClient(host: String = "ccgobb.cupweb6.nl") {
         client = OkHttpClient.Builder()
             .cookieJar(session)
             .build()
+
+        lastRequestTimestamp = System.currentTimeMillis()
     }
 
     fun createCall(
@@ -125,10 +128,22 @@ class CUPClient(host: String = "ccgobb.cupweb6.nl") {
         val request = requestBuilder
             .url(urlBuilder.build())
             // Fake the UA to make sure CUPWeb performs like how it performs in a regular browser
-            .addHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36")
+            .addHeader(
+                "User-Agent",
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+            )
             .build()
 
         return client.newCall(request)
+    }
+
+    fun checkSession(dontUpdateLastRequestTimestamp: Boolean = false): Boolean {
+        val currentMillis = System.currentTimeMillis()
+        if (lastRequestTimestamp + (3 * 60 * 1000) >= currentMillis) {
+            if (!dontUpdateLastRequestTimestamp) lastRequestTimestamp = System.currentTimeMillis()
+            return true
+        }
+        return false
     }
 
     companion object {

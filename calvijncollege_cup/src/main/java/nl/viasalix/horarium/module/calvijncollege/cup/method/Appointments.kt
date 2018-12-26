@@ -33,6 +33,8 @@ class Appointments(override val success: Boolean, override val result: List<Appo
     CUPMethod<List<Appointment>>() {
     companion object {
         fun execute(cupClient: CUPClient): Appointments {
+            if (!cupClient.checkSession()) return Appointments(false).also { it.failReason = "E_CupClient_SessionExpired" }
+
             // TODO: Check if successfully signed in
 
             val call = cupClient.createCall("RoosterForm.aspx", "GET", aspFieldMode = AspFieldMode.NONE)

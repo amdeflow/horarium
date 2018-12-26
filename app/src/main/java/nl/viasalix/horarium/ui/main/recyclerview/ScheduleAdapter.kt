@@ -27,7 +27,16 @@ class ScheduleAdapter(private val context: Context) :
             ""
         }
 
-        // TODO: apply module customizations
+        // Apply module customizations
+        if (appointment.customizations.subjects != null) {
+            appointment.subjects = appointment.customizations.subjects!!.toMutableList()
+        }
+        if (appointment.customizations.teachers != null) {
+            appointment.teachers = appointment.customizations.teachers!!.toMutableList()
+        }
+        if (appointment.customizations.locations != null) {
+            appointment.locations = appointment.customizations.locations!!.toMutableList()
+        }
 
         holder.apply {
             holder.bind(appointment)
@@ -39,7 +48,7 @@ class ScheduleAdapter(private val context: Context) :
             addBuiltinChips(context, appointment)
         }
 
-        // TODO: Add custom chips
+        // TODO: Support and add custom chips
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppointmentViewHolder {

@@ -27,6 +27,8 @@ data class Choose(override val success: Boolean) : CUPMethod<Any>() {
 
     companion object {
         fun execute(cupClient: CUPClient, internalId: Int): Choose {
+            if (!cupClient.checkSession()) return Choose(false).also { it.failReason = "E_CupClient_SessionExpired" }
+
             // TODO: Check if successfully signed in
 
             val call = cupClient.createCall(

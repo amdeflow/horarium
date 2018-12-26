@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity() {
         doAsync {
             val act = weakRef.get()
             if (act != null) {
-                val preInitializedModules = ModuleManager.preInitializeModules(act, userSp, userEvents)
+                val preInitializedModules = ModuleManager.instantiateModulesAndPreSetup(act, userSp, userEvents)
                 setupNext(preInitializedModules.iterator()) {
                     // Perform the final initialization on all modules
                     preInitializedModules.forEach(HorariumUserModule::init)
@@ -155,7 +155,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNext(iterator: Iterator<HorariumUserModule>, finished: () -> Unit) {
-        if (!iterator.hasNext()) finished.invoke()
+        if (!iterator.hasNext()) {
+            finished.invoke()
+            return
+        }
 
         val next = iterator.next()
         val activityClass = next.provideSetupActivityClass()

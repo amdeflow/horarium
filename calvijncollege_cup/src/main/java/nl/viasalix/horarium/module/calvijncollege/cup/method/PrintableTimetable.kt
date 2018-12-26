@@ -35,6 +35,8 @@ class PrintableTimetable(
 ) : CUPMethod<Map<Int, List<HistoryOption>>>() {
     companion object {
         fun execute(cupClient: CUPClient): PrintableTimetable {
+            if (!cupClient.checkSession()) return PrintableTimetable(false).also { it.failReason = "E_CupClient_SessionExpired" }
+
             // TODO: Check if successfully signed in
 
             // Make sure we navigate to "Printbaar Rooster" via the page RoosterForm.aspx

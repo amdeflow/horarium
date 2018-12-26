@@ -108,19 +108,19 @@ object ModuleManager {
         }
     }
 
-    internal fun preInitializeModules(context: Context, userSp: SharedPreferences, eventsProvider: UserModuleEventsProvider): List<HorariumUserModule> {
-        Log.d(TAG, "Pre-initializing active modules...")
+    internal fun instantiateModulesAndPreSetup(context: Context, userSp: SharedPreferences, eventsProvider: UserModuleEventsProvider): List<HorariumUserModule> {
+        Log.d(TAG, "Instantiating active modules and performing pre-setup...")
 
-        val initializedModules: MutableList<HorariumUserModule> = ArrayList()
+        val initializedModules: MutableList<HorariumUserModule> = mutableListOf()
 
         listActiveModules(userSp).forEach { moduleName ->
-            Log.d(TAG, "Pre-initializing modules provided by $moduleName...")
+            Log.d(TAG, "Instantiating modules provided by $moduleName...")
             val moduleMeta = moduleMetadata[moduleName]
 
             moduleMeta?.userModules?.forEach { userModuleClassName ->
                 val className = "${moduleMeta.`package`}.$userModuleClassName"
                 val userIdentifier = userSp.getString(SP_KEY_USER_IDENTIFIER, null)
-                Log.d(TAG, "Pre-initializing module from class $className")
+                Log.d(TAG, "Instantiating module from class $className")
 
                 if (userIdentifier != null) {
                     try {

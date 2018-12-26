@@ -27,6 +27,8 @@ class SearchUsers(override val success: Boolean, override val result: Map<String
     CUPMethod<Map<String, String>>() {
     companion object {
         fun execute(cupClient: CUPClient, surnameFirstLetters: String): SearchUsers {
+            if (!cupClient.checkSession()) return SearchUsers(false).also { it.failReason = "E_CupClient_SessionExpired" }
+
             val extraFields = mapOf(
                 "_nameTextBox" to surnameFirstLetters,
                 "_zoekButton" to "Zoek",

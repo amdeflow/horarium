@@ -18,6 +18,7 @@ package nl.viasalix.horarium.module.calvijncollege.cup
 
 import android.content.SharedPreferences
 import android.util.Log
+import nl.viasalix.horarium.data.AppointmentCustomizations
 import nl.viasalix.horarium.events.UserModuleEventsProvider
 import nl.viasalix.horarium.events.args.ContextEventArgs
 import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
@@ -35,6 +36,7 @@ class CUPUserModule : HorariumUserModule() {
     }
 
     private lateinit var moduleSp: SharedPreferences
+    private var cupClient: CUPClient? = null
 
     override fun preSetup(moduleSp: SharedPreferences, eventsProvider: UserModuleEventsProvider) {
         this.moduleSp = moduleSp
@@ -51,11 +53,21 @@ class CUPUserModule : HorariumUserModule() {
     override fun init() {
         Log.d(TAG, "Initializing CUP module...")
 
-        val cupClient = CUPClient()
-        val (initSuccess, initFailReason) = cupClient.init(
+        initCUPClient()
+    }
+
+    private fun initCUPClient() {
+        val newCupClient = CUPClient()
+        val (initSuccess, initFailReason) = newCupClient.init(
             moduleSp.getString(SP_KEY_CONFIG_FIRST_LETTERS_OF_SURNAME, "") ?: "",
             moduleSp.getString(SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER, "") ?: "",
             moduleSp.getString(SP_KEY_CONFIG_PIN, "") ?: "")
+
+        if (initSuccess) {
+            cupClient = newCupClient
+        } else {
+            Log.e(TAG, "Failed initializing the CUP Client: $initFailReason")
+        }
     }
 
     private fun appointmentsReady(args: AppointmentsReadyEventArgs) {
