@@ -1,15 +1,11 @@
 package nl.viasalix.horarium.ui.main.recyclerview
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
-import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.list_item_appointment.view.*
-import nl.viasalix.horarium.R
 import nl.viasalix.horarium.databinding.ListItemAppointmentBinding
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.utils.DateUtils
@@ -31,15 +27,19 @@ class ScheduleAdapter(private val context: Context) :
             ""
         }
 
+        // TODO: apply module customizations
+
         holder.apply {
-            bind(appointment)
+            holder.bind(appointment)
             itemView.tag = appointment
             if (newDay) {
                 itemView.tvDay.text = dayString
                 itemView.tvDay.visibility = View.VISIBLE
             }
-            addChips(context, appointment)
+            addBuiltinChips(context, appointment)
         }
+
+        // TODO: Add custom chips
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppointmentViewHolder {

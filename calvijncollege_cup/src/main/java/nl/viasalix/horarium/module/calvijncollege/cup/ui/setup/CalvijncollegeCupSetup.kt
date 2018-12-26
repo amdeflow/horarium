@@ -190,6 +190,7 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
      */
     private fun done() {
         moduleSp.edit(commit = true) {
+            putString(CUPUserModule.SP_KEY_CONFIG_FIRST_LETTERS_OF_SURNAME, firstLettersOfSurname)
             putString(CUPUserModule.SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER, selectedUser)
             putString(CUPUserModule.SP_KEY_CONFIG_PIN, pin)
             putBoolean(CUPUserModule.SP_KEY_SETUP_COMPLETED, true)

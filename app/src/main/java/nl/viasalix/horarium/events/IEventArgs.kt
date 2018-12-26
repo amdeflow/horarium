@@ -16,5 +16,4 @@
 
 package nl.viasalix.horarium.events
 
-interface IEventArgs {
-}
+interface IEventArgs

@@ -18,22 +18,23 @@ package nl.viasalix.horarium.module
 
 import android.app.Activity
 import android.content.SharedPreferences
-import nl.viasalix.horarium.events.UserEvents
+import nl.viasalix.horarium.events.UserModuleEventsProvider
 
 open class HorariumUserModule {
 
     /**
-     * Initialize the module, performed upon module instantiation.
+     * Pre-initialize the module, invoked upon module instantiation.
      * Before this method is called, the user storage container will be ready.
      *
      * Called every time the user session loads. It is recommended that you bind the hooks here.
      *
      * Note: this function will be called from a background thread. UI operations are not safe (and
-     * not recommended in the [init] method anyway).
+     * not recommended in the [preSetup] method anyway).
      *
      * @param moduleSp [SharedPreferences] container for this module to store settings.
+     * @param eventsProvider Instance of [UserModuleEventsProvider] to which you can subscribe for events.
      */
-    open fun init(moduleSp: SharedPreferences, eventsProvider: UserEvents) {}
+    open fun preSetup(moduleSp: SharedPreferences, eventsProvider: UserModuleEventsProvider) {}
 
     /**
      * Provide the [Activity] class for the setup activity.
@@ -48,6 +49,11 @@ open class HorariumUserModule {
      * @return Return `null` to indicate that no setup activity should be started.
      */
     open fun provideSetupActivityClass(): Class<out Activity>? = null
+
+    /**
+     * Initialize the module, invoked when all the setups are reportedly done.
+     */
+    open fun init() {}
 
     /**
      * Stop the module gracefully. Must not reset anything.

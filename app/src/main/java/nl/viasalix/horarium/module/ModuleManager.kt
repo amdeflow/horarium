@@ -24,7 +24,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import nl.viasalix.horarium.HorariumApplication
 import nl.viasalix.horarium.R
-import nl.viasalix.horarium.events.UserEvents
+import nl.viasalix.horarium.events.UserModuleEventsProvider
 import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_ACTIVE
 import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_PROMPTED
 import nl.viasalix.horarium.utils.Constants.SP_KEY_SCHOOL_NAME
@@ -108,26 +108,26 @@ object ModuleManager {
         }
     }
 
-    internal fun initializeModules(context: Context, userSp: SharedPreferences, eventsProvider: UserEvents): List<HorariumUserModule> {
-        Log.d(TAG, "Initializing active modules...")
+    internal fun preInitializeModules(context: Context, userSp: SharedPreferences, eventsProvider: UserModuleEventsProvider): List<HorariumUserModule> {
+        Log.d(TAG, "Pre-initializing active modules...")
 
         val initializedModules: MutableList<HorariumUserModule> = ArrayList()
 
         listActiveModules(userSp).forEach { moduleName ->
-            Log.d(TAG, "Initializing modules provided by $moduleName...")
+            Log.d(TAG, "Pre-initializing modules provided by $moduleName...")
             val moduleMeta = moduleMetadata[moduleName]
 
             moduleMeta?.userModules?.forEach { userModuleClassName ->
                 val className = "${moduleMeta.`package`}.$userModuleClassName"
                 val userIdentifier = userSp.getString(SP_KEY_USER_IDENTIFIER, null)
-                Log.d(TAG, "Initializing module from class $className")
+                Log.d(TAG, "Pre-initializing module from class $className")
 
                 if (userIdentifier != null) {
                     try {
                         val userModuleInstance =
                             Class.forName(className).asSubclass(HorariumUserModule::class.java).newInstance()
 
-                        userModuleInstance.init(
+                        userModuleInstance.preSetup(
                             context.getSharedPreferences(
                                 userIdentifier + "_module_$className",
                                 Context.MODE_PRIVATE

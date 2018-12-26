@@ -23,17 +23,14 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import nl.viasalix.horarium.events.UserEvents
+import nl.viasalix.horarium.events.UserModuleEventsProvider
 import nl.viasalix.horarium.module.HorariumUserModule
 import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.ui.drawer.BottomDrawer
 import nl.viasalix.horarium.ui.main.ScheduleFragment
-import nl.viasalix.horarium.utils.*
 import nl.viasalix.horarium.utils.Constants.SP_KEY_CURRENT_USER
 import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_PROMPTED
 import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULE_INSTALLATION_STATE
@@ -50,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var userSp: SharedPreferences
 
-    val userEvents = UserEvents()
+    val userEvents = UserModuleEventsProvider()
     var moduleInstances: List<HorariumUserModule> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,10 +143,12 @@ class MainActivity : AppCompatActivity() {
         doAsync {
             val act = weakRef.get()
             if (act != null) {
-                val initializedModules = ModuleManager.initializeModules(act, userSp, userEvents)
-                setupNext(initializedModules.iterator()) {
-                    // Store the module instances after all modules are initialized
-                    moduleInstances = initializedModules
+                val preInitializedModules = ModuleManager.preInitializeModules(act, userSp, userEvents)
+                setupNext(preInitializedModules.iterator()) {
+                    // Perform the final initialization on all modules
+                    preInitializedModules.forEach(HorariumUserModule::init)
+                    // Store the module instances after all modules are fully initialized
+                    moduleInstances = preInitializedModules
                 }
             }
         }

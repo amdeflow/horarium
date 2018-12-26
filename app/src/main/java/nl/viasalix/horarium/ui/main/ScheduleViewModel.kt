@@ -29,7 +29,7 @@ import nl.viasalix.horarium.utils.DateUtils.startOfWeek
 import java.util.*
 
 class ScheduleViewModel internal constructor(
-        private val scheduleRepository: ScheduleRepository,
+        val scheduleRepository: ScheduleRepository,
         initYear: Int,
         initWeek: Int
 ): ViewModel() {

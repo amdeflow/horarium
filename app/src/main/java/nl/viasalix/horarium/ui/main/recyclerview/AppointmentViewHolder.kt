@@ -21,7 +21,7 @@ class AppointmentViewHolder(
         }
     }
 
-    fun addChips(context: Context, appointment: Appointment) {
+    fun addBuiltinChips(context: Context, appointment: Appointment) {
         val c = Chip(context)
         c.setTextColor(Color.WHITE)
 

@@ -16,7 +16,6 @@
 
 package nl.viasalix.horarium.module.calvijncollege.cup
 
-import android.util.Log
 import nl.viasalix.horarium.module.calvijncollege.cup.data.Session
 import nl.viasalix.horarium.module.calvijncollege.cup.method.SearchUsers
 import nl.viasalix.horarium.module.calvijncollege.cup.method.SignIn
@@ -25,7 +24,6 @@ import okhttp3.FormBody
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okio.Buffer
 import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
 

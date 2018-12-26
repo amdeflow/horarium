@@ -16,25 +16,15 @@
 
 package nl.viasalix.horarium.events
 
-import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
 import nl.viasalix.horarium.events.args.ContextEventArgs
-import nl.viasalix.horarium.events.args.RenderAppointmentEventArgs
+import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
+import nl.viasalix.horarium.events.args.EmptyEventArgs
 
-class UserEvents {
-    /**
-     * This event is invoked when appointments are loaded. The result is not used, and you should not modify any content
-     * of the event args.
-     */
+class UserModuleEventsProvider {
+
+    val refresh = ConcurrentSetEvent<EmptyEventArgs, Unit>()
+
     val appointmentsReady = ConcurrentSetEvent<AppointmentsReadyEventArgs, Unit>()
-
-    /**
-     * This event is invoked just before the item is being rendered. This method should return as quick as possible,
-     * to make the list view as smooth as possible.
-     *
-     * TODO: Support for custom chips.
-     * TODO: Custom styling.
-     */
-    val renderAppointment = ConcurrentSetEvent<RenderAppointmentEventArgs, Unit>()
 
     /**
      * This event is invoked when the main drawer menu is created. This methoud should return as quick as possible, to

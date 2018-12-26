@@ -29,14 +29,17 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import nl.viasalix.horarium.MainActivity
 import nl.viasalix.horarium.R
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
+import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
+import nl.viasalix.horarium.events.args.EmptyEventArgs
 import nl.viasalix.horarium.ui.main.bottomsheets.WeekSelectorDialog
 import nl.viasalix.horarium.ui.main.recyclerview.ScheduleAdapter
 import nl.viasalix.horarium.utils.DateUtils.getCurrentWeek
 import nl.viasalix.horarium.utils.InjectorUtils
-import java.util.*
+import org.jetbrains.anko.doAsync
 
 class ScheduleFragment : Fragment() {
 
@@ -73,7 +76,7 @@ class ScheduleFragment : Fragment() {
             sheet.onResultCallback = { year, week ->
                 viewModel.year.value = year
                 viewModel.week.value = week
-                viewModel.updateSchedule()
+                refresh()
             }
             sheet.show(fragmentManager, "")
         }
@@ -84,12 +87,23 @@ class ScheduleFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        refresh()
+    }
+
+    private fun refresh() {
+        doAsync {
+            val context = context
+            if (context != null && context is MainActivity) {
+                context.userEvents.refresh.invoke(EmptyEventArgs())
+            }
+        }
+
         viewModel.updateSchedule()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.refresh -> { viewModel.updateSchedule(); true }
+            R.id.refresh -> { refresh(); true }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -98,11 +112,23 @@ class ScheduleFragment : Fragment() {
         viewModel.getSchedule().observe(viewLifecycleOwner, Observer { schedule ->
             if (schedule != null) {
                 adapter.submitList(schedule.sortedBy(Appointment::start))
+
+                // Scroll to the current day
                 if (viewModel.week.value == getCurrentWeek()) {
                     val index = schedule.indexOfFirst { DateUtils.isToday(it.start.time) }
                     val layoutManager = scheduleView.layoutManager as LinearLayoutManager?
                     layoutManager?.scrollToPositionWithOffset(index, 0)
                 }
+
+                // Submit the appointments to all modules
+                doAsync {
+                    val context = context
+                    if (context != null && context is MainActivity) {
+                        context.userEvents.appointmentsReady.invoke(AppointmentsReadyEventArgs(schedule))
+                    }
+                }
+
+                schedule.forEach { appointment -> Log.d("hor.ScheduleFragment", "Appointment: $appointment") }
             }
             else Log.e("hor.ScheduleFragment", "schedule is null")
         })

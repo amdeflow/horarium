@@ -18,10 +18,9 @@ package nl.viasalix.horarium.module.calvijncollege.cup
 
 import android.content.SharedPreferences
 import android.util.Log
-import nl.viasalix.horarium.events.UserEvents
-import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
+import nl.viasalix.horarium.events.UserModuleEventsProvider
 import nl.viasalix.horarium.events.args.ContextEventArgs
-import nl.viasalix.horarium.events.args.RenderAppointmentEventArgs
+import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
 import nl.viasalix.horarium.module.HorariumUserModule
 import nl.viasalix.horarium.module.calvijncollege.cup.ui.setup.CalvijncollegeCupSetup
 
@@ -30,25 +29,18 @@ class CUPUserModule : HorariumUserModule() {
     companion object {
         const val TAG: String = "HORARIUM/CC/CUP"
         const val SP_KEY_SETUP_COMPLETED: String = "setupCompleted"
+        const val SP_KEY_CONFIG_FIRST_LETTERS_OF_SURNAME = "config_firstLettersOfSurname";
         const val SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER = "config_internalUsernameIdentifier"
         const val SP_KEY_CONFIG_PIN = "config_pin"
     }
 
     private lateinit var moduleSp: SharedPreferences
 
-    override fun init(moduleSp: SharedPreferences, eventsProvider: UserEvents) {
-        Log.d(TAG, "Initializing CUP module...")
-
+    override fun preSetup(moduleSp: SharedPreferences, eventsProvider: UserModuleEventsProvider) {
         this.moduleSp = moduleSp
 
         eventsProvider.appointmentsReady += ::appointmentsReady
-        eventsProvider.renderAppointment += ::renderAppointment
         eventsProvider.provideMainDrawerMenuItems += ::provideMainDrawerMenuItems
-
-        if (moduleSp.contains(SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER) &&
-            moduleSp.contains(SP_KEY_CONFIG_PIN)) {
-            // TODO: Create CUPClient instance?
-        }
     }
 
     override fun provideSetupActivityClass(): Class<CalvijncollegeCupSetup>? {
@@ -56,12 +48,18 @@ class CUPUserModule : HorariumUserModule() {
         return CalvijncollegeCupSetup::class.java
     }
 
-    private fun appointmentsReady(args: AppointmentsReadyEventArgs) {
+    override fun init() {
+        Log.d(TAG, "Initializing CUP module...")
 
+        val cupClient = CUPClient()
+        val (initSuccess, initFailReason) = cupClient.init(
+            moduleSp.getString(SP_KEY_CONFIG_FIRST_LETTERS_OF_SURNAME, "") ?: "",
+            moduleSp.getString(SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER, "") ?: "",
+            moduleSp.getString(SP_KEY_CONFIG_PIN, "") ?: "")
     }
 
-    private fun renderAppointment(args: RenderAppointmentEventArgs) {
-
+    private fun appointmentsReady(args: AppointmentsReadyEventArgs) {
+        Log.d(TAG, "Appointments ready!")
     }
 
     private fun provideMainDrawerMenuItems(args: ContextEventArgs): Map<String, () -> Unit> {
