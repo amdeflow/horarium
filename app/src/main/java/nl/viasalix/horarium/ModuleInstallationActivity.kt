@@ -19,6 +19,7 @@ package nl.viasalix.horarium
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -29,8 +30,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.play.core.splitinstall.SplitInstallException
 import com.google.android.play.core.splitinstall.SplitInstallRequest
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
+import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULE_INSTALLATION_STATE
 import nl.viasalix.horarium.databinding.ActivityModuleInstallationBinding
@@ -143,10 +146,13 @@ class ModuleInstallationActivity : AppCompatActivity() {
         }.build()
 
         listener = SplitInstallStateUpdatedListener { state ->
+            Log.d(TAG, "State: " + state.toString())
             when (state.status()) {
                 SplitInstallSessionStatus.DOWNLOADING -> {
                     viewModel.progressIndeterminate.value = false
-                    viewModel.progress.value = ((state.bytesDownloaded() / state.totalBytesToDownload()) * 100).toInt()
+                    val progressValue = ((state.bytesDownloaded() / state.totalBytesToDownload()) * 100).toInt()
+                    Log.i(TAG, "Progress value: $progressValue")
+                    viewModel.progress.value = progressValue
                 }
                 SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION -> {
                     startIntentSender(state.resolutionIntent()?.intentSender, null, 0, 0, 0)
@@ -170,6 +176,9 @@ class ModuleInstallationActivity : AppCompatActivity() {
 
         HorariumApplication.manager.registerListener(listener)
         HorariumApplication.manager.startInstall(installRequest).addOnFailureListener { ex ->
+            if (ex is SplitInstallException) {
+                Log.e(TAG, "SplitInstallException code: ${ex.errorCode}")
+            }
             displayErrorDialog(ex.localizedMessage)
         }
 

@@ -12,8 +12,8 @@ android {
         applicationId "nl.viasalix.horarium"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 3
+        versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         kapt {
             arguments {
