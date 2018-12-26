@@ -65,12 +65,9 @@ class CUPUserModule : HorariumUserModule() {
     }
 
     private fun provideMainDrawerMenuItems(args: ContextEventArgs): Map<String, () -> Unit> {
-        Thread.sleep(2000)
         return mapOf(
             args.context.getString(R.string.module_calvijncollege_cup_menu_choices) to {
-                Log.d(TAG, "Tapped!")
-
-                Unit
+                // TODO: Start a new activity
             }
         )
     }
