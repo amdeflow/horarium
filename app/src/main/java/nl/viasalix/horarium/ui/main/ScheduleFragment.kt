@@ -135,8 +135,6 @@ class ScheduleFragment : Fragment() {
                         })
                     }
                 }
-
-                schedule.forEach { appointment -> Log.d("hor.ScheduleFragment", "Appointment: $appointment") }
             }
             else Log.e("hor.ScheduleFragment", "schedule is null")
         })

@@ -61,15 +61,21 @@ object DateUtils {
 
     fun getCurrentWeek() = with(Calendar.getInstance()) { get(Calendar.WEEK_OF_YEAR) }
 
-    fun isOtherDay(currentTime: Date, oldTime: Date): Boolean {
+    fun isSameDay(first: Date, second: Date): Boolean {
         val calendar = Calendar.getInstance()
-        calendar.time = currentTime
+        calendar.time = first
         val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+        val currentYear = calendar.get(Calendar.YEAR)
 
-        calendar.time = oldTime
+        calendar.time = second
         val oldDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+        val oldYear = calendar.get(Calendar.YEAR)
 
-        return currentDayOfWeek != oldDayOfWeek
+        return currentYear == oldYear && currentDayOfWeek == oldDayOfWeek
+    }
+
+    fun isOtherDay(currentTime: Date, oldTime: Date): Boolean {
+        return !isSameDay(currentTime, oldTime)
     }
 
     fun dayToString(timestamp: Date): String {
@@ -112,6 +118,13 @@ object DateUtils {
                     get(Calendar.YEAR),
                     get(Calendar.WEEK_OF_YEAR)
             )
+        }
+    }
+
+    fun getWeek(date: Date): Int {
+        with(Calendar.getInstance()) {
+            time = date
+            return get(Calendar.WEEK_OF_YEAR)
         }
     }
 }
