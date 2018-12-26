@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/bottom_drawer_navigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="16dp"

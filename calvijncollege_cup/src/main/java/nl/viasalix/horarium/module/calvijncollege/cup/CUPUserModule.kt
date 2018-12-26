@@ -20,9 +20,10 @@ import android.content.SharedPreferences
 import android.util.Log
 import nl.viasalix.horarium.events.UserEvents
 import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
+import nl.viasalix.horarium.events.args.ContextEventArgs
 import nl.viasalix.horarium.events.args.RenderAppointmentEventArgs
 import nl.viasalix.horarium.module.HorariumUserModule
-import nl.viasalix.horarium.module.calvijncollege.cup.ui.CalvijncollegeCupSetup
+import nl.viasalix.horarium.module.calvijncollege.cup.ui.setup.CalvijncollegeCupSetup
 
 class CUPUserModule : HorariumUserModule() {
 
@@ -42,6 +43,7 @@ class CUPUserModule : HorariumUserModule() {
 
         eventsProvider.appointmentsReady += ::appointmentsReady
         eventsProvider.renderAppointment += ::renderAppointment
+        eventsProvider.provideMainDrawerMenuItems += ::provideMainDrawerMenuItems
 
         if (moduleSp.contains(SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER) &&
             moduleSp.contains(SP_KEY_CONFIG_PIN)) {
@@ -60,5 +62,16 @@ class CUPUserModule : HorariumUserModule() {
 
     private fun renderAppointment(args: RenderAppointmentEventArgs) {
 
+    }
+
+    private fun provideMainDrawerMenuItems(args: ContextEventArgs): Map<String, () -> Unit> {
+        Thread.sleep(2000)
+        return mapOf(
+            args.context.getString(R.string.module_calvijncollege_cup_menu_choices) to {
+                Log.d(TAG, "Tapped!")
+
+                Unit
+            }
+        )
     }
 }

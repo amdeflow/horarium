@@ -121,16 +121,7 @@ class CUPClient(host: String = "ccgobb.cupweb6.nl") {
                 }
                 .build()
 
-
             requestBuilder.post(body)
-
-            if (Log.isLoggable("CUPClient", Log.DEBUG)) {
-                Log.d("CUPClient", "RequestBody: <next message>")
-                Buffer().also {
-                    body.writeTo(it)
-                    Log.d("CUPClient", it.readUtf8())
-                }
-            }
         }
 
         val request = requestBuilder

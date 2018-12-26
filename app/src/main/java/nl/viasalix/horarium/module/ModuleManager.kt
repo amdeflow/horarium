@@ -61,17 +61,17 @@ object ModuleManager {
     /**
      * Check if the current user must be prompted for module installation.
      */
-    internal fun mustPromptModuleInstallation(context: Context, userSp: SharedPreferences): Boolean {
+    internal fun mustPromptModuleInstallation(userSp: SharedPreferences): Boolean {
         Log.d(TAG, "mustPromptModuleInstallation check.")
 
         val prompted = userSp.getBoolean(SP_KEY_MODULES_PROMPTED, false)
 
         if (prompted) return false
 
-        return listAvailableModules(context, userSp).isNotEmpty()
+        return listAvailableModules(userSp).isNotEmpty()
     }
 
-    fun listAvailableModules(context: Context, userSp: SharedPreferences): List<String> {
+    fun listAvailableModules(userSp: SharedPreferences): List<String> {
         var schoolName = userSp.getString(SP_KEY_SCHOOL_NAME, "")
 
         if (schoolName == null)
@@ -85,7 +85,7 @@ object ModuleManager {
         return modulesPerInstitute[schoolName]!!
     }
 
-    fun listActiveModules(context: Context, userSp: SharedPreferences): Set<String> {
+    fun listActiveModules(userSp: SharedPreferences): Set<String> {
         return userSp.getStringSet(SP_KEY_MODULES_ACTIVE, emptySet())!!
     }
 
@@ -113,7 +113,7 @@ object ModuleManager {
 
         val initializedModules: MutableList<HorariumUserModule> = ArrayList()
 
-        listActiveModules(context, userSp).forEach { moduleName ->
+        listActiveModules(userSp).forEach { moduleName ->
             Log.d(TAG, "Initializing modules provided by $moduleName...")
             val moduleMeta = moduleMetadata[moduleName]
 

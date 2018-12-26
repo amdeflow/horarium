@@ -1,4 +1,4 @@
-package nl.viasalix.horarium.module.calvijncollege.cup.ui
+package nl.viasalix.horarium.module.calvijncollege.cup.ui.setup
 
 import android.content.Context
 import android.os.Bundle
@@ -11,23 +11,27 @@ import android.widget.EditText
 import nl.viasalix.horarium.module.calvijncollege.cup.R
 import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 
-class SetupStep3 : Fragment() {
+class SetupStep1 : Fragment() {
 
-    var pin = ""
+    companion object {
+        const val TAG: String = "HOR/CC/SETUP/STEP1"
+    }
+
+    var firstLettersOfSurname = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_calvijncollege_cup_setup_step3, container, false)
+        return inflater.inflate(R.layout.fragment_calvijncollege_cup_setup_step1, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val tv = view.findViewById<EditText>(R.id.module_calvijncollege_cup_setup_step3_pin)
+        val tv = view.findViewById<EditText>(R.id.module_calvijncollege_cup_setup_step1_firstLettersOfSurname)
         tv.textChangedListener {
             onTextChanged { _, _, _, _ ->
-                pin = tv.text.toString()
-                Log.d(SetupStep1.TAG, "pin = $pin")
+                firstLettersOfSurname = tv.text.toString()
+                Log.d(TAG, "firstLettersOfSurname = $firstLettersOfSurname")
             }
         }
     }
@@ -35,7 +39,8 @@ class SetupStep3 : Fragment() {
     override fun onAttach(context: Context?) {
         if (context != null && context is CalvijncollegeCupSetup) {
             context.setNextHandler {
-                context.pin = pin
+                Log.d(TAG, "Next handler of step 1 is executing")
+                context.firstLettersOfSurname = firstLettersOfSurname
             }
         }
 

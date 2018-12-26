@@ -17,6 +17,7 @@
 package nl.viasalix.horarium.events
 
 import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
+import nl.viasalix.horarium.events.args.ContextEventArgs
 import nl.viasalix.horarium.events.args.RenderAppointmentEventArgs
 
 class UserEvents {
@@ -34,4 +35,15 @@ class UserEvents {
      * TODO: Custom styling.
      */
     val renderAppointment = ConcurrentSetEvent<RenderAppointmentEventArgs, Unit>()
+
+    /**
+     * This event is invoked when the main drawer menu is created. This methoud should return as quick as possible, to
+     * make the menu appear as smooth as possible.
+     *
+     * When the event is invoked, it should return a pair of a string and a lambda function. The string is the text that
+     * is displayed in the menu. The lambda function is the tap callback.
+     *
+     * Please note that the callback is called from the UI thread.
+     */
+    val provideMainDrawerMenuItems = ConcurrentSetEvent<ContextEventArgs, Map<String, () -> Unit>>()
 }

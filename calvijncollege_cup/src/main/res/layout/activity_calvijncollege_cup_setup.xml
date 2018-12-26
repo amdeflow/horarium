@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.CalvijncollegeCupSetup">
+    tools:context=".ui.setup.CalvijncollegeCupSetup">
 
     <TextView
         android:id="@+id/module_calvijncollege_cup_setup_title"

@@ -1,7 +1,6 @@
-package nl.viasalix.horarium.module.calvijncollege.cup.ui
+package nl.viasalix.horarium.module.calvijncollege.cup.ui.setup
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -63,7 +62,7 @@ class SetupStep2 : Fragment() {
         if (context != null && context is CalvijncollegeCupSetup) {
             setup = context
             context.setNextHandler {
-                context.selectedUser = userKeys[selectedIndex]
+                context.selectedUser = userKeys[selectedIndex - 1]
             }
         }
 

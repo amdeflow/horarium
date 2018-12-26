@@ -49,8 +49,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var userSp: SharedPreferences
-    private val userEvents = UserEvents()
-    private var moduleInstances: List<HorariumUserModule> = emptyList()
+
+    val userEvents = UserEvents()
+    var moduleInstances: List<HorariumUserModule> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val currentUser = defaultSharedPreferences.getString(SP_KEY_CURRENT_USER, null)
@@ -68,9 +69,9 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "Checking modules state...")
 
         var installationPrompted = false
-        if (ModuleManager.mustPromptModuleInstallation(this, userSp)) {
-            val availableModules = ModuleManager.listAvailableModules(this, userSp)
-            val activeModules = ModuleManager.listActiveModules(this, userSp)
+        if (ModuleManager.mustPromptModuleInstallation(userSp)) {
+            val availableModules = ModuleManager.listAvailableModules(userSp)
+            val activeModules = ModuleManager.listActiveModules(userSp)
 
             startActivity(
                 Intent(this, ModuleInstallationActivity::class.java)
@@ -146,24 +147,27 @@ class MainActivity : AppCompatActivity() {
             val act = weakRef.get()
             if (act != null) {
                 val initializedModules = ModuleManager.initializeModules(act, userSp, userEvents)
-                setupNext(initializedModules.iterator())
+                setupNext(initializedModules.iterator()) {
+                    // Store the module instances after all modules are initialized
+                    moduleInstances = initializedModules
+                }
             }
         }
     }
 
-    private fun setupNext(iterator: Iterator<HorariumUserModule>) {
-        if (!iterator.hasNext()) return
+    private fun setupNext(iterator: Iterator<HorariumUserModule>, finished: () -> Unit) {
+        if (!iterator.hasNext()) finished.invoke()
 
         val next = iterator.next()
         val activityClass = next.provideSetupActivityClass()
 
         if (activityClass == null) {
-            setupNext(iterator)
+            setupNext(iterator, finished)
             return
         }
 
         val finishKey = ModuleManager.requestSetup {
-            setupNext(iterator)
+            setupNext(iterator, finished)
         }
 
         val userIdentifier = userSp.getString(SP_KEY_USER_IDENTIFIER, "")!!

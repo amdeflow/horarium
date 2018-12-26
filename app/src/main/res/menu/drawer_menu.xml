@@ -2,13 +2,20 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/drawer_settings"
-        android:title="@string/settings" />
-    <item
-        android:id="@+id/drawer_announcements"
-        android:title="@string/announcements" />
-    <item
-        android:id="@+id/drawer_schedule"
-        android:title="@string/schedule" />
+    <group android:id="@+id/drawer_group_modules"
+        android:orderInCategory="0"/>
+
+    <group android:id="@+id/drawer_group_primary"
+        android:orderInCategory="1">
+        <item
+            android:id="@+id/drawer_settings"
+            android:title="@string/settings" />
+        <item
+            android:id="@+id/drawer_announcements"
+            android:title="@string/announcements" />
+        <item
+            android:id="@+id/drawer_schedule"
+            android:title="@string/schedule" />
+    </group>
+
 </menu>

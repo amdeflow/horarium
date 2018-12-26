@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.module.calvijncollege.cup.ui
+package nl.viasalix.horarium.module.calvijncollege.cup.ui.setup
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -24,7 +24,6 @@ import android.util.Log
 import android.widget.Button
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPClient
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPUserModule
@@ -159,14 +158,14 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
                 replaceDetail(SetupStep3())
             }
             3 -> { // User has entered the pin code
+                Log.d(TAG, "firstLettersOfSurname = $firstLettersOfSurname, selectedUser = $selectedUser, pin = $pin")
+
                 val cupClient = CUPClient()
                 val (initSuccess, initFailReason) = cupClient.init(firstLettersOfSurname, selectedUser, pin)
 
                 if (initSuccess) {
                     done()
                 } else {
-                    Log.e(TAG, "Step 3 failed: $initFailReason")
-
                     if (initFailReason.startsWith("E_SignIn_Plain_")) {
                         val plainFailReason = initFailReason.substring(15)
                         // TODO: Display plain error
