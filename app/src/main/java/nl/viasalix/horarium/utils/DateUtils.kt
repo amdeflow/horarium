@@ -57,7 +57,18 @@ object DateUtils {
         return cal.time
     }
 
-    fun getCurrentYear() = with(Calendar.getInstance()) { get(Calendar.YEAR) }
+    fun getCurrentYear(): Int {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+
+        val calendarEndOfWeek = Calendar.getInstance()
+        calendarEndOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY)
+        if (calendarEndOfWeek.get(Calendar.YEAR) == year + 1) {
+            return year + 1
+        }
+
+        return year
+    }
 
     fun getCurrentWeek() = with(Calendar.getInstance()) { get(Calendar.WEEK_OF_YEAR) }
 
