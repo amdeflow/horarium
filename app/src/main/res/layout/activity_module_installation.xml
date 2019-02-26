@@ -88,8 +88,8 @@ limitations under the License.
             app:layout_constraintStart_toStartOf="@+id/module_installation_title"
             app:layout_constraintTop_toTopOf="@+id/module_installation_proceed"
             android:visibility="invisible"
-            android:progress="@{viewModel.progress}"
-            android:indeterminate="@{viewModel.progressIndeterminate}"/>
+            android:progress="@{safeUnbox(viewModel.progress)}"
+            android:indeterminate="@{safeUnbox(viewModel.progressIndeterminate)}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
