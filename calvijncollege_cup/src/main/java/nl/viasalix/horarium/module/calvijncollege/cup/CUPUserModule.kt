@@ -66,14 +66,14 @@ class CUPUserModule : HorariumUserModule() {
     }
 
     private fun initCUPClient() {
-        val newCupClient = CUPClient()
+        val newCUPClient = CUPClient()
         val (initSuccess, initFailReason) = newCupClient.init(
             moduleSp.getString(SP_KEY_CONFIG_FIRST_LETTERS_OF_SURNAME, "") ?: "",
             moduleSp.getString(SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER, "") ?: "",
             moduleSp.getString(SP_KEY_CONFIG_PIN, "") ?: "")
 
         if (initSuccess) {
-            cupClient = newCupClient
+            cupClient = newCUPClient
             Log.i(TAG, "Successfully initialized the CUP client.")
         } else {
             Log.e(TAG, "Failed initializing the CUP Client: $initFailReason")
