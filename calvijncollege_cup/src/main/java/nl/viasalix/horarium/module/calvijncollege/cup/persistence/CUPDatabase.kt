@@ -1,9 +1,13 @@
 package nl.viasalix.horarium.module.calvijncollege.cup.persistence
 
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import nl.viasalix.horarium.module.calvijncollege.cup.data.Appointment
 import nl.viasalix.horarium.utils.DatabaseUtils.formatModuleDatabaseName
 
-@Database(entities = [Appointment::class, version = 1)
+@Database(entities = [Appointment::class], version = 1)
 abstract class CUPDatabase : RoomDatabase() {
     abstract fun appointmentDao(): AppointmentDao
 
