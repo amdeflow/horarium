@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Jochem Broekhoff
+ * Copyright 2019 Jochem Broekhoff and Rutger Broekhoff
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,19 @@
 
 package nl.viasalix.horarium.data
 
+import android.view.View
+
 /**
  * When a value is `null`, it is assumed to be not edited.
  */
 data class AppointmentCustomizations(
-    val subjects: List<String>? = null,
-    val teachers: List<String>? = null,
-    val locations: List<String>? = null
+        val subjects: List<String>? = null,
+        val teachers: List<String>? = null,
+        val locations: List<String>? = null,
+        val extraChips: List<ChipStub>? = null
+)
+
+data class ChipStub(
+        val name: String,
+        val action: (View?) -> Unit
 )

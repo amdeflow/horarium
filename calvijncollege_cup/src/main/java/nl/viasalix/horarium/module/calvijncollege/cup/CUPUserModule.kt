@@ -25,7 +25,7 @@ import nl.viasalix.horarium.events.args.ContextEventArgs
 import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
 import nl.viasalix.horarium.module.HorariumUserModule
 import nl.viasalix.horarium.module.calvijncollege.cup.method.PrintableTimetable
-import nl.viasalix.horarium.module.calvijncollege.cup.ui.setup.CalvijncollegeCupSetup
+import nl.viasalix.horarium.module.calvijncollege.cup.ui.setup.CalvijnCollegeCUPSetup
 import nl.viasalix.horarium.utils.DateUtils
 import org.jetbrains.anko.doAsync
 import java.util.HashSet
@@ -54,9 +54,9 @@ class CUPUserModule : HorariumUserModule() {
         eventsProvider.provideMainDrawerMenuItems += ::provideMainDrawerMenuItems
     }
 
-    override fun provideSetupActivityClass(): Class<CalvijncollegeCupSetup>? {
+    override fun provideSetupActivityClass(): Class<CalvijnCollegeCUPSetup>? {
         if (moduleSp.getBoolean(SP_KEY_SETUP_COMPLETED, false)) return null
-        return CalvijncollegeCupSetup::class.java
+        return CalvijnCollegeCUPSetup::class.java
     }
 
     override fun init() {
@@ -98,55 +98,53 @@ class CUPUserModule : HorariumUserModule() {
         if (!busy) {
             busy = true
 
-            doAsync {
-                Log.d(TAG, "Running background processor.")
+            Log.d(TAG, "Running background processor.")
 
-                if (cupClient == null) {
-                    busy = false
-                    return@doAsync
-                }
+            if (cupClient == null) {
+                busy = false
+                return
+            }
 
-                if (!cupClient!!.checkSession(dontUpdateLastRequestTimestamp = true)) {
-                    initCUPClient()
-                }
+            if (!cupClient!!.checkSession(dontUpdateLastRequestTimestamp = true)) {
+                initCUPClient()
+            }
 
-                val printableTimetableExecution = PrintableTimetable.execute(cupClient!!)
-                if (!printableTimetableExecution.success) {
-                    Log.e(TAG, "Failed executing PrintableTimetable: ${printableTimetableExecution.failReason}")
-                    busy = false
-                    return@doAsync
-                }
+            val printableTimetableExecution = PrintableTimetable.execute(cupClient!!)
+            if (!printableTimetableExecution.success) {
+                Log.e(TAG, "Failed executing PrintableTimetable: ${printableTimetableExecution.failReason}")
+                busy = false
+                return
+            }
 
-                val result = printableTimetableExecution.result
+            val result = printableTimetableExecution.result
 
-                synchronized (processQueue) {
-                    for (appointment in processQueue) {
-                        Log.d(TAG, appointment.toString())
+            synchronized (processQueue) {
+                for (appointment in processQueue) {
+                    Log.d(TAG, appointment.toString())
 
-                        val week = DateUtils.getWeek(appointment.start)
-                        if (!result.containsKey(week)) continue
+                    val week = DateUtils.getWeek(appointment.start)
+                    if (!result.containsKey(week)) continue
 
-                        val narrowedDown = result[week]!!.filter { it.slot == appointment.startTimeSlot && DateUtils.isSameDay(it.day, appointment.start) }
-                        if (narrowedDown.size != 1) {
-                            Log.w(TAG, "Size of narrowedDown is NOT equal to 1, instead it has ${narrowedDown.size} items.")
-                            continue
-                        }
-
-                        val historyOption = narrowedDown[0]
-                        val customizations = AppointmentCustomizations(
-                            listOf(historyOption.option.subject),
-                            listOf(historyOption.option.teacher),
-                            listOf(historyOption.option.room)
-                        )
-
-                        args.updateAppointmentCustomDataCallback(appointment.appointmentInstance, customizations)
+                    val narrowedDown = result[week]!!.filter { it.slot == appointment.startTimeSlot && DateUtils.isSameDay(it.day, appointment.start) }
+                    if (narrowedDown.size != 1) {
+                        Log.w(TAG, "Size of narrowedDown is NOT equal to 1, instead it has ${narrowedDown.size} items.")
+                        continue
                     }
 
-                    processQueue.clear()
+                    val historyOption = narrowedDown[0]
+                    val customizations = AppointmentCustomizations(
+                        listOf(historyOption.option.subject),
+                        listOf(historyOption.option.teacher),
+                        listOf(historyOption.option.room)
+                    )
+
+                    args.updateAppointmentCustomDataCallback(appointment.appointmentInstance, customizations)
                 }
 
-                busy = false
+                processQueue.clear()
             }
+
+            busy = false
         }
     }
 

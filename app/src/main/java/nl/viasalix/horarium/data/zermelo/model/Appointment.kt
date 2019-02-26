@@ -16,10 +16,7 @@
 
 package nl.viasalix.horarium.data.zermelo.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
+import androidx.room.*
 import nl.viasalix.horarium.converters.RoomTypeConverters
 import nl.viasalix.horarium.data.AppointmentCustomizations
 import java.text.DateFormat
@@ -79,6 +76,9 @@ data class Appointment(
         var branchOfSchool: Long = -1,
         // Branch code of the branchOfSchool
         var branch: String = "",
+
+        @Ignore
+        @Transient
         var customizations: AppointmentCustomizations = AppointmentCustomizations()
 ) {
     fun startTimeSlotString() = if (startTimeSlot < 0) "" else startTimeSlot.toString()

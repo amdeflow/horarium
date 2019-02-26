@@ -56,7 +56,7 @@ dependencies {
     api 'com.github.apl-devs:appintro:v4.2.3'
     api('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
     api 'com.google.zxing:core:3.3.0'
-    api 'com.google.android.play:core:1.3.6'
+    api 'com.google.android.play:core:1.3.7'
     api "com.google.dagger:dagger:$dagger2_version"
     api "io.reactivex.rxjava2:rxjava:$rxjava2_version"
     kapt "androidx.room:room-compiler:$room_version"

@@ -3,15 +3,17 @@ package nl.viasalix.horarium.module.calvijncollege.cup.ui.setup
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import nl.viasalix.horarium.module.calvijncollege.cup.R
+import org.jetbrains.anko.sdk27.coroutines.onKey
 import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 
-class SetupStep1 : Fragment() {
+class SetupStep1 : SetupFragment() {
+    override var onDoneCallback: (() -> Unit)? = null
 
     companion object {
         const val TAG: String = "HOR/CC/SETUP/STEP1"
@@ -28,16 +30,19 @@ class SetupStep1 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val tv = view.findViewById<EditText>(R.id.module_calvijncollege_cup_setup_step1_firstLettersOfSurname)
-        tv.textChangedListener {
-            onTextChanged { _, _, _, _ ->
+        tv.onKey { _, keyCode, event ->
+            if (event?.action == KeyEvent.ACTION_DOWN &&
+                    keyCode == KeyEvent.KEYCODE_ENTER &&
+                    tv.text.length >= 3 && tv.text.length <= 7) {
+                onDoneCallback?.invoke()
+            } else {
                 firstLettersOfSurname = tv.text.toString()
-                Log.d(TAG, "firstLettersOfSurname = $firstLettersOfSurname")
             }
         }
     }
 
     override fun onAttach(context: Context?) {
-        if (context != null && context is CalvijncollegeCupSetup) {
+        if (context != null && context is CalvijnCollegeCUPSetup) {
             context.setNextHandler {
                 Log.d(TAG, "Next handler of step 1 is executing")
                 context.firstLettersOfSurname = firstLettersOfSurname

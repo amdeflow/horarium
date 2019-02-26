@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.list_item_appointment.view.*
 import nl.viasalix.horarium.R
+import nl.viasalix.horarium.data.ChipStub
 import nl.viasalix.horarium.databinding.ListItemAppointmentBinding
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 
@@ -47,6 +48,15 @@ class AppointmentViewHolder(
             else -> return
         }
         itemView.cgInfo.addView(c)
+    }
+
+    fun addExtraChips(context: Context, appointment: Appointment, chips: List<ChipStub>) {
+        for (chip in chips) {
+            val c = Chip(context)
+
+            c.text = chip.name
+            c.setOnClickListener(chip.action)
+        }
     }
 
 }

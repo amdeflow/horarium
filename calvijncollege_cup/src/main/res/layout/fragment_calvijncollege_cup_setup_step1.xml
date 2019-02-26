@@ -13,15 +13,11 @@
             android:id="@+id/module_calvijncollege_cup_setup_step1_firstLettersOfSurname"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:hint="First 3 to 7 letters of surname"
             android:maxLength="7"
             android:maxLines="1"
-            android:text=""/>
+            android:singleLine="true"
+            android:text="" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

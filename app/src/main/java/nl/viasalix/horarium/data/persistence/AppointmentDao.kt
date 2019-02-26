@@ -42,9 +42,6 @@ interface AppointmentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAppointments(appointments: List<Appointment>)
 
-    @Query("UPDATE `appointment` SET `customizations` = :appointmentCustomizations WHERE `appointment_instance` = :appointmentInstance")
-    fun updateAppointmentCustomizations(appointmentInstance: Long, appointmentCustomizations: AppointmentCustomizations)
-
     @Delete
     fun deleteAppointments(appointments: List<Appointment>)
 }

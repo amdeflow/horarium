@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import nl.viasalix.horarium.MainActivity
 import nl.viasalix.horarium.R
+import nl.viasalix.horarium.data.AppointmentCustomizations
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.databinding.ScheduleFragmentBinding
 import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
@@ -123,16 +124,19 @@ class ScheduleFragment : Fragment() {
                 // Submit the appointments to all modules
                 doAsync {
                     val context = context
-                    if (context != null && context is MainActivity) {
+                    if (context != null && context is MainActivity && !viewModel.injected) {
+                        val customizations = mutableMapOf<Long, AppointmentCustomizations>()
+
                         context.userEvents.appointmentsReady.invoke(AppointmentsReadyEventArgs(schedule) { appointmentInstance, appointmentCustomizations ->
+                            Log.d("hor.ScheduleFragment", "appointmentsReady invoked")
+
                             // Make sure that the module does not modify other appointments
                             if (schedule.any { it.appointmentInstance == appointmentInstance }) {
-                                viewModel.scheduleRepository.updateCustomizations(
-                                    appointmentInstance,
-                                    appointmentCustomizations
-                                )
+                                customizations[appointmentInstance] = appointmentCustomizations
                             }
                         })
+
+                        viewModel.injectCustomizations(customizations)
                     }
                 }
             }

@@ -24,10 +24,6 @@ class ScheduleRepository(
         return appointmentDao.getAppointmentsFromTill(from, till)
     }
 
-    fun updateCustomizations(appointmentInstance: Long, customizations: AppointmentCustomizations) {
-        appointmentDao.updateAppointmentCustomizations(appointmentInstance, customizations)
-    }
-
     private fun refreshAppointmentsFromTill(from: Date, till: Date) {
         doAsync {
             val response = api.getAppointmentsWithArgs(GetAppointmentsArgs(from, till)).execute()

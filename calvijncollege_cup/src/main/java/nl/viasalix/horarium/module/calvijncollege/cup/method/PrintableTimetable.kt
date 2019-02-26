@@ -86,7 +86,7 @@ class PrintableTimetable(
             var lastKnownDate: Date?
             var optionsForCurrentWeek: MutableList<HistoryOption> = ArrayList()
 
-            historyTable.select("> tbody > tr").also { it.removeAt(0) }.forEachIndexed { index, tableRow ->
+            historyTable.select("> tbody > tr").also { it.removeAt(0) }.forEach { tableRow ->
                 val tableColumns = tableRow.select("> td")
 
                 if (tableColumns.size == 1) {

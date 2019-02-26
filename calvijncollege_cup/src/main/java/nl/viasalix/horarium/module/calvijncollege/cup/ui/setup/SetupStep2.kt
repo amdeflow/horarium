@@ -12,13 +12,14 @@ import android.widget.RadioGroup
 
 import nl.viasalix.horarium.module.calvijncollege.cup.R
 
-class SetupStep2 : Fragment() {
+class SetupStep2 : SetupFragment() {
+    override var onDoneCallback: (() -> Unit)? = null
 
     companion object {
         const val TAG: String = "HOR/CC/SETUP/STEP2"
     }
 
-    var setup: CalvijncollegeCupSetup? = null
+    var setup: CalvijnCollegeCUPSetup? = null
 
     var selectedIndex = 0
 
@@ -59,7 +60,7 @@ class SetupStep2 : Fragment() {
     }
 
     override fun onAttach(context: Context?) {
-        if (context != null && context is CalvijncollegeCupSetup) {
+        if (context != null && context is CalvijnCollegeCUPSetup) {
             setup = context
             context.setNextHandler {
                 context.selectedUser = userKeys[selectedIndex - 1]

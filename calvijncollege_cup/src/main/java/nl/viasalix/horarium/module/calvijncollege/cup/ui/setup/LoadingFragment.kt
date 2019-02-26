@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import nl.viasalix.horarium.module.calvijncollege.cup.R
 
-class LoadingFragment : Fragment() {
+class LoadingFragment : SetupFragment() {
+    override var onDoneCallback: (() -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -10,7 +10,7 @@
     </dist:module>
 
     <application>
-        <activity android:name=".ui.setup.CalvijncollegeCupSetup"
+        <activity android:name=".ui.setup.CalvijnCollegeCUPSetup"
             android:screenOrientation="portrait"/>
     </application>
 

@@ -32,7 +32,7 @@ import nl.viasalix.horarium.module.calvijncollege.cup.method.SearchUsers
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class CalvijncollegeCupSetup : AppCompatActivity() {
+class CalvijnCollegeCUPSetup : AppCompatActivity() {
 
     companion object {
         const val TAG: String = "HOR/CC/Setup"
@@ -93,9 +93,10 @@ class CalvijncollegeCupSetup : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun replaceDetail(newFragment: Fragment) {
+    private fun replaceDetail(newFragment: SetupFragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.run {
+            newFragment.onDoneCallback = { doAsync { next() } }
             replace(R.id.module_calvijncollege_cup_setup_detailContainer, newFragment)
             disallowAddToBackStack()
             commit()
