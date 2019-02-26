@@ -9,9 +9,17 @@
         <dist:fusing dist:include="true" />
     </dist:module>
 
-    <application>
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher">
+
         <activity android:name=".ui.setup.CalvijnCollegeCUPSetup"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

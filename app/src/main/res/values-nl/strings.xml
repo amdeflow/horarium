@@ -19,7 +19,6 @@ limitations under the License.
 <resources>
     <string name="already_downloaded">Al gedownload</string>
     <string name="has_to_be_downloaded">Moet nog gedownload worden</string>
-    <string name="title_calvijncollege_cup">Calvijn College: CUP</string>
     <string name="module_installation_instructions">Modules zijn beschikbaar voor jouw school. Selecteer de modules die je wilt downloaden en activeren.</string>
     <string name="module_installation">Module-installatie</string>
     <string name="skip">Overslaan</string>
@@ -60,4 +59,5 @@ limitations under the License.
     <string name="cancelled">Geannuleerd</string>
     <string name="moved">Verplaatst</string>
     <string name="modified">Gewijzigd</string>
+    <string name="module_item_icon">Icoontje van module-item</string>
 </resources>

@@ -16,7 +16,7 @@
 
 package nl.viasalix.horarium.module.calvijncollege.cup
 
-import nl.viasalix.horarium.module.calvijncollege.cup.data.Session
+import nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model.Session
 import nl.viasalix.horarium.module.calvijncollege.cup.method.SearchUsers
 import nl.viasalix.horarium.module.calvijncollege.cup.method.SignIn
 import okhttp3.Call
@@ -25,6 +25,7 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 class CUPClient(host: String = "ccgobb.cupweb6.nl") {
@@ -86,7 +87,7 @@ class CUPClient(host: String = "ccgobb.cupweb6.nl") {
         return Pair(true, "")
     }
 
-    fun init(loadedSession: Session) {
+    private fun init(loadedSession: Session) {
         session = loadedSession
         client = OkHttpClient.Builder()
             .cookieJar(session)
@@ -147,7 +148,7 @@ class CUPClient(host: String = "ccgobb.cupweb6.nl") {
     }
 
     companion object {
-        val appointmentDateFormatter = SimpleDateFormat("d-M-y")
-        val appointmentTimeFormatter = SimpleDateFormat("k.m")
+        val appointmentDateFormatter: DateFormat = SimpleDateFormat.getDateInstance()
+        val appointmentTimeFormatter: DateFormat = SimpleDateFormat.getTimeInstance()
     }
 }

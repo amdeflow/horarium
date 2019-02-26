@@ -14,23 +14,11 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.module.calvijncollege.cup.data
-
-import java.util.Date
+package nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model
 
 /**
- * @param start Start dateString.
- * @param end End dateString, can be null.
- * @param slot Slot for timetable.
- * @param selectedOption Selected [Option], can be null.
- * @param fixed `true` if this appointment is fixed. This probably means that no choices are available.
- * @param choices List of available [Choice]s.
+ * @param option The [Option] contained by this [Choice].
+ * @param full `true` if this choice is full, no places are available anymore.
+ * @param internalId Internal id, used to commit a [Choice].
  */
-data class Appointment(
-    val start: Date,
-    val end: Date?,
-    val slot: Int,
-    val selectedOption: Option?,
-    val fixed: Boolean,
-    val choices: List<Choice>
-)
+data class Choice(val option: Option, val full: Boolean, val internalId: Int)

@@ -19,18 +19,18 @@ package nl.viasalix.horarium.module.calvijncollege.cup.method
 import nl.viasalix.horarium.module.calvijncollege.cup.AspFieldMode
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPClient
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPMethod
-import nl.viasalix.horarium.module.calvijncollege.cup.data.Appointment
-import nl.viasalix.horarium.module.calvijncollege.cup.data.Choice
-import nl.viasalix.horarium.module.calvijncollege.cup.data.Option
+import nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model.Appointment
+import nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model.Choice
+import nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model.Option
 import org.jsoup.Jsoup
 import java.text.ParseException
-import java.util.Date
+import java.util.*
 
 /**
  * @param result List of available [Appointment]s.
  */
 class Appointments(override val success: Boolean, override val result: List<Appointment> = emptyList()) :
-    CUPMethod<List<Appointment>>() {
+        CUPMethod<List<Appointment>>() {
     companion object {
         fun execute(cupClient: CUPClient): Appointments {
             if (!cupClient.checkSession()) return Appointments(false).also { it.failReason = "E_CupClient_SessionExpired" }
@@ -47,8 +47,8 @@ class Appointments(override val success: Boolean, override val result: List<Appo
 
             val appointments: MutableList<Appointment> = ArrayList()
             doc.select("#rooster > tbody > tr.cls0, #rooster > tbody > tr.cls1").forEach { domAppointment ->
-                var startDate: Date? = null
-                var endDate: Date? = null
+                var startDate: Calendar? = null
+                var endDate: Calendar? = null
                 var slot = 0
                 var selectedOption: Option? = null
                 var fixed = false
@@ -61,7 +61,8 @@ class Appointments(override val success: Boolean, override val result: List<Appo
                         0 -> {
                             // Primary start dateString
                             try {
-                                startDate = CUPClient.appointmentDateFormatter.parse(columnStringContent)
+                                startDate = Calendar.getInstance()
+                                startDate!!.time = CUPClient.appointmentDateFormatter.parse(columnStringContent)
                             } catch (pe: ParseException) {
                             }
                         }
@@ -71,23 +72,38 @@ class Appointments(override val success: Boolean, override val result: List<Appo
                             // Start and end time
                             if (startDate != null) {
                                 val fromToRaw = domAppointmentColumn
-                                    .selectFirst("> p")
-                                    .attr("onmouseover")
-                                    .replace("showHelpText(\"", "")
-                                    .replace(",event);", "")
-                                    .split('-')
+                                        .selectFirst("> p")
+                                        .attr("onmouseover")
+                                        .replace("showHelpText(\"", "")
+                                        .replace(",event);", "")
+                                        .split('-')
                                 if (fromToRaw.size == 2) {
                                     try {
                                         val from = CUPClient.appointmentTimeFormatter.parse(fromToRaw[0])
-                                        startDate!!.hours = from.hours
-                                        startDate!!.minutes = from.minutes
+                                        val fromCal = Calendar.getInstance().also {
+                                            it.time = from
+                                        }
+
+                                        startDate?.apply {
+                                            set(Calendar.HOUR, fromCal.get(Calendar.HOUR))
+                                            set(Calendar.MINUTE, fromCal.get(Calendar.MINUTE))
+                                        }
                                     } catch (pe: ParseException) {
                                     }
                                     try {
                                         val to = CUPClient.appointmentTimeFormatter.parse(fromToRaw[1])
-                                        endDate = if (startDate == null) null else Date(startDate!!.time)
-                                        endDate!!.hours = to.hours
-                                        endDate!!.minutes = to.minutes
+                                        val toCal = Calendar.getInstance().also {
+                                            it.time = to
+                                        }
+                                        endDate = if (startDate == null) null else {
+                                            Calendar.getInstance().also {
+                                                it.time = startDate?.time
+                                            }
+                                        }
+                                        endDate?.apply {
+                                            set(Calendar.HOUR, toCal.get(Calendar.HOUR))
+                                            set(Calendar.MINUTE, toCal.get(Calendar.MINUTE))
+                                        }
                                     } catch (pe: ParseException) {
                                     }
                                 }
@@ -121,7 +137,7 @@ class Appointments(override val success: Boolean, override val result: List<Appo
                     it.failReason = "E_Appointments_StartDateNull"
                 }
 
-                appointments += Appointment(startDate!!, endDate, slot, selectedOption, fixed, choices)
+                appointments += Appointment(startDate!!.time, endDate!!.time, slot, selectedOption, fixed, choices)
             }
 
             return Appointments(true, appointments)

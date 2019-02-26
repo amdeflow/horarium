@@ -19,14 +19,14 @@ package nl.viasalix.horarium.module.calvijncollege.cup.method
 import nl.viasalix.horarium.module.calvijncollege.cup.AspFieldMode
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPClient
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPMethod
-import nl.viasalix.horarium.module.calvijncollege.cup.data.Choice
+import nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model.Choice
 import org.jsoup.Jsoup
 
 data class Choose(override val success: Boolean) : CUPMethod<Any>() {
     override val result: Any? = null
 
     companion object {
-        fun execute(cupClient: CUPClient, internalId: Int): Choose {
+        private fun execute(cupClient: CUPClient, internalId: Int): Choose {
             if (!cupClient.checkSession()) return Choose(false).also { it.failReason = "E_CupClient_SessionExpired" }
 
             // TODO: Check if successfully signed in
@@ -48,7 +48,7 @@ data class Choose(override val success: Boolean) : CUPMethod<Any>() {
             val doc = Jsoup.parse(response.body()!!.string())
             cupClient.session.extractAspFields(doc)
 
-            val prekolomImgs = doc.select(".prekolom > img");
+            val prekolomImgs = doc.select(".prekolom > img")
             if (prekolomImgs.isNotEmpty()) {
                 val img = prekolomImgs.first()
                 if (img.attr("src")!!.contentEquals("images/infoError.png") && img.hasAttr("onmouseover")) {

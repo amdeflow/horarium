@@ -50,7 +50,7 @@ class AppointmentViewHolder(
         itemView.cgInfo.addView(c)
     }
 
-    fun addExtraChips(context: Context, appointment: Appointment, chips: List<ChipStub>) {
+    fun addExtraChips(context: Context, chips: List<ChipStub>) {
         for (chip in chips) {
             val c = Chip(context)
 

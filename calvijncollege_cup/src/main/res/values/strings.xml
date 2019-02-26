@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-Copyright 2018 Jochem Broekhoff
+Copyright 2018 Jochem Broekhoff and Rutger Broekhoff
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,5 +18,9 @@ limitations under the License.
 
 <resources>
 
-    <string name="module_calvijncollege_cup_menu_choices">CUP Choices</string>
+    <string name="menu_choices">CUP Choices</string>
+    <string name="firstnletters_hint">First 3 to 7 letters of surname</string>
+    <string name="pinndigits_hint">Pin (4 digits)</string>
+    <string name="cup_setup">CUP setup</string>
+    <string name="next">Next</string>
 </resources>

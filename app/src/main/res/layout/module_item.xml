@@ -19,7 +19,7 @@ limitations under the License.
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="wrap_content"
     android:paddingStart="16dp"
     android:paddingLeft="16dp"
     android:paddingTop="16dp"
@@ -31,23 +31,31 @@ limitations under the License.
         android:id="@+id/module_item_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_twotone_attachment_24px" />
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_twotone_attachment_24px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/module_item_icon" />
 
     <TextView
         android:id="@+id/module_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="module name"
+        android:layout_marginTop="8dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        app:layout_constraintLeft_toRightOf="@id/module_item_icon" />
+        app:layout_constraintLeft_toRightOf="@id/module_item_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp" />
 
     <TextView
         android:id="@+id/module_item_installationState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="installation state"
         app:layout_constraintLeft_toLeftOf="@id/module_item_title"
         app:layout_constraintTop_toBottomOf="@id/module_item_title" />
 
@@ -56,6 +64,10 @@ limitations under the License.
         android:id="@+id/module_item_activationState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

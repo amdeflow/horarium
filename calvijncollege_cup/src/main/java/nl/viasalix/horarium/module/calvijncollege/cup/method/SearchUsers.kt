@@ -44,7 +44,7 @@ class SearchUsers(override val success: Boolean, override val result: Map<String
             cupClient.session.extractAspFields(doc)
 
             for (errContainer in doc.select(".clsError")) {
-                if (errContainer.attr("isvalid").equals("False")) {
+                if (errContainer.attr("isvalid") == "False") {
                     return SearchUsers(false).also { it.failReason = "E_SearchUsers_Plain_" + errContainer.text() }
                 }
             }

@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import nl.viasalix.horarium.module.calvijncollege.cup.R
 import org.jetbrains.anko.sdk27.coroutines.onKey
-import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 
 class SetupStep1 : SetupFragment() {
     override var onDoneCallback: (() -> Unit)? = null
@@ -19,7 +18,7 @@ class SetupStep1 : SetupFragment() {
         const val TAG: String = "HOR/CC/SETUP/STEP1"
     }
 
-    var firstLettersOfSurname = ""
+    private var firstLettersOfSurname = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,7 +28,7 @@ class SetupStep1 : SetupFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val tv = view.findViewById<EditText>(R.id.module_calvijncollege_cup_setup_step1_firstLettersOfSurname)
+        val tv = view.findViewById<EditText>(R.id.setup_step1_firstLettersOfSurname)
         tv.onKey { _, keyCode, event ->
             if (event?.action == KeyEvent.ACTION_DOWN &&
                     keyCode == KeyEvent.KEYCODE_ENTER &&

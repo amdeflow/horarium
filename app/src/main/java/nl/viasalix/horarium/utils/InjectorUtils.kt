@@ -1,7 +1,6 @@
 package nl.viasalix.horarium.utils
 
 import android.content.Context
-import android.util.Log
 import nl.viasalix.horarium.data.net.ZermeloApi
 import nl.viasalix.horarium.data.persistence.HorariumDatabase
 import nl.viasalix.horarium.data.repository.ScheduleRepository

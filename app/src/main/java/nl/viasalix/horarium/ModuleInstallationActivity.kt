@@ -33,7 +33,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.play.core.splitinstall.SplitInstallException
 import com.google.android.play.core.splitinstall.SplitInstallRequest
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
-import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULE_INSTALLATION_STATE
 import nl.viasalix.horarium.databinding.ActivityModuleInstallationBinding
@@ -74,7 +73,7 @@ class ModuleInstallationActivity : AppCompatActivity() {
         val binding = DataBindingUtil.setContentView<ActivityModuleInstallationBinding>(
                 this, R.layout.activity_module_installation
         )
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         // Retrieve parameters from Intent extra
@@ -88,10 +87,10 @@ class ModuleInstallationActivity : AppCompatActivity() {
 
         viewManager = LinearLayoutManager(this)
         viewAdapter = ModuleItemAdapter(
-            statusReports,
-            getString(R.string.already_downloaded),
-            getString(R.string.has_to_be_downloaded),
-            ::activationStateChanged
+                statusReports,
+                getString(R.string.already_downloaded),
+                getString(R.string.has_to_be_downloaded),
+                ::activationStateChanged
         )
 
         recyclerView = findViewById<RecyclerView>(R.id.module_installation_recyclerView).apply {
@@ -102,25 +101,27 @@ class ModuleInstallationActivity : AppCompatActivity() {
 
         viewModel.proceedButtonText.value = getString(R.string.skip)
 
-        findViewById<Button>(R.id.module_installation_proceed).onClick { _ -> doAsync {
-            val activatedModules = statusReports.filter { it.activated }
-            val noActivated = activatedModules.size
+        findViewById<Button>(R.id.module_installation_proceed).onClick {
+            doAsync {
+                val activatedModules = statusReports.filter { it.activated }
+                val noActivated = activatedModules.size
 
-            if (noActivated == 0) {
-                userSp.edit { putInt(SP_KEY_MODULE_INSTALLATION_STATE, STATE_SKIPPED) }
-                uiThread { finish() }
-            } else {
-                if (statusReports.count { it.installed } == noActivated) {
-                    userSp.edit {
-                        putInt(SP_KEY_MODULE_INSTALLATION_STATE, STATE_DONE_NOTHING_DOWNLOADED)
-                        putStringSet(SP_KEY_MODULES_ACTIVE, activatedModules.map { it.moduleName }.toSet())
-                    }
+                if (noActivated == 0) {
+                    userSp.edit { putInt(SP_KEY_MODULE_INSTALLATION_STATE, STATE_SKIPPED) }
                     uiThread { finish() }
                 } else {
-                    startInstallationProcess(activatedModules)
+                    if (statusReports.count { it.installed } == noActivated) {
+                        userSp.edit {
+                            putInt(SP_KEY_MODULE_INSTALLATION_STATE, STATE_DONE_NOTHING_DOWNLOADED)
+                            putStringSet(SP_KEY_MODULES_ACTIVE, activatedModules.map { it.moduleName }.toSet())
+                        }
+                        uiThread { finish() }
+                    } else {
+                        startInstallationProcess(activatedModules)
+                    }
                 }
             }
-        }}
+        }
 
         // Fire initial activationStateChanged
         activationStateChanged()
@@ -146,7 +147,7 @@ class ModuleInstallationActivity : AppCompatActivity() {
         }.build()
 
         listener = SplitInstallStateUpdatedListener { state ->
-            Log.d(TAG, "State: " + state.toString())
+            Log.d(TAG, "State: $state")
             when (state.status()) {
                 SplitInstallSessionStatus.DOWNLOADING -> {
                     viewModel.progressIndeterminate.value = false
@@ -190,15 +191,15 @@ class ModuleInstallationActivity : AppCompatActivity() {
 
     private fun displayErrorDialog(message: CharSequence) {
         AlertDialog.Builder(this)
-            .setMessage(getString(R.string.module_installation_error).format(message))
-            .setNegativeButton(R.string.skip) { _, _ ->
-                userSp.edit { putInt(SP_KEY_MODULE_INSTALLATION_STATE, STATE_SKIPPED) }
-                finish()
-            }
-            .setPositiveButton(R.string.try_again_later) { _, _ ->
-                finish()
-            }
-            .create()
-            .also { runOnUiThread { it.show() } }
+                .setMessage(getString(R.string.module_installation_error).format(message))
+                .setNegativeButton(R.string.skip) { _, _ ->
+                    userSp.edit { putInt(SP_KEY_MODULE_INSTALLATION_STATE, STATE_SKIPPED) }
+                    finish()
+                }
+                .setPositiveButton(R.string.try_again_later) { _, _ ->
+                    finish()
+                }
+                .create()
+                .also { runOnUiThread { it.show() } }
     }
 }

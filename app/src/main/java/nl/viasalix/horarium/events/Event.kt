@@ -18,12 +18,12 @@ package nl.viasalix.horarium.events
 
 abstract class Event<T, U> where T : IEventArgs {
     abstract fun subscribe(callback: (T) -> U): Boolean
-    operator fun plusAssign(callback: (T) -> U): Unit {
+    operator fun plusAssign(callback: (T) -> U) {
         subscribe(callback)
     }
 
     abstract fun unsubscribe(callback: (T) -> U): Boolean
-    operator fun minusAssign(callback: (T) -> U): Unit {
+    operator fun minusAssign(callback: (T) -> U) {
         unsubscribe(callback)
     }
 

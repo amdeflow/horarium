@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var userSp: SharedPreferences
 
     val userEvents = UserModuleEventsProvider()
-    var moduleInstances: List<HorariumUserModule> = emptyList()
+    private var moduleInstances: List<HorariumUserModule> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val currentUser = defaultSharedPreferences.getString(SP_KEY_CURRENT_USER, null)

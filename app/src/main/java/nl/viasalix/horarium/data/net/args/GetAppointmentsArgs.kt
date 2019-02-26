@@ -1,7 +1,5 @@
 package nl.viasalix.horarium.data.net.args
 
-import nl.viasalix.horarium.utils.DateUtils
-import nl.viasalix.horarium.utils.DateUtils.getCurrentYear
 import java.util.Date
 
 data class GetAppointmentsArgs(
@@ -11,13 +9,4 @@ data class GetAppointmentsArgs(
         val valid: Boolean = true,
         val cancelled: Boolean? = null,
         val includeHidden: Boolean = false
-) {
-    companion object {
-         fun inWeek(week: Int, year: Int = getCurrentYear()): GetAppointmentsArgs {
-             return GetAppointmentsArgs(
-                     from = DateUtils.startOfWeek(week, year),
-                     till = DateUtils.endOfWeek(week, year)
-             )
-         }
-    }
-}
+)

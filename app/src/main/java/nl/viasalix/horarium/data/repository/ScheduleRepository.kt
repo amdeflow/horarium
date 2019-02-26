@@ -2,7 +2,6 @@ package nl.viasalix.horarium.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import nl.viasalix.horarium.data.AppointmentCustomizations
 import nl.viasalix.horarium.data.net.ZermeloApi
 import nl.viasalix.horarium.data.persistence.AppointmentDao
 import nl.viasalix.horarium.data.net.args.GetAppointmentsArgs

@@ -17,5 +17,9 @@ limitations under the License.
 -->
 
 <resources>
-    <string name="module_calvijncollege_cup_menu_choices">CUP intekenen</string>
+    <string name="menu_choices">CUP intekenen</string>
+    <string name="pinndigits_hint">Pin (4 nummers)</string>
+    <string name="firstnletters_hint">Eerste 3 tot 7 letters van je achternaam</string>
+    <string name="cup_setup">CUP set-up</string>
+    <string name="next">Volgende</string>
 </resources>

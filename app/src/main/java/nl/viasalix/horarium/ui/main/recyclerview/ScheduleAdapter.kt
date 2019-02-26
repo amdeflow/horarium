@@ -46,9 +46,10 @@ class ScheduleAdapter(private val context: Context) :
                 itemView.tvDay.visibility = View.VISIBLE
             }
             addBuiltinChips(context, appointment)
+            if (appointment.customizations.extraChips?.isNotEmpty() ?: return@apply) {
+                this.addExtraChips(context, appointment.customizations.extraChips!!)
+            }
         }
-
-        // TODO: Support and add custom chips
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppointmentViewHolder {

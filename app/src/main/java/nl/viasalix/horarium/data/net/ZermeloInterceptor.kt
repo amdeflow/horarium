@@ -20,7 +20,7 @@ import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class ZermeloInterceptor(var accessToken: String) : Interceptor {
+class ZermeloInterceptor(private var accessToken: String) : Interceptor {
 
     companion object {
         const val TAG: String = "HOR/ZermeloInterceptor"

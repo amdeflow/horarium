@@ -125,7 +125,7 @@ class CUPUserModule : HorariumUserModule() {
                     val week = DateUtils.getWeek(appointment.start)
                     if (!result.containsKey(week)) continue
 
-                    val narrowedDown = result[week]!!.filter { it.slot == appointment.startTimeSlot && DateUtils.isSameDay(it.day, appointment.start) }
+                    val narrowedDown = result.getValue(week).filter { it.slot == appointment.startTimeSlot && DateUtils.isSameDay(it.day, appointment.start) }
                     if (narrowedDown.size != 1) {
                         Log.w(TAG, "Size of narrowedDown is NOT equal to 1, instead it has ${narrowedDown.size} items.")
                         continue
@@ -150,7 +150,7 @@ class CUPUserModule : HorariumUserModule() {
 
     private fun provideMainDrawerMenuItems(args: ContextEventArgs): Map<String, () -> Unit> {
         return mapOf(
-            args.context.getString(R.string.module_calvijncollege_cup_menu_choices) to {
+            args.context.getString(R.string.menu_choices) to {
                 // TODO: Start a new activity
             }
         )

@@ -19,8 +19,8 @@ package nl.viasalix.horarium.module.calvijncollege.cup.method
 import nl.viasalix.horarium.module.calvijncollege.cup.AspFieldMode
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPClient
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPMethod
-import nl.viasalix.horarium.module.calvijncollege.cup.data.HistoryOption
-import nl.viasalix.horarium.module.calvijncollege.cup.data.Option
+import nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model.HistoryOption
+import nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model.Option
 import org.jsoup.Jsoup
 import java.text.ParseException
 import java.util.Date

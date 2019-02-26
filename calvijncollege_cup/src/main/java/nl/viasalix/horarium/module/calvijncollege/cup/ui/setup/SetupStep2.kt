@@ -3,7 +3,6 @@ package nl.viasalix.horarium.module.calvijncollege.cup.ui.setup
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,9 +20,8 @@ class SetupStep2 : SetupFragment() {
 
     var setup: CalvijnCollegeCUPSetup? = null
 
-    var selectedIndex = 0
-
-    var userKeys: List<String> = emptyList()
+    private var selectedIndex = 0
+    private var userKeys: List<String> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +31,7 @@ class SetupStep2 : SetupFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val selection = view.findViewById<RadioGroup>(R.id.module_calvijncollege_cup_setup_step2_usernameSelection)
+        val selection = view.findViewById<RadioGroup>(R.id.setup_step2_usernameSelection)
         selection.setOnCheckedChangeListener { rg, index -> if (rg != null) {
             Log.d(TAG, "Selected index: $index")
             selectedIndex = index

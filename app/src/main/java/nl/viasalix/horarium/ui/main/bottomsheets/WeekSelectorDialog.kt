@@ -38,7 +38,7 @@ class WeekSelectorDialog : BottomSheetDialogFragment() {
         initWeekObserver()
 
         binding.viewmodel = viewModel
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
         binding.btnCancel.setOnClickListener { dismiss() }
         binding.btnOk.setOnClickListener {
             dismiss()

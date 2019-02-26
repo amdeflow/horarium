@@ -10,7 +10,7 @@ import org.jetbrains.anko.defaultSharedPreferences
 object SharedPreferencesUtils {
     fun makeUserId(authCode: String) = "user_$authCode"
 
-    fun getUserSharedPreferences(userId: String?, context: Context) =
+    fun getUserSharedPreferences(userId: String?, context: Context): SharedPreferences =
             context.getSharedPreferences(userId, Context.MODE_PRIVATE)
 
     fun getCurrentUser(context: Context) =

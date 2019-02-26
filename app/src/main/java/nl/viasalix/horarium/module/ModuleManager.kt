@@ -54,7 +54,7 @@ object ModuleManager {
         }
     }
 
-    fun listInstalledModules(): Set<String> {
+    private fun listInstalledModules(): Set<String> {
         return HorariumApplication.manager.installedModules.intersect(moduleMetadata.keys)
     }
 
@@ -82,7 +82,7 @@ object ModuleManager {
             return emptyList()
         }
 
-        return modulesPerInstitute[schoolName]!!
+        return modulesPerInstitute.getValue(schoolName)
     }
 
     fun listActiveModules(userSp: SharedPreferences): Set<String> {

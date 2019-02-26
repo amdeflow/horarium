@@ -16,7 +16,6 @@
 
 package nl.viasalix.horarium.data.net
 
-import android.util.Log
 import com.google.gson.GsonBuilder
 import nl.viasalix.horarium.converters.DateTypeAdapter
 import nl.viasalix.horarium.data.net.args.GetAppointmentsArgs

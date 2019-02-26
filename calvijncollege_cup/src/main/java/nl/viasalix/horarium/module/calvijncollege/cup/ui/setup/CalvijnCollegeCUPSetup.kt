@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.core.content.edit
-import androidx.fragment.app.Fragment
 import nl.viasalix.horarium.module.ModuleManager
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPClient
 import nl.viasalix.horarium.module.calvijncollege.cup.CUPUserModule
@@ -43,11 +42,11 @@ class CalvijnCollegeCUPSetup : AppCompatActivity() {
     var selectedUser = ""
     var pin = ""
 
-    var mNextHandler: (() -> Unit)? = null
+    private var mNextHandler: (() -> Unit)? = null
 
-    lateinit var moduleSpKey: String
-    lateinit var setupCompleteId: String
-    lateinit var moduleSp: SharedPreferences
+    private lateinit var moduleSpKey: String
+    private lateinit var setupCompleteId: String
+    private lateinit var moduleSp: SharedPreferences
 
     @Volatile
     private var loading = false
@@ -76,7 +75,7 @@ class CalvijnCollegeCUPSetup : AppCompatActivity() {
 
         moduleSp = getSharedPreferences(moduleSpKey, Context.MODE_PRIVATE)
 
-        findViewById<Button>(R.id.module_calvijncollege_cup_setup_next).onClick {
+        findViewById<Button>(R.id.setup_next).onClick {
             doAsync { next() }
         }
 
@@ -97,7 +96,7 @@ class CalvijnCollegeCUPSetup : AppCompatActivity() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.run {
             newFragment.onDoneCallback = { doAsync { next() } }
-            replace(R.id.module_calvijncollege_cup_setup_detailContainer, newFragment)
+            replace(R.id.setup_detailContainer, newFragment)
             disallowAddToBackStack()
             commit()
         }

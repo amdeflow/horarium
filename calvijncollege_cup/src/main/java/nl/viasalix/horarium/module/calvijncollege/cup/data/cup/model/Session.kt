@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.module.calvijncollege.cup.data
+package nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model
 
 import nl.viasalix.horarium.module.calvijncollege.cup.AspFieldMode
 import okhttp3.Cookie

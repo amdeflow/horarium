@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,14 +11,21 @@
         android:layout_height="match_parent">
 
         <EditText
-            android:id="@+id/module_calvijncollege_cup_setup_step1_firstLettersOfSurname"
+            android:id="@+id/setup_step1_firstLettersOfSurname"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="First 3 to 7 letters of surname"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:hint="@string/firstnletters_hint"
             android:maxLength="7"
             android:maxLines="1"
             android:singleLine="true"
-            android:text="" />
+            android:inputType="textNoSuggestions"
+            android:text=""
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="Autofill" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

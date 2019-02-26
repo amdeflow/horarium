@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.viasalix.horarium.module.calvijncollege.cup.data
+package nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model
 
 import org.jsoup.nodes.Element
 
@@ -50,9 +50,9 @@ data class Option(
             var room = ""
             var teacher = ""
             var extra = ""
-            var message = ""
             var info = ""
             var availablePlaces = -1
+            val message = ""
 
             input.text().split(' ').forEachIndexed { index, part ->
                 if (part.startsWith("[") && part.endsWith("]") && part.length >= 3) {
