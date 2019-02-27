@@ -16,12 +16,9 @@
 
 package nl.viasalix.horarium.module
 
-import com.google.gson.annotations.SerializedName
-
 data class ModuleMetadata(
-    @SerializedName("package")
-    val `package`: String,
-    @SerializedName("user_modules") val userModules: List<String>,
-    @SerializedName("description")
-    val description: String
+        val `package`: String,
+        val userModules: List<String>,
+        val description: String,
+        val requiresDatabase: String
 )

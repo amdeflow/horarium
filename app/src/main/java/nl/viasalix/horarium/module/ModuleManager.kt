@@ -44,13 +44,17 @@ object ModuleManager {
 
     internal fun loadDefinitions(context: Context) {
         context.resources.openRawResource(R.raw.modules_per_institute).use {
-            modulesPerInstitute =
-                gson.fromJson(InputStreamReader(it), object : TypeToken<Map<String, List<String>>>() {}.type)
+            modulesPerInstitute = gson.fromJson(
+                    InputStreamReader(it),
+                    object : TypeToken<Map<String, List<String>>>() {}.type
+            )
         }
 
         context.resources.openRawResource(R.raw.module_metadata).use {
-            moduleMetadata =
-                gson.fromJson(InputStreamReader(it), object : TypeToken<Map<String, ModuleMetadata>>() {}.type)
+            moduleMetadata = gson.fromJson(
+                    InputStreamReader(it),
+                    object : TypeToken<Map<String, ModuleMetadata>>() {}.type
+            )
         }
     }
 
@@ -62,7 +66,7 @@ object ModuleManager {
      * Check if the current user must be prompted for module installation.
      */
     internal fun mustPromptModuleInstallation(userSp: SharedPreferences): Boolean {
-        Log.d(TAG, "mustPromptModuleInstallation check.")
+        Log.d(TAG, "mustPromptModuleInstallation check")
 
         val prompted = userSp.getBoolean(SP_KEY_MODULES_PROMPTED, false)
 
@@ -78,7 +82,7 @@ object ModuleManager {
             schoolName = ""
 
         if (!modulesPerInstitute.containsKey(schoolName)) {
-            Log.d(TAG, "ModulesPerInstitute does not contain definitions for $schoolName.")
+            Log.d(TAG, "modulesPerInstitute does not contain definitions for $schoolName")
             return emptyList()
         }
 
@@ -109,12 +113,12 @@ object ModuleManager {
     }
 
     internal fun instantiateModulesAndPreSetup(context: Context, userSp: SharedPreferences, eventsProvider: UserModuleEventsProvider): List<HorariumUserModule> {
-        Log.d(TAG, "Instantiating active modules and performing pre-setup...")
+        Log.d(TAG, "Instantiating active modules and performing pre-setup")
 
         val initializedModules: MutableList<HorariumUserModule> = mutableListOf()
 
         listActiveModules(userSp).forEach { moduleName ->
-            Log.d(TAG, "Instantiating modules provided by $moduleName...")
+            Log.d(TAG, "Instantiating modules provided by $moduleName")
             val moduleMeta = moduleMetadata[moduleName]
 
             moduleMeta?.userModules?.forEach { userModuleClassName ->
@@ -125,14 +129,14 @@ object ModuleManager {
                 if (userIdentifier != null) {
                     try {
                         val userModuleInstance =
-                            Class.forName(className).asSubclass(HorariumUserModule::class.java).newInstance()
+                                Class.forName(className).asSubclass(HorariumUserModule::class.java).newInstance()
 
                         userModuleInstance.preSetup(
-                            context.getSharedPreferences(
-                                userIdentifier + "_module_$className",
-                                Context.MODE_PRIVATE
-                            ),
-                            eventsProvider
+                                context.getSharedPreferences(
+                                        userIdentifier + "_module_$className",
+                                        Context.MODE_PRIVATE
+                                ),
+                                eventsProvider
                         )
 
                         initializedModules.add(userModuleInstance)

@@ -41,21 +41,22 @@ class CUPUserModule : HorariumUserModule() {
     }
 
     private var lastProcessingTimestamp = 0L
-    @Volatile private var busy = false
+    @Volatile
+    private var busy = false
     private val processQueue: MutableSet<Appointment> = HashSet()
 
-    private lateinit var moduleSp: SharedPreferences
+    private lateinit var moduleSP: SharedPreferences
     private var cupClient: CUPClient? = null
 
     override fun preSetup(moduleSp: SharedPreferences, eventsProvider: UserModuleEventsProvider) {
-        this.moduleSp = moduleSp
+        this.moduleSP = moduleSp
 
         eventsProvider.appointmentsReady += ::appointmentsReady
         eventsProvider.provideMainDrawerMenuItems += ::provideMainDrawerMenuItems
     }
 
     override fun provideSetupActivityClass(): Class<CalvijnCollegeCUPSetup>? {
-        if (moduleSp.getBoolean(SP_KEY_SETUP_COMPLETED, false)) return null
+        if (moduleSP.getBoolean(SP_KEY_SETUP_COMPLETED, false)) return null
         return CalvijnCollegeCUPSetup::class.java
     }
 
@@ -68,9 +69,9 @@ class CUPUserModule : HorariumUserModule() {
     private fun initCUPClient() {
         val newCUPClient = CUPClient()
         val (initSuccess, initFailReason) = newCUPClient.init(
-            moduleSp.getString(SP_KEY_CONFIG_FIRST_LETTERS_OF_SURNAME, "") ?: "",
-            moduleSp.getString(SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER, "") ?: "",
-            moduleSp.getString(SP_KEY_CONFIG_PIN, "") ?: "")
+                moduleSP.getString(SP_KEY_CONFIG_FIRST_LETTERS_OF_SURNAME, "")!!,
+                moduleSP.getString(SP_KEY_CONFIG_INTERNAL_USERNAME_IDENTIFIER, "")!!,
+                moduleSP.getString(SP_KEY_CONFIG_PIN, "")!!)
 
         if (initSuccess) {
             cupClient = newCUPClient
@@ -118,7 +119,7 @@ class CUPUserModule : HorariumUserModule() {
 
             val result = printableTimetableExecution.result
 
-            synchronized (processQueue) {
+            synchronized(processQueue) {
                 for (appointment in processQueue) {
                     Log.d(TAG, appointment.toString())
 
@@ -133,9 +134,9 @@ class CUPUserModule : HorariumUserModule() {
 
                     val historyOption = narrowedDown[0]
                     val customizations = AppointmentCustomizations(
-                        listOf(historyOption.option.subject),
-                        listOf(historyOption.option.teacher),
-                        listOf(historyOption.option.room)
+                            listOf(historyOption.option.subject),
+                            listOf(historyOption.option.teacher),
+                            listOf(historyOption.option.room)
                     )
 
                     args.updateAppointmentCustomDataCallback(appointment.appointmentInstance, customizations)
@@ -150,9 +151,9 @@ class CUPUserModule : HorariumUserModule() {
 
     private fun provideMainDrawerMenuItems(args: ContextEventArgs): Map<String, () -> Unit> {
         return mapOf(
-            args.context.getString(R.string.menu_choices) to {
-                // TODO: Start a new activity
-            }
+                args.context.getString(R.string.menu_choices) to {
+                    // TODO: Start a new activity
+                }
         )
     }
 }
