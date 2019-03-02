@@ -31,6 +31,7 @@ import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_ACTIVE
 import nl.viasalix.horarium.utils.Constants.SP_KEY_MODULES_PROMPTED
 import nl.viasalix.horarium.utils.Constants.SP_KEY_SCHOOL_NAME
 import nl.viasalix.horarium.utils.Constants.SP_KEY_USER_IDENTIFIER
+import nl.viasalix.horarium.utils.DatabaseUtils.formatModuleDatabaseName
 import java.io.InputStreamReader
 import java.util.UUID
 
@@ -134,7 +135,7 @@ object ModuleManager {
                                 Class.forName(className).asSubclass(HorariumUserModule::class.java).newInstance()
                         var moduleDB = null as RoomDatabase?
                         userModuleInstance.provideDatabaseClass()?.also {
-                            moduleDB = Room.databaseBuilder(context, it, "").build()
+                            moduleDB = Room.databaseBuilder(context, it, formatModuleDatabaseName(userIdentifier, className)).build()
                         }
 
                         userModuleInstance.preSetup(
