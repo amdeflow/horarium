@@ -19,6 +19,8 @@ package nl.viasalix.horarium.module
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -130,12 +132,17 @@ object ModuleManager {
                     try {
                         val userModuleInstance =
                                 Class.forName(className).asSubclass(HorariumUserModule::class.java).newInstance()
+                        var moduleDB = null as RoomDatabase?
+                        userModuleInstance.provideDatabaseClass()?.also {
+                            moduleDB = Room.databaseBuilder(context, it, "").build()
+                        }
 
                         userModuleInstance.preSetup(
                                 context.getSharedPreferences(
                                         userIdentifier + "_module_$className",
                                         Context.MODE_PRIVATE
                                 ),
+                                moduleDB,
                                 eventsProvider
                         )
 

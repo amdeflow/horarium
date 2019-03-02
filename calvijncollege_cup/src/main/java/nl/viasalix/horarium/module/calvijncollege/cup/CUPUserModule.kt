@@ -18,12 +18,14 @@ package nl.viasalix.horarium.module.calvijncollege.cup
 
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.room.RoomDatabase
 import nl.viasalix.horarium.data.AppointmentCustomizations
 import nl.viasalix.horarium.data.zermelo.model.Appointment
 import nl.viasalix.horarium.events.UserModuleEventsProvider
 import nl.viasalix.horarium.events.args.ContextEventArgs
 import nl.viasalix.horarium.events.args.AppointmentsReadyEventArgs
 import nl.viasalix.horarium.module.HorariumUserModule
+import nl.viasalix.horarium.module.calvijncollege.cup.data.persistence.CUPDatabase
 import nl.viasalix.horarium.module.calvijncollege.cup.method.PrintableTimetable
 import nl.viasalix.horarium.module.calvijncollege.cup.ui.setup.CalvijnCollegeCUPSetup
 import nl.viasalix.horarium.utils.DateUtils
@@ -46,10 +48,16 @@ class CUPUserModule : HorariumUserModule() {
     private val processQueue: MutableSet<Appointment> = HashSet()
 
     private lateinit var moduleSP: SharedPreferences
+    private lateinit var moduleDB: CUPDatabase
     private var cupClient: CUPClient? = null
 
-    override fun preSetup(moduleSp: SharedPreferences, eventsProvider: UserModuleEventsProvider) {
-        this.moduleSP = moduleSp
+    override fun preSetup(
+            moduleSP: SharedPreferences,
+            moduleDB: RoomDatabase?,
+            eventsProvider: UserModuleEventsProvider
+    ) {
+        this.moduleSP = moduleSP
+        this.moduleDB = moduleDB as CUPDatabase
 
         eventsProvider.appointmentsReady += ::appointmentsReady
         eventsProvider.provideMainDrawerMenuItems += ::provideMainDrawerMenuItems
@@ -59,6 +67,8 @@ class CUPUserModule : HorariumUserModule() {
         if (moduleSP.getBoolean(SP_KEY_SETUP_COMPLETED, false)) return null
         return CalvijnCollegeCUPSetup::class.java
     }
+
+    override fun provideDatabaseClass() = CUPDatabase::class.java
 
     override fun init() {
         Log.d(TAG, "Initializing CUP module...")

@@ -18,9 +18,12 @@ package nl.viasalix.horarium.module
 
 import android.app.Activity
 import android.content.SharedPreferences
+import androidx.room.RoomDatabase
 import nl.viasalix.horarium.events.UserModuleEventsProvider
 
 open class HorariumUserModule {
+
+    open fun provideDatabaseClass(): Class<out RoomDatabase>? = null
 
     /**
      * Pre-initialize the module, invoked upon module instantiation.
@@ -31,10 +34,15 @@ open class HorariumUserModule {
      * Note: this function will be called from a background thread. UI operations are not safe (and
      * not recommended in the [preSetup] method anyway).
      *
-     * @param moduleSp [SharedPreferences] container for this module to store settings.
+     * @param moduleSP [SharedPreferences] container for this module to store settings.
+     * @param moduleDB [RoomDatabase?] database which can be cast to the type provided by [provideDatabaseClass].
      * @param eventsProvider Instance of [UserModuleEventsProvider] to which you can subscribe for events.
      */
-    open fun preSetup(moduleSp: SharedPreferences, eventsProvider: UserModuleEventsProvider) {}
+    open fun preSetup(
+            moduleSP: SharedPreferences,
+            moduleDB: RoomDatabase?,
+            eventsProvider: UserModuleEventsProvider
+    ) {}
 
     /**
      * Provide the [Activity] class for the setup activity.
