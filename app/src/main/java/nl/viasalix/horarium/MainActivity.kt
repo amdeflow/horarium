@@ -42,7 +42,7 @@ import org.jetbrains.anko.doAsync
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private const val TAG = "Horarium/Main"
+        private const val TAG = "hor.Main"
     }
 
     private lateinit var userSp: SharedPreferences
