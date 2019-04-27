@@ -2,7 +2,7 @@ package nl.viasalix.horarium.module.calvijncollege.cup.data.persistence
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import nl.viasalix.horarium.data.zermelo.model.Appointment
+import nl.viasalix.horarium.module.calvijncollege.cup.data.cup.model.Appointment
 
 @Dao
 interface AppointmentDao {
