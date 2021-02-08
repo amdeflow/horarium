@@ -2,6 +2,10 @@
 ========
 A very skeer :mega: Zermelo schedule viewer made specifically for people using a phone running Android
 
+#### Archival
+Sadly, every schedule app dies when the time is due. The maintainer either graduates or the school imposes a rule against smartphone use in school.
+In this case, the latter applies. The former should apply sooner than later.
+
 #### Code
 If you're on GitHub staring at this repo, considering looking at the [GitLab version](https://gitlab.com/rutgerbrf/horarium) where all the real stuff gets done.
 
